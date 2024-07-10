@@ -1,5 +1,5 @@
 const ContactPage = () => {
-  return <main>Conatct me at xxxx@gmail.com</main>
+  return <main>Contact</main>
 }
 
 export default ContactPage

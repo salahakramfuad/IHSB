@@ -61,8 +61,8 @@ const Nav = () => {
               </Link>
             </li>
             <li>
-              <Link href='/services' className='nav_list'>
-                Services
+              <Link href='/events' className='nav_list'>
+                Events
               </Link>
             </li>
             <li>
