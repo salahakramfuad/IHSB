@@ -1,3 +1,4 @@
+'use state'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -7,7 +8,7 @@ const Footer = () => {
       <div className='container mx-auto px-4 sm:flex sm:justify-between'>
         {/* Logo and Contact Information */}
         <div className='w-full sm:w-2/5 mb-6 sm:mb-0 text-center sm:text-left'>
-          <Link href='/' className='flex flex-center'>
+          <Link href='/app/page.jsx' className='flex flex-center'>
             <Image
               src='/assets/images/logo.png'
               alt='Logo'
@@ -16,7 +17,7 @@ const Footer = () => {
               className='flex items-center justify-center'
             />
           </Link>
-          <p className='mt-4 text-center text-gray-400 hidden sm:block '>
+          <p className='mt-4 text-center text-gray-400 hidden sm:block'>
             International Hope School Bangladesh Hostel
           </p>
         </div>
@@ -26,23 +27,19 @@ const Footer = () => {
           <h3 className='font-semibold mb-4 text-center sm:text-left'>
             Quick Links
           </h3>
-          <ul className='text-center sm:text-left'>
-            <li>
-              <Link href='/' className='text-gray-400 hover:text-white'>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href='/about' className='text-gray-400 hover:text-white'>
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href='/events' className='text-gray-400 hover:text-white'>
-                Events
-              </Link>
-            </li>
-          </ul>
+          <div className='flex space-x-4 sm:flex flex-left'>
+            <Link href='/' className='footer_text'>
+              Home
+            </Link>
+
+            <Link href='/about' className='footer_text'>
+              About
+            </Link>
+
+            <Link href='/events' className='footer_text'>
+              Events
+            </Link>
+          </div>
         </div>
 
         {/* Contact Information */}

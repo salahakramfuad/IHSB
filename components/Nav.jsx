@@ -7,7 +7,7 @@ const Nav = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className='flex-between w-full mb-16 pt-3 px-2 sm:px-4 py-2.5 rounded z-0'>
+    <nav className='flex-between w-full mb-16 pt-3 px-2 sm:px-4 py-2.5 rounded z-0 sticky'>
       <div className='container flex flex-wrap justify-between items-center mx-auto'>
         <Link href='/' className='flex items-center gap-2'>
           <Image
@@ -49,28 +49,23 @@ const Nav = () => {
           } w-full md:block md:w-auto text-right `}
           id='navbar-default'
         >
-          <ul className='flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium'>
-            <li>
-              <Link href='/' className='nav_list'>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href='/about' className='nav_list'>
-                About
-              </Link>
-            </li>
-            <li>
-              <Link href='/events' className='nav_list'>
-                Events
-              </Link>
-            </li>
-            <li>
-              <Link href='/contact' className='nav_list'>
-                Contact
-              </Link>
-            </li>
-          </ul>
+          <div className='flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium'>
+            <Link href='/' className='nav_list'>
+              Home
+            </Link>
+
+            <Link href='/about' className='nav_list'>
+              About
+            </Link>
+
+            <Link href='/events' className='nav_list'>
+              Events
+            </Link>
+
+            <Link href='/contact' className='nav_list'>
+              Contact
+            </Link>
+          </div>
         </div>
       </div>
     </nav>

@@ -170,5 +170,8 @@
 }
 
 .nav_list {
-  @apply block py-2 pr-4 pl-3 text-gray-700 rounded md:bg-transparent md:p-0;
+  @apply block py-2 text-gray-700 p-3 rounded md:bg-transparent md:p-0;
+}
+.footer_text {
+  @apply text-gray-400 hover:text-white hover:cursor-pointer;
 }

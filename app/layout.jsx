@@ -2,8 +2,9 @@ import '@styles/global.css'
 import Nav from '@components/Nav'
 import Provider from '@components/Provider'
 import Footer from '@components/Footer'
+import Image from 'next/image'
 export const metadata = {
-  title: 'ihsbhostel',
+  title: 'Ihsbhostel',
   description: 'Discover IHSB Hostel'
 }
 const Rootlayout = ({ children }) => {
