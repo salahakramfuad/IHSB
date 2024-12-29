@@ -8,7 +8,7 @@ const EventsPage = () => {
         <h1 className='text-4xl font-bold'>Upcoming Events</h1>
         <p className='text-lg mt-2'>
           Stay updated with the latest happenings at International Hope School
-          Bangladesh Hostel!
+          Bangladesh!
         </p>
       </section>
 
@@ -45,14 +45,6 @@ const EventsPage = () => {
           ))}
         </div>
       </section>
-
-      {/* Footer Section */}
-      <footer className='bg-blue-600 text-white text-center py-4'>
-        <p>
-          &copy; 2024 International Hope School Bangladesh Hostel. All rights
-          reserved.
-        </p>
-      </footer>
     </main>
   )
 }
