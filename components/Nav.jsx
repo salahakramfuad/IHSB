@@ -7,8 +7,9 @@ const Nav = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <nav className='flex-between w-full mb-16 pt-3 px-2 sm:px-4 py-2.5 rounded z-0 sticky'>
-      <div className='container flex flex-wrap justify-between items-center mx-auto'>
+    <nav className='bg-white shadow-md sticky top-0 z-50 w-full'>
+      <div className='container mx-auto flex items-center justify-between px-4 py-3'>
+        {/* Logo */}
         <Link href='/' className='flex items-center gap-2'>
           <Image
             src='/assets/images/logo.png'
@@ -18,13 +19,15 @@ const Nav = () => {
             className='object-contain'
           />
           <p className='max-sm:hidden font-inter font-semibold text-lg text-slate-700 tracking-wide'>
-            International Hope School <br /> Bangladesh Hostel
+            International Hope School Bangladesh
           </p>
         </Link>
+
+        {/* Hamburger Menu */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           type='button'
-          className='inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-200'
+          className='inline-flex items-center p-2 text-gray-600 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300'
           aria-controls='navbar-default'
           aria-expanded={isOpen ? 'true' : 'false'}
         >
@@ -43,13 +46,15 @@ const Nav = () => {
             ></path>
           </svg>
         </button>
+
+        {/* Navigation Links */}
         <div
-          className={`${
-            isOpen ? '' : 'hidden'
-          } w-full md:block md:w-auto text-right `}
+          className={`absolute top-[70px] right-4 bg-white shadow-lg rounded-md transition-all duration-300 ${
+            isOpen ? 'block' : 'hidden'
+          } md:static md:flex md:space-x-8 md:bg-transparent md:shadow-none md:rounded-none`}
           id='navbar-default'
         >
-          <div className='flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium'>
+          <div className='flex flex-col md:flex-row md:items-center'>
             <Link href='/' className='nav_list'>
               Home
             </Link>

@@ -1,63 +1,71 @@
-'use state'
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 
 const Footer = () => {
   return (
     <footer className='bg-gray-800 text-white py-8'>
-      <div className='container mx-auto px-4 sm:flex sm:justify-between'>
-        {/* Logo and Contact Information */}
-        <div className='w-full sm:w-2/5 mb-6 sm:mb-0 text-center sm:text-left'>
-          <Link href='/app/page.jsx' className='flex flex-center'>
-            <Image
-              src='/assets/images/logo.png'
-              alt='Logo'
-              width={80}
-              height={80}
-              className='flex items-center justify-center'
-            />
-          </Link>
-          <p className='mt-4 text-center text-gray-400 hidden sm:block'>
-            International Hope School Bangladesh Hostel
-          </p>
-        </div>
-
-        {/* Quick Links */}
-        <div className='w-full sm:w-1/5 mb-6 sm:mb-0 flex flex-col items-center sm:items-start'>
-          <h3 className='font-semibold mb-4 text-center sm:text-left'>
-            Quick Links
-          </h3>
-          <div className='flex flex-col sm:flex-row sm:justify-start sm:space-x-4'>
-            <Link href='/' className='footer_text'>
-              Home
+      <div className='container mx-auto px-4'>
+        {/* Logo and Description */}
+        <div className='sm:flex sm:justify-between mb-6'>
+          <div className='w-full sm:w-2/5 mb-6 sm:mb-0 text-center sm:text-left'>
+            <Link
+              href='/app/page.jsx'
+              className='flex justify-center sm:justify-start'
+            >
+              <Image
+                src='/assets/images/logo.png'
+                alt='Logo'
+                width={80}
+                height={80}
+              />
             </Link>
-            <Link href='/about' className='footer_text'>
-              About
-            </Link>
-            <Link href='/events' className='footer_text'>
-              Events
-            </Link>
+            <p className='mt-4 text-center text-gray-400 sm:text-left'>
+              International Hope School Bangladesh
+            </p>
           </div>
-        </div>
 
-        {/* Contact Information */}
-        <div className='w-full sm:w-1/5 mb-6 sm:mb-0'>
-          <h3 className='font-semibold mb-4 text-center sm:text-left'>
-            Contact Us
-          </h3>
-          <div className='flex flex-col items-center sm:items-start space-y-2 text-center sm:text-left'>
-            <span className='text-gray-400'>Mobile: 01775067870</span>
-            <span className='text-gray-400'>Email: salah@gmail.com</span>
-            <span className='text-gray-400'>Road: 8, Sector: 4, Uttara</span>
+          {/* Quick Links */}
+          <div className='w-full sm:w-1/5 mb-6 sm:mb-0 flex flex-col items-center sm:items-start'>
+            <h3 className='font-semibold mb-4 text-center sm:text-left'>
+              Quick Links
+            </h3>
+            <div className='flex flex-col space-y-2'>
+              <Link href='/' className='text-gray-400 hover:text-white'>
+                Home
+              </Link>
+              <Link href='/about' className='text-gray-400 hover:text-white'>
+                About
+              </Link>
+              <Link href='/events' className='text-gray-400 hover:text-white'>
+                Events
+              </Link>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className='w-full sm:w-2/5 mb-6 sm:mb-0'>
+            <h3 className='font-semibold mb-4 text-center sm:text-left'>
+              Contact Information
+            </h3>
+            <div className='text-gray-400 text-sm space-y-2 text-center sm:text-left'>
+              <p>
+                <strong>Address:</strong> Plot: 7, Road: 6, Sector: 4, Uttara,
+                Dhaka-1230
+              </p>
+              <p>
+                <strong>Phone:</strong> +880 2 4895 6999, 017 0605 4122
+              </p>
+              <p>
+                <strong>Email:</strong> info@ihsb.edu.bd
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Social Media Links */}
-        <div className='w-full sm:w-1/5 flex-col flex-center'>
-          <h3 className='font-semibold mb-4 text-center sm:text-left'>
-            Follow Us
-          </h3>
-          <div className='flex space-x-4 sm:flex flex-left'>
+        <div className='border-t border-gray-700 pt-4 text-center'>
+          <div className='flex justify-center space-x-4 mb-4'>
             <Link
               href='https://www.facebook.com'
               className='text-gray-400 hover:text-white'
@@ -87,19 +95,15 @@ const Footer = () => {
               className='text-gray-400 hover:text-white'
             >
               <svg className='w-6 h-6' fill='currentColor' viewBox='0 0 24 24'>
-                <path d='M22.225 0h-20.449c-.982 0-1.776.794-1.776 1.776v20.449c0 .982.794 1.776 1.776 1.776h20.449c.982 0 1.776-.794 1.776-1.776v-20.449c0-.982-.794-1.776-1.776-1.776zm-15.434 20.452h-3.159v-11.073h3.159v11.073zm-1.58-12.601h-.022c-1.006 0-1.659-.692-1.659-1.56 0-.885.67-1.56 1.693-1.56 1.024 0 1.659.676 1.682 1.56 0 .868-.654 1.56-1.694 1.56zm13.443 12.601h-3.159v-5.927c0-1.492-.532-2.511-1.862-2.511-.971 0-1.55.653-1.805 1.284-.093.228-.116.544-.116.862v6.292h-3.159s.041-10.218 0-11.073h3.159v1.568c-.006.009-.014.018-.021.026h.021v-.026c.419-.647 1.167-1.566 2.838-1.566 2.074 0 3.626 1.357 3.626 4.276v6.796h-.001z' />
+                <path d='M22.225 0h-20.449c-.982 0-1.776.794-1.776 1.776v20.449c0 .982.794 1.776 1.776 1.776h20.449c.982 0 1.776-.794 1.776-1.776v-20.449c0-.982-.794-1.776-1.776-1.776zm-15.434 20.452h-3.675v-10.452h3.675zm-1.837-11.977c-1.17 0-2.118-.947-2.118-2.117s.947-2.118 2.118-2.118 2.118.947 2.118 2.118-.947 2.117-2.118 2.117zm14.195 11.977h-3.676v-5.678c0-1.352-.025-3.09-1.883-3.09-1.886 0-2.176 1.471-2.176 2.987v5.781h-3.675v-10.452h3.529v1.423h.049c.492-.93 1.69-1.914 3.479-1.914 3.717 0 4.405 2.447 4.405 5.623v5.32z' />
               </svg>
             </Link>
           </div>
+          <p className='text-gray-400'>
+            &copy; {new Date().getFullYear()} International Hope School
+            Bangladesh. All Rights Reserved.
+          </p>
         </div>
-      </div>
-
-      {/* Copyright */}
-      <div className='mt-8 text-center text-xs text-gray-400'>
-        <p>
-          &copy; 2024 International Hope School Bangladesh Hostel. All rights
-          reserved.
-        </p>
       </div>
     </footer>
   )

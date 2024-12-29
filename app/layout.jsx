@@ -4,8 +4,8 @@ import Provider from '@components/Provider'
 import Footer from '@components/Footer'
 import Image from 'next/image'
 export const metadata = {
-  title: 'Ihsbhostel',
-  description: 'Discover IHSB Hostel'
+  title: 'IHSB',
+  description: 'Discover IHSB '
 }
 const Rootlayout = ({ children }) => {
   return (

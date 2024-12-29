@@ -175,3 +175,6 @@
 .footer_text {
   @apply text-gray-400 hover:text-white hover:cursor-pointer;
 }
+.nav_list {
+  @apply text-slate-700 font-medium text-lg py-2 px-4 hover:bg-gray-100 hover:text-blue-600 transition duration-200 rounded;
+}
