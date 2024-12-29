@@ -23,19 +23,17 @@ const Footer = () => {
         </div>
 
         {/* Quick Links */}
-        <div className='w-full sm:w-1/5 mb-6 sm:mb-0'>
+        <div className='w-full sm:w-1/5 mb-6 sm:mb-0 flex flex-col items-center sm:items-start'>
           <h3 className='font-semibold mb-4 text-center sm:text-left'>
             Quick Links
           </h3>
-          <div className='flex space-x-4 sm:flex flex-left'>
+          <div className='flex flex-col sm:flex-row sm:justify-start sm:space-x-4'>
             <Link href='/' className='footer_text'>
               Home
             </Link>
-
             <Link href='/about' className='footer_text'>
               About
             </Link>
-
             <Link href='/events' className='footer_text'>
               Events
             </Link>
