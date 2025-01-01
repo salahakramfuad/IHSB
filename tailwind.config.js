@@ -13,6 +13,10 @@ module.exports = {
       },
       colors: {
         'primary-orange': '#FF5722'
+      },
+      backgroundImage: {
+        'logo-gradient': 'linear-gradient(to bottom right, #FFFFFF, #E8E8E8)', // White to light gray for a clean backdrop
+        'accent-gradient': 'linear-gradient(to bottom right, #E53935, #4CAF50)' // Red to green for a vibrant touch
       }
     }
   },

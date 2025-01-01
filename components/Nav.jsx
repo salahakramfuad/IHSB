@@ -55,21 +55,85 @@ const Nav = () => {
           id='navbar-default'
         >
           <div className='flex flex-col md:flex-row md:items-center'>
-            <Link href='/' className='nav_list'>
-              Home
-            </Link>
+            {/* Home */}
+            <div className='relative group'>
+              <Link href='/' className='nav_list'>
+                Home
+              </Link>
+              <div
+                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
+                transition-all duration-300
+                sm:left-[-160px] sm:top-0
+                md:top-full md:left-0 md:mt-2'
+              >
+                <Link href='/home/option1' className='dropdown_item'>
+                  Option 1
+                </Link>
+                <Link href='/home/option2' className='dropdown_item'>
+                  Option 2
+                </Link>
+              </div>
+            </div>
 
-            <Link href='/about' className='nav_list'>
-              About
-            </Link>
+            {/* About */}
+            <div className='relative group'>
+              <Link href='/about' className='nav_list'>
+                About
+              </Link>
+              <div
+                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
+                transition-all duration-300
+                sm:left-[-160px] sm:top-0
+                md:top-full md:left-0 md:mt-2'
+              >
+                <Link href='/about/option1' className='dropdown_item'>
+                  Option 1
+                </Link>
+                <Link href='/about/option2' className='dropdown_item'>
+                  Option 2
+                </Link>
+              </div>
+            </div>
 
-            <Link href='/events' className='nav_list'>
-              Events
-            </Link>
+            {/* Events */}
+            <div className='relative group'>
+              <Link href='/events' className='nav_list'>
+                Events
+              </Link>
+              <div
+                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
+                transition-all duration-300
+                sm:left-[-160px] sm:top-0
+                md:top-full md:left-0 md:mt-2'
+              >
+                <Link href='/events/option1' className='dropdown_item'>
+                  Option 1
+                </Link>
+                <Link href='/events/option2' className='dropdown_item'>
+                  Option 2
+                </Link>
+              </div>
+            </div>
 
-            <Link href='/contact' className='nav_list'>
-              Contact
-            </Link>
+            {/* Contact */}
+            <div className='relative group'>
+              <Link href='/contact' className='nav_list'>
+                Contact
+              </Link>
+              <div
+                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
+                transition-all duration-300
+                sm:left-[-160px] sm:top-0
+                md:top-full md:left-0 md:mt-2'
+              >
+                <Link href='/contact/option1' className='dropdown_item'>
+                  Option 1
+                </Link>
+                <Link href='/contact/option2' className='dropdown_item'>
+                  Option 2
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
