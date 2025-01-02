@@ -60,21 +60,27 @@ const Nav = () => {
               <Link href='/' className='nav_list'>
                 Home
               </Link>
+            </div>
+
+            {/* BRANCHES */}
+            <div className='relative group'>
+              <Link href='/' className='nav_list'>
+                Branches
+              </Link>
               <div
                 className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
                 transition-all duration-300
                 sm:left-[-160px] sm:top-0
                 md:top-full md:left-0 md:mt-2'
               >
-                <Link href='/home/option1' className='dropdown_item'>
-                  Option 1
+                <Link href='/uttarasenior' className='dropdown_item'>
+                  Uttara Senior Section
                 </Link>
-                <Link href='/home/option2' className='dropdown_item'>
+                <Link href='/about/option2' className='dropdown_item'>
                   Option 2
                 </Link>
               </div>
             </div>
-
             {/* About */}
             <div className='relative group'>
               <Link href='/about' className='nav_list'>
