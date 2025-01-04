@@ -61,7 +61,7 @@ const Nav = () => {
                 href: '/',
                 subLinks: [
                   { title: 'Uttara Senior Section', href: '/uttarasenior' },
-                  { title: 'Option 2', href: '/about/option2' }
+                  { title: 'Uttara Junior Section', href: '/uttarajunior' }
                 ]
               },
               {
