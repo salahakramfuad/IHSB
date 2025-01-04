@@ -18,7 +18,7 @@ const Nav = () => {
             height={60}
             className='object-contain'
           />
-          <p className='max-sm:hidden font-inter font-semibold text-lg text-slate-700 tracking-wide'>
+          <p className=' max-sm:inline font-inter font-semibold text-lg text-slate-700 tracking-wide'>
             International Hope School Bangladesh
           </p>
         </Link>
@@ -29,7 +29,7 @@ const Nav = () => {
           type='button'
           className='inline-flex items-center p-2 text-gray-600 rounded-lg md:hidden hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300'
           aria-controls='navbar-default'
-          aria-expanded={isOpen ? 'true' : 'false'}
+          aria-expanded={isOpen}
         >
           <span className='sr-only'>Open main menu</span>
           <svg
@@ -46,7 +46,6 @@ const Nav = () => {
             ></path>
           </svg>
         </button>
-
         {/* Navigation Links */}
         <div
           className={`absolute top-[70px] right-4 bg-white shadow-lg rounded-md transition-all duration-300 ${
@@ -55,85 +54,69 @@ const Nav = () => {
           id='navbar-default'
         >
           <div className='flex flex-col md:flex-row md:items-center'>
-            {/* Home */}
-            <div className='relative group'>
-              <Link href='/' className='nav_list'>
-                Home
-              </Link>
-              <div
-                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
-                transition-all duration-300
-                sm:left-[-160px] sm:top-0
-                md:top-full md:left-0 md:mt-2'
-              >
-                <Link href='/home/option1' className='dropdown_item'>
-                  Option 1
-                </Link>
-                <Link href='/home/option2' className='dropdown_item'>
-                  Option 2
-                </Link>
-              </div>
-            </div>
+            {[
+              { title: 'Home', href: '/' },
+              {
+                title: 'Branches',
+                href: '/',
+                subLinks: [
+                  { title: 'Uttara Senior Section', href: '/uttarasenior' },
+                  { title: 'Uttara Junior Section', href: '/uttarajunior' }
+                ]
+              },
+              {
+                title: 'About',
+                href: '/about',
+                subLinks: [
+                  { title: 'Option 1', href: '/about/option1' },
+                  { title: 'Option 2', href: '/about/option2' }
+                ]
+              },
+              {
+                title: 'Events',
+                href: '/events',
+                subLinks: [
+                  { title: 'Option 1', href: '/events/option1' },
+                  { title: 'Option 2', href: '/events/option2' }
+                ]
+              },
+              {
+                title: 'Contact',
+                href: '/contact',
+                subLinks: [
+                  { title: 'Option 1', href: '/contact/option1' },
+                  { title: 'Option 2', href: '/contact/option2' }
+                ]
+              }
+            ].map((item, index) => (
+              <div key={index} className='relative group'>
+                <div className='group'>
+                  {/* Parent Link */}
+                  <Link href={item.href} className='nav_list'>
+                    {item.title}
+                  </Link>
 
-            {/* About */}
-            <div className='relative group'>
-              <Link href='/about' className='nav_list'>
-                About
-              </Link>
-              <div
-                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
-                transition-all duration-300
-                sm:left-[-160px] sm:top-0
-                md:top-full md:left-0 md:mt-2'
-              >
-                <Link href='/about/option1' className='dropdown_item'>
-                  Option 1
-                </Link>
-                <Link href='/about/option2' className='dropdown_item'>
-                  Option 2
-                </Link>
+                  {/* Dropdown */}
+                  {item.subLinks && (
+                    <div
+                      className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px] transition-all duration-300
+              sm:left-[-160px] sm:top-0
+              md:top-full md:left-0 md:mt-2'
+                    >
+                      {item.subLinks.map((subItem, subIndex) => (
+                        <Link
+                          key={subIndex}
+                          href={subItem.href}
+                          className='dropdown_item'
+                        >
+                          {subItem.title}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-
-            {/* Events */}
-            <div className='relative group'>
-              <Link href='/events' className='nav_list'>
-                Events
-              </Link>
-              <div
-                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
-                transition-all duration-300
-                sm:left-[-160px] sm:top-0
-                md:top-full md:left-0 md:mt-2'
-              >
-                <Link href='/events/option1' className='dropdown_item'>
-                  Option 1
-                </Link>
-                <Link href='/events/option2' className='dropdown_item'>
-                  Option 2
-                </Link>
-              </div>
-            </div>
-
-            {/* Contact */}
-            <div className='relative group'>
-              <Link href='/contact' className='nav_list'>
-                Contact
-              </Link>
-              <div
-                className='absolute hidden group-hover:flex flex-col bg-white shadow-lg rounded-md z-10 min-w-[150px]
-                transition-all duration-300
-                sm:left-[-160px] sm:top-0
-                md:top-full md:left-0 md:mt-2'
-              >
-                <Link href='/contact/option1' className='dropdown_item'>
-                  Option 1
-                </Link>
-                <Link href='/contact/option2' className='dropdown_item'>
-                  Option 2
-                </Link>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
