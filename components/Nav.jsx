@@ -40,7 +40,7 @@ const Nav = () => {
     },
     {
       title: 'About',
-      href: '#',
+      href: '/about',
       subLinks: [
         { title: 'Option 1', href: '/about/option1' },
         { title: 'Option 2', href: '/about/option2' }
