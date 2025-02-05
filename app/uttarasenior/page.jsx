@@ -122,13 +122,14 @@ const UttaraSeniorSection = () => {
         </section>
 
         {/* Curriculum Section */}
-        <section className='bg-gray-100 py-10'>
+        <section className='bg-gray-100 py-10 relative z-10'>
           <div className='container mx-auto px-6 text-center'>
-            <h2 className='text-3xl font-semibold text-blue-600 mb-6 animate__animated animate__fadeIn'>
+            <h2 className='text-3xl font-semibold text-blue-600 mb-6'>
               IHSB Senior Section Curriculum
             </h2>
 
-            <div className='mb-8 flex justify-center gap-6'>
+            {/* Tabs for Curriculum Selection */}
+            <div className='mb-8 flex justify-center gap-6 relative z-10'>
               <button
                 className={`px-6 py-3 font-semibold text-lg border-b-4 transition-all duration-300 ease-in-out transform hover:scale-105 ${
                   activeTab === 'IGCSE'
@@ -151,8 +152,9 @@ const UttaraSeniorSection = () => {
               </button>
             </div>
 
+            {/* Content for IGCSE */}
             {activeTab === 'IGCSE' && (
-              <div className='animate__animated animate__fadeIn animate__delay-1s'>
+              <div className='animate__animated animate__fadeIn'>
                 <p className='text-gray-700 text-justify mb-4'>
                   INTERNATIONAL HOPE SCHOOL BANGLADESH (IHSB) offers Cambridge
                   IGCSE curriculum for a variety of subjects. Students can
@@ -178,8 +180,9 @@ const UttaraSeniorSection = () => {
               </div>
             )}
 
+            {/* Content for A Levels */}
             {activeTab === 'A Levels' && (
-              <div className='animate__animated animate__fadeIn animate__delay-1s'>
+              <div className='animate__animated animate__fadeIn'>
                 <p className='text-gray-700 text-justify mb-4'>
                   IHSB offers Pearson-Edexcel A Levels and plans to commence
                   Cambridge AS & A Levels soon. Students are supported through
@@ -198,11 +201,6 @@ const UttaraSeniorSection = () => {
                 </ul>
               </div>
             )}
-
-            <p className='text-gray-600 mt-10 animate__animated animate__fadeIn animate__delay-2s'>
-              For more information about the curriculum and guidance, please
-              contact our administration office.
-            </p>
           </div>
         </section>
 

@@ -12,16 +12,22 @@ const AboutPage = () => {
   return (
     <main className='about-page bg-gradient-to-r from-blue-50 to-teal-100 py-16 px-6'>
       {/* Hero Section */}
-      <section className='hero bg-cover bg-center relative h-[80vh] text-white flex items-center justify-center'>
-        <div className='absolute inset-0 bg-black opacity-50'></div>
+      <section className='hero bg-cover bg-center relative h-[80vh] text-white flex items-center justify-center overflow-hidden'>
+        {/* Background Image */}
+        <div className='absolute inset-0 bg-[url(/assets/images/ihsb.png)] bg-cover bg-center bg-no-repeat'></div>
+
+        {/* Overlay with Vibrant Gradient */}
+        <div className='absolute inset-0 bg-gradient-to-br from-teal-900 via-teal-700 to-teal-900 opacity-75'></div>
+
+        {/* Content */}
         <div className='z-10 text-center px-6'>
-          <h1 className='text-5xl font-extrabold leading-tight tracking-wide text-teal-200 animate__animated animate__fadeIn animate__delay-1s'>
+          <h1 className='text-5xl sm:text-6xl font-extrabold leading-tight tracking-wide text-teal-200 animate__animated animate__fadeIn animate__delay-1s'>
             Welcome to International Hope School Bangladesh
           </h1>
-          <p className='mt-4 text-lg text-teal-100 animate__animated animate__fadeIn animate__delay-2s'>
+          <p className='mt-4 text-lg sm:text-xl text-teal-100 animate__animated animate__fadeIn animate__delay-2s'>
             Inspiring Future Leaders with Excellence and Compassion
           </p>
-          <p className='mt-6 text-xl text-teal-50 max-w-3xl mx-auto animate__animated animate__fadeIn animate__delay-3s'>
+          <p className='mt-6 text-xl sm:text-2xl text-teal-50 max-w-3xl mx-auto animate__animated animate__fadeIn animate__delay-3s'>
             At International Hope School Bangladesh, we are dedicated to
             nurturing young minds in an environment of academic excellence,
             creativity, and ethical growth. Our committed teachers and holistic
