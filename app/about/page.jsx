@@ -127,6 +127,8 @@ const AboutPage = () => {
               guiding light. We strive to create such an environment to nurture
               young minds and shape future leaders.
             </p>
+            <p className='font-semibold'>Timothy Doland Fisher</p>
+            <p>Chairman, International Hope School Bangladesh</p>
           </div>
         </div>
       </section>

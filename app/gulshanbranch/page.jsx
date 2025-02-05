@@ -2,14 +2,14 @@
 
 import React from 'react'
 
-const UttaraPreschoolPrimary = () => {
+const GulshanPrimaryMiddleSection = () => {
   const campusImages = [
-    '/images/uttara1.jpg',
-    '/images/uttara2.jpg',
-    '/images/uttara3.jpg',
-    '/images/uttara4.jpg',
-    '/images/uttara5.jpg',
-    '/images/uttara6.jpg'
+    '/images/campus1.jpg',
+    '/images/campus2.jpg',
+    '/images/campus3.jpg',
+    '/images/campus4.jpg',
+    '/images/campus5.jpg',
+    '/images/campus6.jpg'
   ]
 
   return (
@@ -18,12 +18,12 @@ const UttaraPreschoolPrimary = () => {
       <header className='bg-blue-600 text-white py-8 shadow-md'>
         <div className='container mx-auto px-6 text-center'>
           <h1 className='text-4xl font-bold'>
-            Uttara Preschool & Primary Section
+            Gulshan Primary & Middle Section
           </h1>
           <p className='text-lg mt-2'>
-            Plot: 7, Road: 6, Sector: 4, Uttara, Dhaka-1230
+            House: 9, Road: 111, Gulshan-2, Dhaka-1212
           </p>
-          <p className='text-lg'>Tel: +880.2.48956999, 017 7596 6264</p>
+          <p className='text-lg'>Tel: +880 2 222284242, +88 01791715556</p>
         </div>
       </header>
 
@@ -35,10 +35,11 @@ const UttaraPreschoolPrimary = () => {
             About Us
           </h2>
           <p className='text-gray-700 text-justify leading-relaxed'>
-            Our preschool and primary section provide a nurturing and engaging
-            learning environment where children develop cognitive, social, and
-            emotional skills through innovative teaching and interactive
-            experiences.
+            The early years are crucial for children’s holistic development. A
+            quality pre and primary-school education provides children with
+            opportunities to build self-confidence, learn social skills, and
+            develop learning dispositions. These build a strong foundation for
+            children’s future learning.
           </p>
         </section>
 
@@ -46,9 +47,14 @@ const UttaraPreschoolPrimary = () => {
         <section className='mb-10'>
           <h2 className='text-3xl font-semibold text-blue-600 mb-4'>Our Aim</h2>
           <p className='text-gray-700 text-justify leading-relaxed'>
-            We strive to foster a love for learning in a safe and inclusive
-            atmosphere. Our dedicated teachers encourage curiosity, creativity,
-            and confidence, preparing students for a bright academic journey.
+            The School provides a caring, stimulating environment where your
+            child will be given the time and opportunity to develop his/her
+            physical, intellectual, emotional, and social skills. Our
+            well-trained, confident teachers deliver the curriculum in ways that
+            foster a child's uniqueness and individuality as they work towards
+            common goals. Children are encouraged to become independent learners
+            and to discover that learning is fun through structured and
+            spontaneous activities.
           </p>
         </section>
 
@@ -69,14 +75,27 @@ const UttaraPreschoolPrimary = () => {
           </div>
         </section>
 
+        {/* Contact Section */}
+        <section className='mb-10'>
+          <h2 className='text-3xl font-semibold text-blue-600 mb-4'>
+            Contact Us
+          </h2>
+          <p className='text-gray-700'>
+            Address: House: 9, Road: 111, Gulshan-2, Dhaka-1212
+          </p>
+          <p className='text-gray-700'>
+            Tel: +880 2 222284242, +88 01791715556
+          </p>
+        </section>
+
         {/* Google Map Section */}
         <section className='container mx-auto px-4 sm:px-6 lg:px-8 mt-12'>
           <h2 className='text-2xl font-semibold text-center mb-6 text-blue-600'>
-            Uttara Preschool & Primary Section Location
+            Gulshan Primary & Middle Section Location
           </h2>
           <div className='rounded-lg overflow-hidden shadow-lg'>
             <iframe
-              src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.797609401391!2d90.39961447539362!3d23.861319578594895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c42256771bad%3A0x662d13081edbb710!2sInternational%20Hope%20School%20Bangladesh!5e0!3m2!1sen!2sbd!4v1738793777927!5m2!1sen!2sbd'
+              src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.7964749134976!2d90.41484727539148!3d23.79026077864317!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c701d7d26cdb%3A0xdfc79709eafbc5df!2sInternational%20Hope%20School%20Bangladesh%20Gulshan%20Branch!5e0!3m2!1sen!2sbd!4v1738794555096!5m2!1sen!2sbd'
               width='100%'
               height='450'
               style={{ border: 0 }}
@@ -92,4 +111,4 @@ const UttaraPreschoolPrimary = () => {
   )
 }
 
-export default UttaraPreschoolPrimary
+export default GulshanPrimaryMiddleSection
