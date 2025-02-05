@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [dropdownOpen, setDropdownOpen] = useState(null)
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(null)
+  const dropdownRef = useRef(null)
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
@@ -14,9 +16,13 @@ const Nav = () => {
     setDropdownOpen(dropdownOpen === index ? null : index)
   }
 
+  const toggleMobileDropdown = (index) => {
+    setMobileDropdownOpen(mobileDropdownOpen === index ? null : index)
+  }
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest('.dropdown')) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(null)
       }
     }
@@ -29,19 +35,14 @@ const Nav = () => {
     { title: 'Home', href: '/' },
     {
       title: 'Branches',
-      href: '/uttarasenior',
       subLinks: [
-        {
-          title: 'Uttara Senior Section',
-          href: '/uttarasenior'
-        },
+        { title: 'Uttara Senior Section', href: '/uttarasenior' },
         { title: 'Uttara Junior Section', href: '/uttarajunior' },
         { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
       ]
     },
     {
       title: 'About',
-      href: '/about',
       subLinks: [
         { title: 'Option 1', href: '/about' },
         { title: 'Option 2', href: '/about/option2' }
@@ -49,20 +50,12 @@ const Nav = () => {
     },
     {
       title: 'Events',
-      href: '/events',
       subLinks: [
         { title: 'Event 1', href: '/events/event1' },
         { title: 'Option 2', href: '/events/option2' }
       ]
     },
-    {
-      title: 'Contact',
-      href: '/contact',
-      subLinks: [
-        { title: 'Option 1', href: '/contact/option1' },
-        { title: 'Option 2', href: '/contact/option2' }
-      ]
-    }
+    { title: 'Contact', href: '/contact' }
   ]
 
   return (
@@ -128,7 +121,12 @@ const Nav = () => {
                   />
                 </svg>
               </button>
-              <MobileNav menuItems={menuItems} toggleMenu={toggleMenu} />
+              <MobileNav
+                menuItems={menuItems}
+                toggleMenu={toggleMenu}
+                mobileDropdownOpen={mobileDropdownOpen}
+                toggleMobileDropdown={toggleMobileDropdown}
+              />
             </div>
           </div>
         )}
@@ -144,6 +142,7 @@ const Nav = () => {
                 idx={idx}
                 dropdownOpen={dropdownOpen}
                 toggleDropdown={toggleDropdown}
+                dropdownRef={dropdownRef}
               />
             ))}
           </ul>
@@ -153,82 +152,127 @@ const Nav = () => {
   )
 }
 
-const NavItem = ({ item, idx, dropdownOpen, toggleDropdown }) => (
-  <li
-    className='relative group'
-    onMouseEnter={() => toggleDropdown(idx)}
-    onMouseLeave={() => toggleDropdown(null)}
-  >
-    <Link
-      href={item.href}
-      className='block py-2 px-3 text-white bg-slate-700 rounded bg-inherit md:bg-transparent md:text-slate-700 md:p-0 mt-0'
-      aria-current={item.href === '/' ? 'page' : undefined}
-    >
-      {item.title}
-      {item.subLinks && (
-        <svg
-          className={`w-4 h-4 ml-2 inline transition-transform duration-200 ${
-            dropdownOpen === idx ? 'rotate-180' : ''
-          }`}
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
+const NavItem = ({ item, idx, dropdownOpen, toggleDropdown, dropdownRef }) => (
+  <li className='relative group'>
+    {item.subLinks ? (
+      <div className='relative'>
+        {/* Main dropdown trigger */}
+        <button
+          className='flex items-center py-2 px-3 text-slate-700 md:p-0 mt-0 hover:text-blue-600 transition-colors'
+          onClick={() => toggleDropdown(idx)}
         >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth='2'
-            d='M19 9l-7 7-7-7'
-          />
-        </svg>
-      )}
-    </Link>
-    {dropdownOpen === idx && item.subLinks && (
-      <div className='absolute left-0 w-44 bg-white rounded-lg shadow-lg z-10 '>
-        <ul className='py-2 text-sm text-gray-700'>
-          {item.subLinks.map((subItem, subIdx) => (
-            <li key={subIdx}>
-              <Link
-                href={subItem.href}
-                className='block px-4 py-2 hover:bg-gray-100'
-              >
-                {subItem.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
+          {item.title}
+          <svg
+            className={`w-4 h-4 ml-2 inline transition-transform duration-200 ${
+              dropdownOpen === idx ? 'rotate-180' : ''
+            }`}
+            xmlns='http://www.w3.org/2000/svg'
+            fill='none'
+            viewBox='0 0 24 24'
+            stroke='currentColor'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              d='M19 9l-7 7-7-7'
+            />
+          </svg>
+        </button>
+
+        {/* Dropdown content */}
+        {dropdownOpen === idx && (
+          <div
+            ref={dropdownRef}
+            className='absolute left-0 top-full w-44 bg-white rounded-lg shadow-lg z-50 mt-1'
+          >
+            <ul className='py-2 text-sm text-gray-700'>
+              {item.subLinks.map((subItem, subIdx) => (
+                <li key={subIdx}>
+                  <Link
+                    href={subItem.href}
+                    className='block px-4 py-2 hover:bg-gray-100 w-full text-left'
+                    onClick={() => toggleDropdown(null)} // Close the dropdown when link is clicked
+                  >
+                    {subItem.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
+    ) : (
+      <Link
+        href={item.href}
+        className='block py-2 px-3 text-slate-700 rounded md:bg-transparent md:p-0 mt-0 hover:text-blue-600 transition-colors'
+      >
+        {item.title}
+      </Link>
     )}
   </li>
 )
 
-const MobileNav = ({ menuItems, toggleMenu }) => (
-  <div className='relative grid gap-6 rounded-md bg-white p-4'>
-    <nav className='grid grid-flow-row auto-rows-max text-sm'>
-      {menuItems.map((item, index) => (
-        <div key={index}>
+const MobileNav = ({
+  menuItems,
+  toggleMenu,
+  mobileDropdownOpen,
+  toggleMobileDropdown
+}) => (
+  <nav className='grid gap-2'>
+    {menuItems.map((item, index) => (
+      <div key={index} className='space-y-2'>
+        {item.subLinks ? (
+          <div>
+            <button
+              onClick={() => toggleMobileDropdown(index)}
+              className='flex w-full items-center justify-between p-2 text-sm font-medium hover:bg-gray-100 rounded-md'
+            >
+              <span>{item.title}</span>
+              <svg
+                className={`w-4 h-4 transition-transform ${
+                  mobileDropdownOpen === index ? 'rotate-180' : ''
+                }`}
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                stroke='currentColor'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
+            </button>
+            {mobileDropdownOpen === index && (
+              <div className='ml-4 space-y-2'>
+                {item.subLinks.map((subItem, subIndex) => (
+                  <Link
+                    key={subIndex}
+                    href={subItem.href}
+                    onClick={toggleMenu}
+                    className='block p-2 text-sm hover:bg-gray-100 rounded-md'
+                  >
+                    {subItem.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
           <Link
             href={item.href}
-            className='flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline'
             onClick={toggleMenu}
+            className='flex w-full items-center p-2 text-sm font-medium hover:bg-gray-100 rounded-md'
           >
             {item.title}
           </Link>
-          {item.subLinks &&
-            item.subLinks.map((subItem, subIndex) => (
-              <Link
-                key={subIndex}
-                href={subItem.href}
-                className='ml-4 flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline'
-              >
-                {subItem.title}
-              </Link>
-            ))}
-        </div>
-      ))}
-    </nav>
-  </div>
+        )}
+      </div>
+    ))}
+  </nav>
 )
 
 export default Nav
