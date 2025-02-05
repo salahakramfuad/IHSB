@@ -276,6 +276,24 @@ const UttaraSeniorSection = () => {
             </div>
           )}
         </section>
+        {/* Section: Google Map */}
+        <section className='container mx-auto px-4 sm:px-6 lg:px-8 mt-12'>
+          <h2 className='text-2xl font-semibold text-teal-600 text-center mb-6'>
+            Uttara Senior Section Location
+          </h2>
+          <div className='rounded-lg overflow-hidden shadow-lg'>
+            <iframe
+              src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.797609401391!2d90.39961447539362!3d23.861319578594895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c42256771bad%3A0x662d13081edbb710!2sInternational%20Hope%20School%20Bangladesh!5e0!3m2!1sen!2sbd!4v1738793777927!5m2!1sen!2sbd'
+              width='100%'
+              height='450'
+              style={{ border: 0 }}
+              allowFullScreen=''
+              loading='lazy'
+              referrerPolicy='no-referrer-when-downgrade'
+              title='Google Map Location'
+            ></iframe>
+          </div>
+        </section>
       </main>
     </div>
   )

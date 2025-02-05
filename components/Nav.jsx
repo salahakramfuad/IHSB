@@ -35,7 +35,8 @@ const Nav = () => {
           title: 'Uttara Senior Section',
           href: '/uttarasenior'
         },
-        { title: 'Uttara Junior Section', href: '/uttarajunior' }
+        { title: 'Uttara Junior Section', href: '/uttarajunior' },
+        { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
       ]
     },
     {
@@ -56,7 +57,7 @@ const Nav = () => {
     },
     {
       title: 'Contact',
-      href: '#',
+      href: '/contact',
       subLinks: [
         { title: 'Option 1', href: '/contact/option1' },
         { title: 'Option 2', href: '/contact/option2' }
