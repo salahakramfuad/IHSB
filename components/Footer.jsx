@@ -9,10 +9,7 @@ const Footer = () => {
         {/* Logo and Description */}
         <div className='sm:flex sm:justify-between mb-6'>
           <div className='w-full sm:w-2/5 mb-6 sm:mb-0 text-center sm:text-center lg:text-center'>
-            <Link
-              href='/app/page.jsx'
-              className='flex justify-center sm:justify-center '
-            >
+            <Link href='/' className='flex justify-center sm:justify-center '>
               <Image
                 src='/assets/images/logo.png'
                 alt='Logo'
