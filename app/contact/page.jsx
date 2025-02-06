@@ -1,9 +1,48 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 
 const ContactPage = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  })
+  const [status, setStatus] = useState(null)
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('loading')
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+
+      if (response.ok) {
+        setStatus('success')
+        setFormData({ name: '', email: '', message: '' }) // Clear form
+      } else {
+        setStatus('error')
+      }
+    } catch (error) {
+      setStatus('error')
+    }
+  }
+
   return (
     <main className='bg-gray-50 min-h-screen py-12'>
-      {/* Section: Contact Information */}
       <section className='container mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='max-w-4xl mx-auto text-center mb-12'>
           <h1 className='text-4xl font-bold text-teal-700 mb-4'>Contact Us</h1>
@@ -14,7 +53,6 @@ const ContactPage = () => {
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-          {/* Left Column: Contact Details */}
           <div className='space-y-6'>
             <div>
               <h2 className='text-2xl font-semibold text-teal-600 mb-2'>
@@ -56,12 +94,11 @@ const ContactPage = () => {
             </div>
           </div>
 
-          {/* Right Column: Contact Form */}
           <div className='bg-white p-6 rounded-lg shadow-lg'>
             <h2 className='text-2xl font-semibold text-teal-600 mb-4'>
               Send Us a Message
             </h2>
-            <form className='space-y-4'>
+            <form className='space-y-4' onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor='name'
@@ -73,8 +110,11 @@ const ContactPage = () => {
                   type='text'
                   id='name'
                   name='name'
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder='Your Name'
                   className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500'
+                  required
                 />
               </div>
               <div>
@@ -88,8 +128,11 @@ const ContactPage = () => {
                   type='email'
                   id='email'
                   name='email'
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder='your.email@example.com'
                   className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500'
+                  required
                 />
               </div>
               <div>
@@ -103,22 +146,35 @@ const ContactPage = () => {
                   id='message'
                   name='message'
                   rows='4'
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder='Write your message here...'
                   className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500'
+                  required
                 ></textarea>
               </div>
               <button
                 type='submit'
                 className='w-full bg-teal-600 text-white py-2 px-4 rounded-md hover:bg-teal-700 transition duration-300'
+                disabled={status === 'loading'}
               >
-                Submit
+                {status === 'loading' ? 'Sending...' : 'Submit'}
               </button>
             </form>
+            {status === 'success' && (
+              <p className='text-green-600 mt-2 text-center'>
+                Message sent successfully!
+              </p>
+            )}
+            {status === 'error' && (
+              <p className='text-red-600 mt-2 text-center'>
+                Failed to send message. Try again later.
+              </p>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Section: Google Map */}
       <section className='container mx-auto px-4 sm:px-6 lg:px-8 mt-12'>
         <h2 className='text-2xl font-semibold text-teal-600 text-center mb-6'>
           Our Location
