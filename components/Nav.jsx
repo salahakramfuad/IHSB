@@ -42,6 +42,13 @@ const Nav = () => {
       ]
     },
     {
+      title: 'Admissions',
+      subLinks: [
+        { title: 'Admission Procedure', href: '/admissionprocedure' },
+        { title: 'Fees', href: '/fees' }
+      ]
+    },
+    {
       title: 'About',
       subLinks: [
         { title: 'Option 1', href: '/about' },
@@ -50,10 +57,7 @@ const Nav = () => {
     },
     {
       title: 'Events',
-      subLinks: [
-        { title: 'Event 1', href: '/events/event1' },
-        { title: 'Option 2', href: '/events/option2' }
-      ]
+      href: '/events'
     },
     { title: 'Contact', href: '/contact' }
   ]

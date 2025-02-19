@@ -12,7 +12,7 @@ const HomePage = () => {
   return (
     <div className='bg-gray-100 w-full'>
       {/* Hero Section */}
-      <section className='relative text-orange-400 h-screen flex flex-col justify-center items-center text-center overflow-hidden'>
+      <section className='relative text-green-400 font-extrabold font-serif h-screen flex flex-col justify-center items-center text-center overflow-hidden'>
         {/* Background Image */}
         <div className='absolute inset-0 bg-[url(/assets/images/ihsb.png)] bg-cover bg-center bg-no-repeat'></div>
 
