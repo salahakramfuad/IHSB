@@ -46,7 +46,11 @@ const Nav = () => {
       title: 'Academics',
       subLinks: [
         { title: 'Curriculumn', href: '/academics/curriculumn' },
-        { title: 'Academic Calendar', href: '/academics/academiccalendar' }
+        { title: 'Academic Calendar', href: '/academics/calendar' },
+        {
+          title: 'Extracurricular Activities',
+          href: '/academics/extracurricular'
+        }
       ]
     },
     {
