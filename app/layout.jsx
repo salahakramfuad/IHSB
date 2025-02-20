@@ -1,7 +1,7 @@
-import '@styles/global.css'
-import Nav from '@components/Nav'
+import '/styles/global.css'
+import Nav from '/components/Nav'
 
-import Footer from '@components/Footer'
+import Footer from '/components/Footer'
 import Image from 'next/image'
 export const metadata = {
   title: 'IHSB',

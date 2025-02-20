@@ -49,7 +49,7 @@ const Nav = () => {
           title: 'Academic Achievements',
           href: '/achievements/academicachievement'
         },
-        { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
+        { title: 'Alumni', href: '/achievements/alumni' }
       ]
     },
     {
