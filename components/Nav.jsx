@@ -41,7 +41,17 @@ const Nav = () => {
         { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
       ]
     },
-    { title: 'Achievements', href: '/contact' },
+    {
+      title: 'Achievements',
+      subLinks: [
+        { title: '  Sports  ', href: '/achievements/sports' },
+        {
+          title: 'Academic Achievements',
+          href: '/achievements/academicachievement'
+        },
+        { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
+      ]
+    },
     {
       title: 'Academics',
       subLinks: [
@@ -50,6 +60,18 @@ const Nav = () => {
         {
           title: 'Extracurricular Activities',
           href: '/academics/extracurricular'
+        },
+        {
+          title: 'Clubs',
+          href: '/academics/clubs'
+        },
+        {
+          title: 'Scholarship',
+          href: '/academics/scholarship'
+        },
+        {
+          title: 'Publicstions',
+          href: '/academics/publication'
         }
       ]
     },
