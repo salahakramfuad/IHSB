@@ -7,7 +7,7 @@ const EventsPage = () => {
       <section className='text-center bg-blue-600 text-white py-8 px-4'>
         <h1 className='text-4xl font-bold'>Upcoming Events</h1>
         <p className='text-lg mt-2'>
-          Stay updated with the latest happenings at International Hope School
+          Stay updated with the latest events at International Hope School
           Bangladesh!
         </p>
       </section>

@@ -20,7 +20,7 @@ const AdmissionForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Form data submitted:', formData)
-    // Add form submission logic here
+    // Add form submission logic here huuhuhuhuhu
   }
 
   return (
