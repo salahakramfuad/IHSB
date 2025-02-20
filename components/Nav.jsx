@@ -41,6 +41,14 @@ const Nav = () => {
         { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
       ]
     },
+    { title: 'Achievements', href: '/contact' },
+    {
+      title: 'Academics',
+      subLinks: [
+        { title: 'Curriculumn', href: '/academics/curriculumn' },
+        { title: 'Academic Calendar', href: '/academics/academiccalendar' }
+      ]
+    },
     {
       title: 'Admissions',
       subLinks: [
@@ -76,9 +84,10 @@ const Nav = () => {
             height={60}
             className='object-contain'
           />
-          <span className='hidden md:block self-center text-2xl font-semibold whitespace-nowrap text-slate-800'>
-            International Hope School Bangladesh
-          </span>
+          <div className='hidden md:flex flex-col self-center text-xl font-semibold whitespace-nowrap text-slate-800'>
+            <span className='w-full text-center'>International Hope</span>
+            <span className='w-full text-center'>School Bangladesh</span>
+          </div>
         </Link>
         <button
           onClick={toggleMenu}
