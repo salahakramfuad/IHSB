@@ -9,7 +9,7 @@ const AlumniComponent = () => {
   ]
 
   const totalAlumni = alumniYearData.reduce((total, item) => {
-    const numericCount = parseInt(item.count.replace('+', ''), 10) //
+    const numericCount = parseInt(item.count.replace('+', ''), 10)
     return total + numericCount
   }, 0)
 
@@ -18,19 +18,19 @@ const AlumniComponent = () => {
       id: 1,
       name: 'John Doe',
       description: 'CEO at TechCorp',
-      imageUrl: 'public/assets/images/ihsb.jpg'
+      imageUrl: 'https://picsum.photos/seed/alumni1/150' // Alternative placeholder image
     },
     {
       id: 2,
       name: 'Jane Smith',
       description: 'Founder of InnovateX',
-      imageUrl: 'https://via.placeholder.com/150'
+      imageUrl: 'https://picsum.photos/seed/alumni2/150' // Alternative placeholder image
     },
     {
       id: 3,
       name: 'Alex Johnson',
       description: 'Lead Engineer at FutureTech',
-      imageUrl: 'https://via.placeholder.com/150'
+      imageUrl: 'https://picsum.photos/seed/alumni3/150' // Alternative placeholder image
     }
   ]
 
@@ -42,7 +42,7 @@ const AlumniComponent = () => {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae nisi nec nisi tincidunt...',
       content:
         'Full article content goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae nisi nec nisi tincidunt...',
-      imageUrl: 'public/assets/images/ihsb.jpg'
+      imageUrl: 'https://picsum.photos/seed/story1/300/200' // Alternative placeholder image
     },
     {
       id: 2,
@@ -51,7 +51,7 @@ const AlumniComponent = () => {
         'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae...',
       content:
         'Full article content goes here. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae...',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://picsum.photos/seed/story2/300/200' // Alternative placeholder image
     },
     {
       id: 3,
@@ -60,7 +60,7 @@ const AlumniComponent = () => {
         'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque...',
       content:
         'Full article content goes here. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque...',
-      imageUrl: 'https://via.placeholder.com/400x200'
+      imageUrl: 'https://picsum.photos/seed/story3/300/200' // Alternative placeholder image
     }
   ]
 

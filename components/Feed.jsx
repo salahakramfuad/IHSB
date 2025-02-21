@@ -87,7 +87,7 @@ const HomePage = () => {
             >
               <div className='w-full h-48 relative overflow-hidden rounded-t-lg mb-4'>
                 <Image
-                  src='/assets/images/lab.png'
+                  src='/assets/images/students.png'
                   alt='Laboratories'
                   layout='fill'
                   objectFit='cover'
@@ -108,7 +108,7 @@ const HomePage = () => {
             >
               <div className='w-full h-48 relative overflow-hidden rounded-t-lg mb-4'>
                 <Image
-                  src='/assets/images/library.png'
+                  src='/assets/images/students.png'
                   alt='Library'
                   layout='fill'
                   objectFit='cover'
@@ -137,7 +137,7 @@ const HomePage = () => {
             >
               <div className='w-full h-48 relative overflow-hidden rounded-t-lg mb-4'>
                 <Image
-                  src='/assets/images/auditorium.png'
+                  src='/assets/images/students.png'
                   alt='Auditorium'
                   layout='fill'
                   objectFit='cover'
@@ -158,7 +158,7 @@ const HomePage = () => {
             >
               <div className='w-full h-48 relative overflow-hidden rounded-t-lg mb-4'>
                 <Image
-                  src='/assets/images/football-field.png'
+                  src='/assets/images/students.png'
                   alt='Football Field'
                   layout='fill'
                   objectFit='cover'
@@ -180,7 +180,7 @@ const HomePage = () => {
             >
               <div className='w-full h-48 relative overflow-hidden rounded-t-lg mb-4'>
                 <Image
-                  src='/assets/images/gymnasium.png'
+                  src='/assets/images/students.png'
                   alt='Gymnasium'
                   layout='fill'
                   objectFit='cover'
