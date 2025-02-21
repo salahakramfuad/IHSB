@@ -84,10 +84,7 @@ const Nav = () => {
     },
     {
       title: 'About',
-      subLinks: [
-        { title: 'Option 1', href: '/about' },
-        { title: 'Home of ', href: '/about/option2' }
-      ]
+      href: '/about'
     },
     {
       title: 'Events',
