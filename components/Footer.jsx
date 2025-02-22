@@ -27,20 +27,29 @@ const Footer = () => {
             <h3 className='font-semibold mb-4 text-center sm:text-left'>
               Quick Links
             </h3>
-            <div className='flex flex-col space-y-2'>
-              <Link href='/' className='text-gray-400 hover:text-white'>
-                Home
-              </Link>
-              <Link href='/about' className='text-gray-400 hover:text-white'>
-                About
-              </Link>
-              <Link href='/events' className='text-gray-400 hover:text-white'>
-                Events
-              </Link>
-            </div>
+            <ul className='text-gray-400 text-center sm:text-left space-y-2'>
+              <li>
+                <Link href='/about' className='hover:underline'>
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href='/admissions' className='hover:underline'>
+                  Admissions
+                </Link>
+              </li>
+              <li>
+                <Link href='/academics' className='hover:underline'>
+                  Academics
+                </Link>
+              </li>
+              <li>
+                <Link href='/contact' className='hover:underline'>
+                  Contact
+                </Link>
+              </li>
+            </ul>
           </div>
-
-          {/* Contact Information */}
           <div className='w-full sm:w-2/5 mb-6 sm:mb-0'>
             <h3 className='font-semibold mb-4 text-center sm:text-left'>
               Contact Information
