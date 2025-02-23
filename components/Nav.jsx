@@ -78,8 +78,9 @@ const Nav = () => {
     {
       title: 'Admissions',
       subLinks: [
-        { title: 'Admission Procedure', href: '/admissionprocedure' },
-        { title: 'Fees', href: '/fees' }
+        { title: 'Admission Procedure', href: '/admission/admissionprocedure' },
+        { title: 'Fees', href: '/admission/fees' },
+        { title: 'Apply Online', href: '/admission/apply' }
       ]
     },
     {
