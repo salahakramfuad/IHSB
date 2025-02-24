@@ -46,46 +46,30 @@ const Clubs = () => {
           </p>
         </header>
 
-        {/* Description */}
         <div className='mb-12 text-gray-700 space-y-4'>
           <p>
-            Working closely with friends, having fun, and learning new things
-            about yourself, your peers, community, and the world can all happen
-            in IHSB Clubs. Our clubs have a significant impact on many
-            whole-school priorities such as behavior, attendance, and
-            attainment. IHSB Clubs also provide a means of developing a sense of
-            belonging, confidence, and competence in young people that can
-            translate to other aspects of school life and priorities, such as
-            special educational needs.
+            IHSB Clubs offer fun, learning, and personal growth. They impact
+            behavior, attendance, and achievement, fostering a sense of
+            belonging and confidence.
           </p>
           <p>
-            Int’l Hope School Bangladesh students participate in a variety of
-            teams and clubs during the school year. Involvement in these
-            activities does require a time commitment and enthusiasm,
-            nevertheless, they are a very rewarding and important part of school
-            life at IHSB. All students are encouraged to make a difference to
-            the school with their ideas and their involvement. The running of
-            any club or activity is contingent upon student interest.
+            Students engage in various teams and clubs, requiring commitment and
+            enthusiasm. These activities are rewarding and vital to school life,
+            encouraging student involvement and ideas.
           </p>
           <p>
-            Our purpose is to provide co-curricular organizations and activities
-            to permit all interested students an opportunity to participate.
+            Our goal is to provide co-curricular opportunities for all
+            interested students.
           </p>
           <p>
-            There are numerous clubs that focus on sports, art, dance, and other
-            areas to attract active young people and inspire them to participate
-            in a range of alternative clubs. We aim to:
+            We offer clubs in sports, art, dance, and more to inspire active
+            participation. Our aims include:
           </p>
           <ul className='list-disc list-inside pl-5'>
-            <li>Make use of underutilized school facilities more.</li>
-            <li>
-              Change the attitudes of different-aged pupils towards being
-              healthy and active in their everyday lives.
-            </li>
+            <li>Utilizing school facilities more effectively.</li>
+            <li>Promoting healthy, active lifestyles among students.</li>
           </ul>
         </div>
-
-        {/* Clubs Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
           {clubs.map((club, index) => (
             <div
@@ -97,7 +81,6 @@ const Clubs = () => {
             </div>
           ))}
         </div>
-
         {/* Footer Note */}
         <p className='text-center text-gray-600 mt-8 text-sm'>
           * Clubs may vary from one branch to another.

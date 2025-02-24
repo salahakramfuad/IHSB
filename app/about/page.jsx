@@ -46,7 +46,7 @@ const AboutPage = () => {
       >
         <div className='section-header text-center mb-10'>
           <h2 className='text-3xl font-extrabold text-teal-700 hover:text-teal-500'>
-            Mission & Vision of IHS
+            Mission & Vision of IHSB
           </h2>
         </div>
         <div className='section-content text-lg text-gray-700 max-w-4xl mx-auto'>
