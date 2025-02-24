@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import AOS from 'aos'
 import Image from 'next/image'
 import 'aos/dist/aos.css'
+import Link from 'next/link'
 
 const HomePage = () => {
   useEffect(() => {
@@ -208,12 +209,14 @@ const HomePage = () => {
           <p className='text-lg mb-8'>
             Admission for the 2024-2025 session is now open!
           </p>
-          <button
-            className='bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-300'
-            data-aos='zoom-in'
-          >
-            Apply Now
-          </button>
+          <Link href='/admission/apply'>
+            <button
+              className='bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors duration-300'
+              data-aos='zoom-in'
+            >
+              Apply Now
+            </button>
+          </Link>
         </div>
       </section>
     </div>
