@@ -19,6 +19,13 @@ export async function POST(req) {
       text: `From: ${name} (${email})\n\n${message}`
     })
 
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Thank you for contacting us',
+      text: `Hi ${name},\n\nThank you for reaching out to us. We have received your message and will get back to you shortly.\n\nBest regards,\nInternational Hope School Bangladesh`
+    })
+
     return new Response(JSON.stringify({ success: true }), { status: 200 })
   } catch (error) {
     console.error('Error sending email:', error)
