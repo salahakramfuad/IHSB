@@ -112,10 +112,11 @@ const AdmissionForm = () => {
     ...rest
   }) => (
     <div className='mb-4'>
-      <label className='block text-sm font-medium text-gray-700'>
+      <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <input
+        id={name}
         type={type}
         {...register(name)}
         className={`mt-1 block w-full p-2 border ${
@@ -131,10 +132,11 @@ const AdmissionForm = () => {
 
   const FormSelect = ({ label, name, options, required = false }) => (
     <div className='mb-4'>
-      <label className='block text-sm font-medium text-gray-700'>
+      <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <select
+        id={name}
         {...register(name)}
         className={`mt-1 block w-full p-2 border ${
           errors[name] ? 'border-red-500' : 'border-gray-300'
@@ -155,10 +157,11 @@ const AdmissionForm = () => {
 
   const FormFileInput = ({ label, name, accept, required = false }) => (
     <div className='mb-4'>
-      <label className='block text-sm font-medium text-gray-700'>
+      <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <input
+        id={name}
         type='file'
         accept={accept}
         {...register(name)}
@@ -171,8 +174,9 @@ const AdmissionForm = () => {
   )
 
   const FormCheckbox = ({ label, name }) => (
-    <label className='inline-flex items-center mt-3'>
+    <label htmlFor={name} className='inline-flex items-center mt-3'>
       <input
+        id={name}
         type='checkbox'
         {...register(name)}
         className='form-checkbox h-4 w-4 text-blue-600'
@@ -207,10 +211,11 @@ const AdmissionForm = () => {
 
   const FormTextarea = ({ label, name, required = false }) => (
     <div className='mb-4'>
-      <label className='block text-sm font-medium text-gray-700'>
+      <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <textarea
+        id={name}
         {...register(name)}
         rows='3'
         className={`mt-1 block w-full p-2 border ${
@@ -491,6 +496,27 @@ const AdmissionForm = () => {
             name='paymentReference'
             required
           />
+        </section>
+
+        {/* ReCAPTCHA */}
+        <section>
+          <Controller
+            name='recaptcha'
+            control={control}
+            render={({ field }) => (
+              <ReCAPTCHA
+                sitekey='YOUR_RECAPTCHA_SITE_KEY'
+                onChange={(value) => field.onChange(value)}
+                onExpired={() => field.onChange('')}
+                key={recaptchaKey}
+              />
+            )}
+          />
+          {errors.recaptcha && (
+            <p className='mt-1 text-sm text-red-500'>
+              {errors.recaptcha.message}
+            </p>
+          )}
         </section>
 
         {/* Submit Button */}
