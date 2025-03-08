@@ -74,6 +74,7 @@ const AdmissionForm = () => {
   })
 
   const [recaptchaKey, setRecaptchaKey] = useState(Date.now())
+  const [currentStep, setCurrentStep] = useState(1)
   const onMedication = watch('onMedication')
 
   const onSubmit = async (data) => {
@@ -111,7 +112,7 @@ const AdmissionForm = () => {
     required = false,
     ...rest
   }) => (
-    <div className='mb-4'>
+    <div className='mb-4' style={{ zIndex: 10 }}>
       <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
@@ -131,7 +132,7 @@ const AdmissionForm = () => {
   )
 
   const FormSelect = ({ label, name, options, required = false }) => (
-    <div className='mb-4'>
+    <div className='mb-4' style={{ zIndex: 10 }}>
       <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
@@ -156,7 +157,7 @@ const AdmissionForm = () => {
   )
 
   const FormFileInput = ({ label, name, accept, required = false }) => (
-    <div className='mb-4'>
+    <div className='mb-4' style={{ zIndex: 10 }}>
       <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
@@ -174,7 +175,11 @@ const AdmissionForm = () => {
   )
 
   const FormCheckbox = ({ label, name }) => (
-    <label htmlFor={name} className='inline-flex items-center mt-3'>
+    <label
+      htmlFor={name}
+      className='inline-flex items-center mt-3'
+      style={{ zIndex: 10 }}
+    >
       <input
         id={name}
         type='checkbox'
@@ -186,7 +191,7 @@ const AdmissionForm = () => {
   )
 
   const FormRadioGroup = ({ label, name, options, required = false }) => (
-    <div className='mb-4'>
+    <div className='mb-4' style={{ zIndex: 10 }}>
       <label className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
@@ -210,7 +215,7 @@ const AdmissionForm = () => {
   )
 
   const FormTextarea = ({ label, name, required = false }) => (
-    <div className='mb-4'>
+    <div className='mb-4' style={{ zIndex: 10 }}>
       <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
         {label} {required && <span className='text-red-500'>*</span>}
       </label>
@@ -229,7 +234,7 @@ const AdmissionForm = () => {
   )
 
   const FormCheckboxGroup = ({ label, options }) => (
-    <div className='mb-4'>
+    <div className='mb-4' style={{ zIndex: 10 }}>
       <label className='block text-sm font-medium text-gray-700'>{label}</label>
       <div className='flex flex-wrap gap-4 mt-2'>
         {options.map((option) => (
@@ -244,24 +249,20 @@ const AdmissionForm = () => {
   )
 
   const SiblingFields = ({ prefix }) => (
-    <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+    <div
+      className='grid grid-cols-1 md:grid-cols-3 gap-4'
+      style={{ zIndex: 10 }}
+    >
       <FormInput label='Name' name={`${prefix}Name`} />
       <FormInput label='IHSB No' name={`${prefix}IHSBNo`} />
       <FormInput label='Class' name={`${prefix}Class`} />
     </div>
   )
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className='max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg'
-    >
-      <h1 className='text-2xl font-bold text-center mb-6'>
-        ADMISSION APPLICATION FORM
-      </h1>
-
-      <div className='space-y-8'>
-        {/* School Information */}
+  const steps = [
+    {
+      title: 'School Information',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>School Information</h2>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
@@ -282,8 +283,11 @@ const AdmissionForm = () => {
             />
           </div>
         </section>
-
-        {/* Student Information */}
+      )
+    },
+    {
+      title: 'Student Information',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>Student Information</h2>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -345,8 +349,11 @@ const AdmissionForm = () => {
             <FormInput label='Passport (If any)' name='passport' />
           </div>
         </section>
-
-        {/* Address Information */}
+      )
+    },
+    {
+      title: 'Address Information',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>Address Information</h2>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -362,8 +369,11 @@ const AdmissionForm = () => {
             />
           </div>
         </section>
-
-        {/* Parent Information */}
+      )
+    },
+    {
+      title: 'Parent Information',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>Parent Information</h2>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -381,8 +391,11 @@ const AdmissionForm = () => {
             <FormInput label="Mother's Email" name='motherEmail' type='email' />
           </div>
         </section>
-
-        {/* Document Uploads */}
+      )
+    },
+    {
+      title: 'Document Uploads',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>Document Uploads</h2>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -415,8 +428,11 @@ const AdmissionForm = () => {
             />
           </div>
         </section>
-
-        {/* Additional Information */}
+      )
+    },
+    {
+      title: 'Additional Information',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>Additional Information</h2>
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -487,8 +503,11 @@ const AdmissionForm = () => {
             name='otherRelevantInfo'
           />
         </section>
-
-        {/* Payment Information */}
+      )
+    },
+    {
+      title: 'Payment Information',
+      content: (
         <section>
           <h2 className='text-xl font-semibold mb-4'>Payment Information</h2>
           <FormInput
@@ -497,8 +516,11 @@ const AdmissionForm = () => {
             required
           />
         </section>
-
-        {/* ReCAPTCHA */}
+      )
+    },
+    {
+      title: 'ReCAPTCHA',
+      content: (
         <section>
           <Controller
             name='recaptcha'
@@ -518,15 +540,59 @@ const AdmissionForm = () => {
             </p>
           )}
         </section>
+      )
+    }
+  ]
 
-        {/* Submit Button */}
-        <button
-          type='submit'
-          disabled={isSubmitting}
-          className='w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed'
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Application'}
-        </button>
+  const nextStep = () => {
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length))
+  }
+
+  const prevStep = () => {
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1))
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className='max-w-4xl mx-auto p-6 bg-gray-200 shadow-lg rounded-lg'
+    >
+      <h1 className='text-2xl font-bold text-center mb-6'>
+        ADMISSION APPLICATION FORM
+      </h1>
+
+      <div className='space-y-8'>
+        {steps[currentStep - 1].content}
+
+        <div className='flex justify-between'>
+          {currentStep > 1 && (
+            <button
+              type='button'
+              onClick={prevStep}
+              className='py-2 px-4 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 z-10'
+            >
+              Previous
+            </button>
+          )}
+          {currentStep < steps.length && (
+            <button
+              type='button'
+              onClick={nextStep}
+              className='py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-10'
+            >
+              Next
+            </button>
+          )}
+          {currentStep === steps.length && (
+            <button
+              type='submit'
+              disabled={isSubmitting}
+              className='py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed'
+            >
+              {isSubmitting ? 'Submitting...' : 'Submit Application'}
+            </button>
+          )}
+        </div>
       </div>
     </form>
   )
