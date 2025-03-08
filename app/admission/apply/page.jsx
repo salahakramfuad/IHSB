@@ -1,11 +1,11 @@
 'use client'
 import React from 'react'
-import OnlineApplication from 'components/OnlineApplication.jsx'
+import Form from 'components/Form'
 
 const ApplyOnline = () => {
   return (
     <div>
-      <OnlineApplication />
+      <Form />
     </div>
   )
 }
