@@ -22,8 +22,12 @@ const SchoolInformation = ({ register, errors, control }) => {
             style={{ zIndex: 20 }} // Ensure dropdown is above other elements
           >
             <option value=''>Select Branch</option>
-            <option value='Branch A'>Branch A</option>
-            <option value='Branch B'>Branch B</option>
+            <option value='Branch A'>
+              Uttara PreSchool and Junior Section
+            </option>
+            <option value='Branch B'>Gulshan Section</option>
+            <option value='Branch B'>Chittagong Section</option>
+            <option value='Branch B'>Urtara Senior Section</option>
           </select>
           {errors.branch && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
@@ -74,6 +78,7 @@ const SchoolInformation = ({ register, errors, control }) => {
               errors.applicationNumber ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
             style={{ zIndex: 20 }} // Ensure input is above other elements
+            readOnly
           />
           {errors.applicationNumber && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>

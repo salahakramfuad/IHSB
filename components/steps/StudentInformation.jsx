@@ -5,30 +5,6 @@ const StudentInformation = ({ register, errors }) => {
     <section>
       <h2 className='text-xl font-semibold mb-4'>Student Information</h2>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-        {/* Surname Field */}
-        <div className='mb-4 relative z-10'>
-          <label
-            htmlFor='surname'
-            className='block text-sm font-medium text-gray-700 cursor-pointer'
-          >
-            Surname <span className='text-red-500'>*</span>
-          </label>
-          <input
-            id='surname'
-            type='text'
-            {...register('surname')}
-            className={`mt-1 block w-full p-2 border ${
-              errors.surname ? 'border-red-500' : 'border-gray-300'
-            } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
-          />
-          {errors.surname && (
-            <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.surname.message}
-            </p>
-          )}
-        </div>
-
         {/* Student Name Field */}
         <div className='mb-4 relative z-10'>
           <label
@@ -52,7 +28,29 @@ const StudentInformation = ({ register, errors }) => {
             </p>
           )}
         </div>
-
+        {/* Surname Field */}
+        <div className='mb-4 relative z-10'>
+          <label
+            htmlFor='surname'
+            className='block text-sm font-medium text-gray-700 cursor-pointer'
+          >
+            Surname <span className='text-red-500'>*</span>
+          </label>
+          <input
+            id='surname'
+            type='text'
+            {...register('surname')}
+            className={`mt-1 block w-full p-2 border ${
+              errors.surname ? 'border-red-500' : 'border-gray-300'
+            } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
+            style={{ zIndex: 20 }} // Ensure input is above other elements
+          />
+          {errors.surname && (
+            <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
+              {errors.surname.message}
+            </p>
+          )}
+        </div>
         {/* Date of Birth Field */}
         <div className='mb-4 relative z-10'>
           <label

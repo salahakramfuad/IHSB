@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import ReCAPTCHA from 'react-google-recaptcha'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 
 // Step Components
 import SchoolInformation from 'components/steps/SchoolInformation.jsx'
@@ -15,60 +14,42 @@ import PaymentInformation from 'components/steps/PaymentInformation.jsx'
 import ReCAPTCHAStep from 'components/steps/ReCAPTCHAStep.jsx'
 
 // Validation Schema
-const admissionSchema = yup.object().shape({
-  // School Information
-  branch: yup.string().required('Branch is required'),
-  academicYear: yup.string().required('Academic year is required'),
-  applicationNumber: yup.string().required('Application number is required'),
+const admissionSchema = z.object({
+  branch: z.string().min(1, 'Branch is required'),
+  academicYear: z.string().min(1, 'Academic year is required'),
+  applicationNumber: z.string().min(1, 'Application number is required'),
 
-  // Student Information
-  surname: yup.string().required('Surname is required'),
-  studentName: yup.string().required('Student name is required'),
-  dateOfBirth: yup.date().required('Date of birth is required'),
-  gender: yup.string().required('Gender is required'),
-  religion: yup.string(),
-  nationality: yup.string().required('Nationality is required'),
-  classAppliedFor: yup.string().required('Class applied for is required'),
-  bloodGroup: yup.string(),
-  passport: yup.string(),
+  surname: z.string().min(1, 'Surname is required'),
+  studentName: z.string().min(1, 'Student name is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required'),
+  gender: z.string().min(1, 'Gender is required'),
+  nationality: z.string().min(1, 'Nationality is required'),
+  classAppliedFor: z.string().min(1, 'Class applied for is required'),
 
-  // Address Information
-  presentAddress: yup.string().required('Present address is required'),
-  permanentAddress: yup.string().required('Permanent address is required'),
+  presentAddress: z.string().min(1, 'Present address is required'),
+  permanentAddress: z.string().min(1, 'Permanent address is required'),
 
-  // Parent Information
-  fatherName: yup.string().required("Father's name is required"),
-  fatherOccupation: yup.string(),
-  fatherContact: yup.string().required("Father's contact is required"),
-  fatherEmail: yup.string().email('Invalid email format'),
-  motherName: yup.string(),
-  motherOccupation: yup.string(),
-  motherContact: yup.string(),
-  motherEmail: yup.string().email('Invalid email format'),
+  fatherName: z.string().min(1, "Father's name is required"),
+  fatherContact: z.string().min(1, "Father's contact is required"),
+  fatherEmail: z.string().email('Invalid email format').optional(),
+  motherEmail: z.string().email('Invalid email format').optional(),
 
-  // Medical Information
-  onMedication: yup.boolean(),
-  medicationName: yup.string().when('onMedication', {
-    is: true,
-    then: yup
-      .string()
-      .required('Medication name is required when on medication')
-  }),
+  onMedication: z.boolean(),
+  medicationName: z
+    .string()
+    .optional()
+    .refine((val, ctx) => {
+      return ctx.data.onMedication ? val && val.length > 0 : true
+    }, 'Medication name is required when on medication'),
 
-  // Documents
-  studentPhoto: yup.mixed().required('Student photo is required'),
-  birthCertificateImage: yup.mixed().required('Birth certificate is required'),
-  lastYearReportCardImage: yup.mixed(),
-  passportImage: yup.mixed(),
-  visitingCardImage: yup.mixed(),
+  studentPhoto: z.any(),
+  birthCertificateImage: z.any(),
+  lastYearReportCardImage: z.any().optional(),
+  passportImage: z.any().optional(),
+  visitingCardImage: z.any().optional(),
 
-  // Additional Information
-  lastSchoolAttended: yup.string(),
-  languageSpokenAtHome: yup.string(),
-  studentLivingWith: yup.string(),
-  allergiesOrSpecialNeeds: yup.string(),
-  paymentReference: yup.string().required('Payment reference is required'),
-  recaptcha: yup.string().required('Captcha is required')
+  paymentReference: z.string().min(1, 'Payment reference is required'),
+  recaptcha: z.string().min(1, 'Captcha is required')
 })
 
 const AdmissionForm = () => {
@@ -79,45 +60,37 @@ const AdmissionForm = () => {
     watch,
     formState: { errors, isSubmitting }
   } = useForm({
-    resolver: yupResolver(admissionSchema),
+    resolver: zodResolver(admissionSchema),
     mode: 'onBlur'
   })
 
   const [currentStep, setCurrentStep] = useState(1)
   const onMedication = watch('onMedication')
 
-  // Steps Configuration
   const steps = [
     {
       title: 'School Information',
       component: (
-        <SchoolInformation
-          register={register}
-          errors={errors}
-          control={control}
-        />
+        <>
+          <SchoolInformation
+            register={register}
+            errors={errors}
+            control={control}
+          />
+          <StudentInformation
+            register={register}
+            errors={errors}
+            control={control}
+          />
+          <AddressInformation
+            register={register}
+            errors={errors}
+            control={control}
+          />
+        </>
       )
     },
-    {
-      title: 'Student Information',
-      component: (
-        <StudentInformation
-          register={register}
-          errors={errors}
-          control={control}
-        />
-      )
-    },
-    {
-      title: 'Address Information',
-      component: (
-        <AddressInformation
-          register={register}
-          errors={errors}
-          control={control}
-        />
-      )
-    },
+
     {
       title: 'Parent Information',
       component: (
@@ -165,20 +138,12 @@ const AdmissionForm = () => {
     }
   ]
 
-  // Navigation Functions
-  const nextStep = () => {
+  const nextStep = () =>
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length))
-  }
+  const prevStep = () => setCurrentStep((prevStep) => Math.max(prevStep - 1, 1))
 
-  const prevStep = () => {
-    setCurrentStep((prevStep) => Math.max(prevStep - 1, 1))
-  }
-
-  // Form Submission
   const onSubmit = async (data) => {
     const formData = new FormData()
-
-    // Append all form data
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof FileList) {
         formData.append(key, value[0])
@@ -188,12 +153,10 @@ const AdmissionForm = () => {
     })
 
     try {
-      // Submit to API
       const response = await fetch('/api/admissions', {
         method: 'POST',
         body: formData
       })
-
       if (!response.ok) throw new Error('Submission failed')
       alert('Form submitted successfully!')
     } catch (error) {
@@ -205,22 +168,18 @@ const AdmissionForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className='max-w-4xl mx-auto p-6 bg-gray-200 shadow-lg rounded-lg'
+      className='max-w-4xl mx-auto p-6 shadow-lg rounded-lg'
     >
       <h1 className='text-2xl font-bold text-center mb-6'>
         ADMISSION APPLICATION FORM
       </h1>
-
-      {/* Current Step Content */}
       <div className='space-y-8'>{steps[currentStep - 1].component}</div>
-
-      {/* Navigation Buttons */}
       <div className='flex justify-between mt-8'>
         {currentStep > 1 && (
           <button
             type='button'
             onClick={prevStep}
-            className='py-2 px-4 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 z-10'
+            className='py-2 px-4 bg-gray-500 text-white rounded-md hover:bg-gray-600 z-10'
           >
             Previous
           </button>
@@ -229,7 +188,7 @@ const AdmissionForm = () => {
           <button
             type='button'
             onClick={nextStep}
-            className='py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 z-10'
+            className='py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 z-10'
           >
             Next
           </button>
@@ -238,7 +197,7 @@ const AdmissionForm = () => {
           <button
             type='submit'
             disabled={isSubmitting}
-            className='py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed'
+            className='py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400'
           >
             {isSubmitting ? 'Submitting...' : 'Submit Application'}
           </button>
