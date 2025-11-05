@@ -2,314 +2,322 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-const Nav = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(null)
-  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(null)
-  const dropdownRef = useRef(null)
+export default function Nav() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [dropdownOpenIdx, setDropdownOpenIdx] = useState(null)
+  const [mobileDropdownOpenIdx, setMobileDropdownOpenIdx] = useState(null)
 
-  const toggleMenu = () => setIsOpen(!isOpen)
+  const navRef = useRef(null)
+  const drawerRef = useRef(null)
 
-  const toggleDropdown = (index) => {
-    setDropdownOpen(dropdownOpen === index ? null : index)
-  }
+  const menuItems = useMemo(
+    () => [
+      { title: 'Home', href: '/' },
+      {
+        title: 'Branches',
+        subLinks: [
+          { title: 'Uttara Senior Section', href: '/uttarasenior' },
+          { title: 'Uttara Junior Section', href: '/uttarajunior' },
+          { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
+        ]
+      },
+      {
+        title: 'Achievements',
+        subLinks: [
+          { title: '  Sports  ', href: '/achievements/sports' },
+          {
+            title: 'Academic Achievements',
+            href: '/achievements/academicachievement'
+          },
+          { title: 'Alumni', href: '/achievements/alumni' }
+        ]
+      },
+      {
+        title: 'Academics',
+        subLinks: [
+          { title: 'Curriculumn', href: '/academics/curriculumn' },
+          { title: 'Academic Calendar', href: '/academics/calendar' },
+          {
+            title: 'Extracurricular Activities',
+            href: '/academics/extracurricular'
+          },
+          { title: 'Clubs', href: '/academics/clubs' },
+          { title: 'Scholarship', href: '/academics/scholarship' },
+          { title: 'Publicstions', href: '/academics/publication' }
+        ]
+      },
+      {
+        title: 'Admissions',
+        subLinks: [
+          {
+            title: 'Admission Procedure',
+            href: '/admission/admissionprocedure'
+          },
+          { title: 'Fees', href: '/admission/fees' },
+          { title: 'Apply Online', href: '/admission/apply' }
+        ]
+      },
+      { title: 'About', href: '/about' },
+      { title: 'Events', href: '/events' },
+      { title: 'Contact', href: '/contact' }
+    ],
+    []
+  )
 
-  const toggleMobileDropdown = (index) => {
-    setMobileDropdownOpen(mobileDropdownOpen === index ? null : index)
-  }
-
+  // Close on outside click (dropdowns + drawer) & on Escape
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(null)
+    const onDocMouseDown = (e) => {
+      const t = e.target
+      const insideNav = navRef.current && navRef.current.contains(t)
+      const insideDrawer = drawerRef.current && drawerRef.current.contains(t)
+      if (!insideNav) setDropdownOpenIdx(null)
+      if (isDrawerOpen && !insideDrawer) setIsDrawerOpen(false)
+    }
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setDropdownOpenIdx(null)
+        setIsDrawerOpen(false)
       }
     }
+    document.addEventListener('mousedown', onDocMouseDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDocMouseDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [isDrawerOpen])
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  // Lock body scroll while drawer is open
+  useEffect(() => {
+    if (!isDrawerOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [isDrawerOpen])
 
-  const menuItems = [
-    { title: 'Home', href: '/' },
-    {
-      title: 'Branches',
-      subLinks: [
-        { title: 'Uttara Senior Section', href: '/uttarasenior' },
-        { title: 'Uttara Junior Section', href: '/uttarajunior' },
-        { title: 'Gulshan Primary & Middle Section', href: '/gulshanbranch' }
-      ]
-    },
-    {
-      title: 'Achievements',
-      subLinks: [
-        { title: '  Sports  ', href: '/achievements/sports' },
-        {
-          title: 'Academic Achievements',
-          href: '/achievements/academicachievement'
-        },
-        { title: 'Alumni', href: '/achievements/alumni' }
-      ]
-    },
-    {
-      title: 'Academics',
-      subLinks: [
-        { title: 'Curriculumn', href: '/academics/curriculumn' },
-        { title: 'Academic Calendar', href: '/academics/calendar' },
-        {
-          title: 'Extracurricular Activities',
-          href: '/academics/extracurricular'
-        },
-        {
-          title: 'Clubs',
-          href: '/academics/clubs'
-        },
-        {
-          title: 'Scholarship',
-          href: '/academics/scholarship'
-        },
-        {
-          title: 'Publicstions',
-          href: '/academics/publication'
-        }
-      ]
-    },
-    {
-      title: 'Admissions',
-      subLinks: [
-        { title: 'Admission Procedure', href: '/admission/admissionprocedure' },
-        { title: 'Fees', href: '/admission/fees' },
-        { title: 'Apply Online', href: '/admission/apply' }
-      ]
-    },
-    {
-      title: 'About',
-      href: '/about'
-    },
-    {
-      title: 'Events',
-      href: '/events'
-    },
-    { title: 'Contact', href: '/contact' }
-  ]
+  const toggleDropdown = (idx) => {
+    setDropdownOpenIdx((prev) => (prev === idx ? null : idx))
+  }
+  const toggleMobileDropdown = (idx) => {
+    setMobileDropdownOpenIdx((prev) => (prev === idx ? null : idx))
+  }
 
   return (
-    <nav className='bg-slate-50 border-gray-200'>
-      <div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
-        <Link
-          href='/'
-          className='flex items-center space-x-3 rtl:space-x-reverse'
-        >
+    <nav ref={navRef} className='bg-slate-50 border-b border-gray-200'>
+      <div className='mx-auto max-w-screen-xl flex items-center justify-between p-4'>
+        <Link href='/' className='flex items-center gap-3'>
           <Image
             src='/assets/images/logo.png'
             alt='Logo'
             width={60}
             height={60}
+            priority
             className='object-contain'
           />
-          <div className='hidden md:flex flex-col self-center text-xl font-semibold whitespace-nowrap text-slate-800'>
-            <span className='w-full text-center'>International Hope</span>
-            <span className='w-full text-center'>School Bangladesh</span>
+          <div className='hidden md:flex flex-col text-xl font-semibold text-slate-800 leading-tight'>
+            <span className='text-center'>International Hope</span>
+            <span className='text-center'>School Bangladesh</span>
           </div>
         </Link>
+
+        {/* Mobile burger */}
         <button
-          onClick={toggleMenu}
-          className='inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200'
-          aria-controls='navbar-multi-level'
-          aria-expanded={isOpen ? 'true' : 'false'}
+          onClick={() => setIsDrawerOpen(true)}
+          className='md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-600 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-300'
+          aria-controls='mobile-drawer'
+          aria-expanded={isDrawerOpen}
+          aria-label='Open main menu'
         >
-          <span className='sr-only'>Open main menu</span>
           <svg
             className='w-5 h-5'
-            aria-hidden='true'
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
             viewBox='0 0 17 14'
+            fill='none'
+            xmlns='http://www.w3.org/2000/svg'
           >
             <path
+              d='M1 1h15M1 7h15M1 13h15'
               stroke='currentColor'
+              strokeWidth='2'
               strokeLinecap='round'
               strokeLinejoin='round'
-              strokeWidth='2'
-              d='M1 1h15M1 7h15M1 13h15'
             />
           </svg>
         </button>
-        {isOpen && (
-          <div className='fixed inset-0 z-40'>
-            <div className='fixed top-0 right-0 w-2/4 max-w-sm h-full bg-slate-300 shadow-lg z-50 p-4'>
-              <button
-                onClick={toggleMenu}
-                className='text-gray-500 hover:bg-gray-200 rounded p-2 mb-4'
-              >
-                <svg
-                  className='w-6 h-6'
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  stroke='currentColor'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    d='M6 18L18 6M6 6l12 12'
-                  />
-                </svg>
-              </button>
-              <MobileNav
-                menuItems={menuItems}
-                toggleMenu={toggleMenu}
-                mobileDropdownOpen={mobileDropdownOpen}
-                toggleMobileDropdown={toggleMobileDropdown}
-              />
-            </div>
-          </div>
-        )}
-        <div
-          className='hidden w-full md:block md:w-auto mt-0'
-          id='navbar-multi-level'
-        >
-          <ul className='flex flex-col font-medium p-4 md:p-0 border border-gray-100 rounded-lg bg-inherit md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-inherit'>
+
+        {/* Desktop menu */}
+        <div className='hidden md:block'>
+          <ul className='flex items-center gap-6'>
             {menuItems.map((item, idx) => (
-              <NavItem
-                key={idx}
-                item={item}
-                idx={idx}
-                dropdownOpen={dropdownOpen}
-                toggleDropdown={toggleDropdown}
-                dropdownRef={dropdownRef}
-              />
+              <li key={idx} className='relative'>
+                {item.subLinks ? (
+                  <>
+                    <button
+                      className='flex items-center gap-2 py-2 px-1 text-slate-700 hover:text-blue-600 transition-colors'
+                      aria-haspopup='menu'
+                      aria-expanded={dropdownOpenIdx === idx}
+                      onClick={() => toggleDropdown(idx)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          toggleDropdown(idx)
+                        }
+                      }}
+                    >
+                      {item.title}
+                      <svg
+                        className={`w-4 h-4 transition-transform ${
+                          dropdownOpenIdx === idx ? 'rotate-180' : ''
+                        }`}
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        xmlns='http://www.w3.org/2000/svg'
+                      >
+                        <path
+                          d='M19 9l-7 7-7-7'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                    </button>
+                    {dropdownOpenIdx === idx && (
+                      <div
+                        role='menu'
+                        className='absolute left-0 top-full mt-2 w-56 rounded-lg bg-white shadow-lg ring-1 ring-black/5 z-50'
+                      >
+                        <ul className='py-2 text-sm text-gray-700'>
+                          {item.subLinks.map((sub, sIdx) => (
+                            <li key={sIdx}>
+                              <Link
+                                href={sub.href}
+                                className='block px-4 py-2 hover:bg-gray-100'
+                                onClick={() => setDropdownOpenIdx(null)}
+                              >
+                                {sub.title}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className='py-2 px-1 text-slate-700 hover:text-blue-600 transition-colors'
+                  >
+                    {item.title}
+                  </Link>
+                )}
+              </li>
             ))}
           </ul>
         </div>
       </div>
-    </nav>
-  )
-}
 
-const NavItem = ({ item, idx, dropdownOpen, toggleDropdown, dropdownRef }) => (
-  <li className='relative group'>
-    {item.subLinks ? (
-      <div className='relative'>
-        {/* Main dropdown trigger */}
+      {/* Backdrop */}
+      {isDrawerOpen && (
         <button
-          className='flex items-center py-2 px-3 text-slate-700 md:p-0 mt-0 hover:text-blue-600 transition-colors'
-          onClick={() => toggleDropdown(idx)}
-        >
-          {item.title}
-          <svg
-            className={`w-4 h-4 ml-2 inline transition-transform duration-200 ${
-              dropdownOpen === idx ? 'rotate-180' : ''
-            }`}
-            xmlns='http://www.w3.org/2000/svg'
-            fill='none'
-            viewBox='0 0 24 24'
-            stroke='currentColor'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='M19 9l-7 7-7-7'
-            />
-          </svg>
-        </button>
+          aria-label='Close menu'
+          onClick={() => setIsDrawerOpen(false)}
+          className='fixed inset-0 z-40 bg-black/30 md:hidden'
+        />
+      )}
 
-        {/* Dropdown content */}
-        {dropdownOpen === idx && (
-          <div
-            ref={dropdownRef}
-            className='absolute left-0 top-full w-44 bg-white rounded-lg shadow-lg z-50 mt-1'
-          >
-            <ul className='py-2 text-sm text-gray-700'>
-              {item.subLinks.map((subItem, subIdx) => (
-                <li key={subIdx}>
-                  <Link
-                    href={subItem.href}
-                    className='block px-4 py-2 hover:bg-gray-100 w-full text-left'
-                    onClick={() => toggleDropdown(null)} // Close the dropdown when link is clicked
-                  >
-                    {subItem.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    ) : (
-      <Link
-        href={item.href}
-        className='block py-2 px-3 text-slate-700 rounded md:bg-transparent md:p-0 mt-0 hover:text-blue-600 transition-colors'
+      {/* Mobile drawer */}
+      <aside
+        id='mobile-drawer'
+        ref={drawerRef}
+        className={`fixed right-0 top-0 h-full w-4/5 max-w-sm z-50 transform bg-slate-50 shadow-xl transition-transform duration-200 md:hidden ${
+          isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+        aria-hidden={!isDrawerOpen}
       >
-        {item.title}
-      </Link>
-    )}
-  </li>
-)
-
-const MobileNav = ({
-  menuItems,
-  toggleMenu,
-  mobileDropdownOpen,
-  toggleMobileDropdown
-}) => (
-  <nav className='grid gap-2'>
-    {menuItems.map((item, index) => (
-      <div key={index} className='space-y-2'>
-        {item.subLinks ? (
-          <div>
+        <div className='p-4 space-y-4'>
+          <div className='flex items-center justify-between'>
+            <span className='font-semibold text-slate-800'>Menu</span>
             <button
-              onClick={() => toggleMobileDropdown(index)}
-              className='flex w-full items-center justify-between p-2 text-sm font-medium hover:bg-gray-100 rounded-md'
+              onClick={() => setIsDrawerOpen(false)}
+              className='p-2 rounded hover:bg-gray-100'
+              aria-label='Close menu'
             >
-              <span>{item.title}</span>
-              <svg
-                className={`w-4 h-4 transition-transform ${
-                  mobileDropdownOpen === index ? 'rotate-180' : ''
-                }`}
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
+              <svg className='w-6 h-6' viewBox='0 0 24 24' fill='none'>
                 <path
+                  d='M6 18L18 6M6 6l12 12'
+                  stroke='currentColor'
+                  strokeWidth='2'
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M19 9l-7 7-7-7'
                 />
               </svg>
             </button>
-            {mobileDropdownOpen === index && (
-              <div className='ml-4 space-y-2'>
-                {item.subLinks.map((subItem, subIndex) => (
-                  <Link
-                    key={subIndex}
-                    href={subItem.href}
-                    onClick={toggleMenu}
-                    className='block p-2 text-sm hover:bg-gray-100 rounded-md'
-                  >
-                    {subItem.title}
-                  </Link>
-                ))}
-              </div>
-            )}
           </div>
-        ) : (
-          <Link
-            href={item.href}
-            onClick={toggleMenu}
-            className='flex w-full items-center p-2 text-sm font-medium hover:bg-gray-100 rounded-md'
-          >
-            {item.title}
-          </Link>
-        )}
-      </div>
-    ))}
-  </nav>
-)
 
-export default Nav
+          <nav className='grid gap-2'>
+            {menuItems.map((item, idx) => (
+              <div key={idx} className='space-y-2'>
+                {item.subLinks ? (
+                  <>
+                    <button
+                      onClick={() => toggleMobileDropdown(idx)}
+                      className='flex w-full items-center justify-between p-2 text-sm font-medium rounded-md hover:bg-gray-100'
+                      aria-expanded={mobileDropdownOpenIdx === idx}
+                      aria-controls={`mobile-sub-${idx}`}
+                    >
+                      <span>{item.title}</span>
+                      <svg
+                        className={`w-4 h-4 transition-transform ${
+                          mobileDropdownOpenIdx === idx ? 'rotate-180' : ''
+                        }`}
+                        viewBox='0 0 24 24'
+                        fill='none'
+                      >
+                        <path
+                          d='M19 9l-7 7-7-7'
+                          stroke='currentColor'
+                          strokeWidth='2'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                        />
+                      </svg>
+                    </button>
+                    <div
+                      id={`mobile-sub-${idx}`}
+                      className={`${
+                        mobileDropdownOpenIdx === idx ? 'block' : 'hidden'
+                      } ml-3`}
+                    >
+                      {item.subLinks.map((sub, sIdx) => (
+                        <Link
+                          key={sIdx}
+                          href={sub.href}
+                          onClick={() => setIsDrawerOpen(false)}
+                          className='block p-2 text-sm rounded-md hover:bg-gray-100'
+                        >
+                          {sub.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsDrawerOpen(false)}
+                    className='block p-2 text-sm font-medium rounded-md hover:bg-gray-100'
+                  >
+                    {item.title}
+                  </Link>
+                )}
+              </div>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    </nav>
+  )
+}

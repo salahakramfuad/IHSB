@@ -7,8 +7,8 @@ const Footer = () => {
     <footer className='bg-gray-800 text-white py-8'>
       <div className='container mx-auto px-4'>
         {/* Logo and Description */}
-        <div className='sm:flex sm:justify-between mb-6'>
-          <div className='w-full sm:w-2/5 mb-6 sm:mb-0 text-center sm:text-center lg:text-center'>
+        <div className='flex flex-wrap gap-4 mb-6'>
+          <div className='basis-60 grow w-full sm:w-2/5 text-center sm:text-center lg:text-center'>
             <Link href='/' className='flex justify-center sm:justify-center '>
               <Image
                 src='/assets/images/logo.png'
@@ -23,7 +23,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className='w-full sm:w-1/5 mb-6 sm:mb-0 flex flex-col items-center sm:items-start'>
+          <div className='basis-60 grow flex flex-col items-center'>
             <h3 className='font-semibold mb-4 text-center sm:text-left'>
               Quick Links
             </h3>
@@ -50,7 +50,8 @@ const Footer = () => {
               </li>
             </ul>
           </div>
-          <div className='w-full sm:w-2/5 mb-6 sm:mb-0'>
+
+          <div className='basis-60 grow'>
             <h3 className='font-semibold mb-4 text-center sm:text-left'>
               Contact Information
             </h3>
