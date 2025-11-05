@@ -12,7 +12,7 @@ const Rootlayout = ({ children }) => {
     <html lang='en'>
       <body>
         <div>
-          <div className='gradient' />
+          <div className='gradient scroll-smooth' />
         </div>
         <main>
           <Nav />
