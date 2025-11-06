@@ -1,22 +1,27 @@
-// app/page.tsx (or pages/index.tsx)
+// app/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
-// Adjust this path if your alias differs:
-import { lightTheme, darkTheme } from '/constants/Colors'
+import React from 'react'
+import { lightTheme, darkTheme } from '../constants/Colors' // adjust alias if needed
 
-// Deterministic helper for placeholder images (swap with /public images later)
-const picsum = (seed, w, h) =>
+// ---------- Helper ----------
+const picsum = (seed: string, w: number, h: number): string =>
   `https://picsum.photos/seed/${encodeURIComponent(seed)}/${w}/${h}`
 
-// ----- Static content (hydrate-safe)
-const highlights = [
+// ---------- Static Data ----------
+const highlights: { k: string; v: string }[] = [
   { k: 'Nationalities', v: '48+' },
   { k: 'Student–Teacher', v: '8:1' },
   { k: 'University Offers', v: 'Top 100+' },
   { k: 'IB Avg. Score', v: '35+' }
 ]
 
-const programs = [
+const programs: {
+  title: string
+  blurb: string
+  img: string
+  href: string
+}[] = [
   {
     title: 'Early Years (Ages 3–5)',
     blurb:
@@ -47,7 +52,7 @@ const programs = [
   }
 ]
 
-const notices = [
+const notices: { date: string; title: string; text: string; href: string }[] = [
   {
     date: 'Nov 25',
     title: 'Admissions Open Day',
@@ -68,7 +73,7 @@ const notices = [
   }
 ]
 
-const news = [
+const news: { title: string; img: string; href: string }[] = [
   {
     title: 'IHSB Robotics Wins Regional Championship',
     img: picsum('robotics-team', 1200, 800),
@@ -86,7 +91,7 @@ const news = [
   }
 ]
 
-const testimonials = [
+const testimonials: { quote: string; name: string }[] = [
   {
     quote:
       'Our daughter found her voice at IHSB. The IB program and teachers nurtured her curiosity and resilience.',
@@ -104,15 +109,15 @@ const testimonials = [
   }
 ]
 
-const partners = [
+const partners: { name: string; img: string }[] = [
   { name: 'IB World School', img: picsum('partner-ib', 300, 200) },
   { name: 'Cambridge Assessment', img: picsum('partner-cambridge', 300, 200) },
   { name: 'Council of Intl. Schools', img: picsum('partner-cis', 300, 200) },
   { name: 'Eco-Schools', img: picsum('partner-eco', 300, 200) }
 ]
 
-// Build CSS variables for both themes once (no client-time usage → no hydration issues)
-const cssVars = (t) => `
+// ---------- Helper for Theme Variables ----------
+const cssVars = (t: Record<string, string>): string => `
   --primary:${t.primary};
   --secondary:${t.secondary};
   --accent:${t.accent};
@@ -127,12 +132,13 @@ const cssVars = (t) => `
   --error:${t.error};
 `
 
-const COPYRIGHT_YEAR = 2025 // keep static or update at deploy time to avoid hydration drift
+const COPYRIGHT_YEAR = 2025
 
-export default function HomePage() {
+// ---------- Page ----------
+export default function Feed() {
   return (
     <>
-      {/* Global theme variables (Tailwind dark mode must toggle .dark on <html> or <body>) */}
+      {/* Inject theme variables */}
       <style
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
@@ -144,7 +150,7 @@ export default function HomePage() {
       />
 
       <main className='w-full bg-[var(--bg)] text-[var(--text)]'>
-        {/* Hero (full-width) */}
+        {/* Hero */}
         <section aria-label='Hero' className='relative isolate'>
           <div className='absolute inset-0 -z-10'>
             <Image
@@ -157,6 +163,7 @@ export default function HomePage() {
             />
             <div className='absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60' />
           </div>
+
           <div className='mx-auto max-w-7xl px-4 py-28 sm:py-36 text-white'>
             <h1 className='text-4xl sm:text-6xl font-bold tracking-tight'>
               International learning for a changing world
@@ -181,7 +188,6 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Stats */}
             <dl className='mt-14 grid grid-cols-2 gap-6 sm:grid-cols-4'>
               {highlights.map((h) => (
                 <div
@@ -196,7 +202,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Program pathways */}
+        {/* Academic Pathways */}
         <section aria-labelledby='programs-h' className='py-20'>
           <div className='mx-auto max-w-7xl px-4'>
             <h2 id='programs-h' className='text-3xl font-bold sm:text-4xl'>
@@ -206,6 +212,7 @@ export default function HomePage() {
               Multiple entry points with IB and Cambridge options. Small
               classes, caring mentors, and purposeful assessment.
             </p>
+
             <div className='mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4'>
               {programs.map((p) => (
                 <article
@@ -240,110 +247,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Campus life feature grid */}
-        <section aria-labelledby='life-h' className='py-20'>
-          <div className='mx-auto max-w-7xl px-4'>
-            <div className='grid items-center gap-10 lg:grid-cols-2'>
-              <div>
-                <h2 id='life-h' className='text-3xl font-bold sm:text-4xl'>
-                  Beyond the classroom
-                </h2>
-                <p className='mt-4 text-[var(--text-2)]'>
-                  From robotics and Model UN to orchestra, theatre, and
-                  competitive sports, students develop leadership and teamwork
-                  skills.
-                </p>
-                <ul className='mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2'>
-                  {[
-                    'STEAM & Design Lab',
-                    'Championship Athletics',
-                    'Performing Arts',
-                    'Residential Life',
-                    'Outdoor Education',
-                    'Community Service'
-                  ].map((item) => (
-                    <li key={item} className='flex items-start gap-3'>
-                      <span
-                        className='mt-1 inline-block h-2 w-2 rounded-full bg-[var(--primary)]'
-                        aria-hidden
-                      />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className='mt-6 flex gap-4'>
-                  <Link
-                    href='/campus-life'
-                    className='rounded-full bg-[var(--primary)] px-5 py-3 text-white font-semibold hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--primary)]/40'
-                  >
-                    Explore Campus Life
-                  </Link>
-                  <Link
-                    href='/boarding'
-                    className='rounded-full border border-[var(--border)] px-5 py-3 font-semibold hover:bg-[var(--surface)]/60'
-                  >
-                    Boarding at IHSB
-                  </Link>
-                </div>
-              </div>
-              <div className='grid grid-cols-2 gap-4'>
-                {['life1', 'life2', 'life3', 'life4'].map((seed) => (
-                  <div
-                    key={seed}
-                    className='relative aspect-[4/3] overflow-hidden rounded-2xl'
-                  >
-                    <Image
-                      src={picsum(seed, 1200, 900)}
-                      alt='Campus life'
-                      fill
-                      className='object-cover'
-                      sizes='(max-width:1024px) 50vw, 33vw'
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Notices / Upcoming events */}
-        <section aria-labelledby='notices-h' className='py-20'>
-          <div className='mx-auto max-w-7xl px-4'>
-            <div className='flex items-end justify-between gap-4'>
-              <h2 id='notices-h' className='text-3xl font-bold sm:text-4xl'>
-                Upcoming Events
-              </h2>
-              <Link
-                href='/events'
-                className='font-medium text-[var(--primary)] hover:underline'
-              >
-                View all events →
-              </Link>
-            </div>
-            <div className='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3'>
-              {notices.map((n) => (
-                <article
-                  key={n.title}
-                  className='rounded-2xl bg-[var(--surface)] p-6 shadow ring-1 ring-[var(--border)]'
-                >
-                  <div className='text-sm font-semibold text-[var(--info)]'>
-                    {n.date}
-                  </div>
-                  <h3 className='mt-2 text-lg font-semibold'>{n.title}</h3>
-                  <p className='mt-2 text-sm text-[var(--text-2)]'>{n.text}</p>
-                  <Link
-                    href={n.href}
-                    className='mt-3 inline-block font-medium text-[var(--primary)] hover:underline'
-                  >
-                    Details →
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* News */}
+        {/* News & Highlights */}
         <section aria-labelledby='news-h' className='py-20'>
           <div className='mx-auto max-w-7xl px-4'>
             <div className='flex items-end justify-between gap-4'>
@@ -357,6 +261,7 @@ export default function HomePage() {
                 Read all news →
               </Link>
             </div>
+
             <div className='mt-8 grid grid-cols-1 gap-8 sm:grid-cols-3'>
               {news.map((item) => (
                 <article
@@ -394,6 +299,7 @@ export default function HomePage() {
             <h2 id='testimonials-h' className='text-3xl font-bold sm:text-4xl'>
               What our community says
             </h2>
+
             <div className='mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3'>
               {testimonials.map((t, idx) => (
                 <figure
@@ -410,122 +316,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Accreditation & Partners */}
-        <section aria-labelledby='partners-h' className='py-16'>
-          <div className='mx-auto max-w-7xl px-4'>
-            <h2
-              id='partners-h'
-              className='text-center text-sm font-semibold tracking-wide text-[var(--text-2)]'
-            >
-              Accredited & Proudly Affiliated
-            </h2>
-            <div className='mt-6 grid grid-cols-2 items-center justify-items-center gap-6 sm:grid-cols-4'>
-              {partners.map((p) => (
-                <div key={p.name} className='relative h-16 w-36'>
-                  <Image
-                    src={p.img}
-                    alt={p.name}
-                    fill
-                    className='object-contain'
-                    sizes='144px'
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* International Admissions CTA */}
-        <section aria-labelledby='intl-h' className='py-20'>
-          <div className='mx-auto max-w-7xl px-4'>
-            <div className='grid gap-8 rounded-3xl bg-[color:var(--info)]/10 p-8 ring-1 ring-[var(--info)]/20 sm:grid-cols-2'>
-              <div>
-                <h2 id='intl-h' className='text-2xl font-bold sm:text-3xl'>
-                  International admissions support
-                </h2>
-                <p className='mt-3 text-[var(--text-2)]'>
-                  Moving countries? Our multilingual team assists with visas,
-                  placement, language support, and housing.
-                </p>
-                <ul className='mt-4 list-disc pl-5 text-[var(--text)]'>
-                  <li>Rolling admissions and mid-year transfers</li>
-                  <li>English language support (EAL)</li>
-                  <li>University & career counseling</li>
-                  <li>On-campus health & wellbeing center</li>
-                </ul>
-                <div className='mt-6 flex gap-4'>
-                  <Link
-                    href='/admissions'
-                    className='rounded-full bg-[var(--primary)] px-5 py-3 text-white font-semibold hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--primary)]/40'
-                  >
-                    Admissions Overview
-                  </Link>
-                  <Link
-                    href='/contact'
-                    className='rounded-full border border-[var(--info)] px-5 py-3 font-semibold text-[var(--info)] hover:bg-[var(--surface)]/60'
-                  >
-                    Talk to an Officer
-                  </Link>
-                </div>
-              </div>
-              <div className='relative aspect-[4/3] overflow-hidden rounded-2xl'>
-                <Image
-                  src={picsum('intl-admissions', 1200, 900)}
-                  alt='Admissions officer welcoming a family in the lobby'
-                  fill
-                  className='object-cover'
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section aria-labelledby='faq-h' className='py-20'>
-          <div className='mx-auto max-w-5xl px-4'>
-            <h2 id='faq-h' className='text-3xl font-bold sm:text-4xl'>
-              Frequently Asked Questions
-            </h2>
-            <div className='mt-8 divide-y divide-[var(--border)] rounded-2xl border border-[var(--border)] bg-[var(--surface)]'>
-              {[
-                {
-                  q: 'Which curricula do you offer?',
-                  a: 'IB PYP and DP alongside Cambridge IGCSE/A-Levels, with counseling to choose the best pathway.'
-                },
-                {
-                  q: 'Do you provide boarding?',
-                  a: 'Yes, weekly and full boarding for Grades 6–12 with supervised study and weekend activities.'
-                },
-                {
-                  q: 'Is financial aid available?',
-                  a: 'We offer merit and needs-based scholarships; see Scholarships for deadlines and criteria.'
-                },
-                {
-                  q: 'How do I schedule a visit?',
-                  a: 'Book a tour online and our team will confirm your date and send entry instructions.'
-                }
-              ].map((item) => (
-                <details
-                  key={item.q}
-                  className='group p-6 open:bg-[var(--surface)]'
-                >
-                  <summary className='flex cursor-pointer list-none items-center justify-between font-medium'>
-                    {item.q}
-                    <span className='ml-4 rounded-full border border-[var(--border)] px-2 text-xs text-[var(--text-2)] group-open:hidden'>
-                      +
-                    </span>
-                    <span className='ml-4 hidden rounded-full border border-[var(--border)] px-2 text-xs text-[var(--text-2)] group-open:inline'>
-                      –
-                    </span>
-                  </summary>
-                  <p className='mt-3 text-[var(--text-2)]'>{item.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Newsletter / Lead capture */}
+        {/* Newsletter */}
         <section aria-labelledby='newsletter-h' className='py-20'>
           <div className='mx-auto max-w-3xl px-4 text-center'>
             <h2 id='newsletter-h' className='text-2xl font-bold sm:text-3xl'>
@@ -564,10 +355,9 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* JSON-LD (SEO) – static, safe */}
+        {/* SEO Schema */}
         <script
           type='application/ld+json'
-          // Safe because it is static and not user-generated
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',

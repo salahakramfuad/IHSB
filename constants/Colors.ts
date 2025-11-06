@@ -1,6 +1,21 @@
 // Light and dark theme color palettes
 
-export const lightTheme = {
+export type ThemeColors = {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  surface: string;
+  text: string;
+  textSecondary: string;
+  border: string;
+  info: string;
+  success: string;
+  warning: string;
+  error: string;
+};
+
+export const lightTheme: ThemeColors = {
   primary: '#2563eb', // blue-600
   secondary: '#f59e42', // orange-400
   accent: '#10b981', // emerald-500
@@ -13,9 +28,9 @@ export const lightTheme = {
   success: '#22c55e', // green-500
   warning: '#facc15', // yellow-400
   error: '#ef4444' // red-500
-}
+};
 
-export const darkTheme = {
+export const darkTheme: ThemeColors = {
   primary: '#60a5fa', // blue-400
   secondary: '#fbbf24', // yellow-400
   accent: '#34d399', // emerald-400
@@ -28,4 +43,4 @@ export const darkTheme = {
   success: '#4ade80', // green-400
   warning: '#fde047', // yellow-300
   error: '#f87171' // red-400
-}
+};

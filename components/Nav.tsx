@@ -2,18 +2,21 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+
+type SubLink = { title: string; href: string }
+type MenuItem = { title: string; href?: string; subLinks?: SubLink[] }
 
 function useTheme() {
-  const [mounted, setMounted] = useState(false)
-  const [theme, setTheme] = useState('light')
+  const [mounted, setMounted] = useState<boolean>(false)
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme')
+    const saved = localStorage.getItem('theme') as 'light' | 'dark' | null
     const systemDark = window.matchMedia?.(
       '(prefers-color-scheme: dark)'
     ).matches
-    const initial = saved || (systemDark ? 'dark' : 'light')
+    const initial: 'light' | 'dark' = saved || (systemDark ? 'dark' : 'light')
     setTheme(initial)
     document.documentElement.classList.toggle('dark', initial === 'dark')
     setMounted(true)
@@ -21,7 +24,7 @@ function useTheme() {
 
   const toggle = () => {
     setTheme((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark'
+      const next: 'light' | 'dark' = prev === 'dark' ? 'light' : 'dark'
       document.documentElement.classList.toggle('dark', next === 'dark')
       localStorage.setItem('theme', next)
       return next
@@ -31,17 +34,19 @@ function useTheme() {
   return { theme, toggle, mounted }
 }
 
-export default function Nav() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [dropdownOpenIdx, setDropdownOpenIdx] = useState(null)
-  const [mobileDropdownOpenIdx, setMobileDropdownOpenIdx] = useState(null)
+export default function Nav(): JSX.Element {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
+  const [dropdownOpenIdx, setDropdownOpenIdx] = useState<number | null>(null)
+  const [mobileDropdownOpenIdx, setMobileDropdownOpenIdx] = useState<
+    number | null
+  >(null)
 
-  const navRef = useRef(null)
-  const drawerRef = useRef(null)
+  const navRef = useRef<HTMLElement | null>(null)
+  const drawerRef = useRef<HTMLElement | null>(null)
 
   const { theme, toggle, mounted } = useTheme()
 
-  const menuItems = useMemo(
+  const menuItems: MenuItem[] = useMemo(
     () => [
       { title: 'Home', href: '/' },
       {
@@ -96,14 +101,14 @@ export default function Nav() {
   )
 
   useEffect(() => {
-    const onDocMouseDown = (e) => {
-      const t = e.target
-      const insideNav = navRef.current && navRef.current.contains(t)
-      const insideDrawer = drawerRef.current && drawerRef.current.contains(t)
+    const onDocMouseDown = (e: MouseEvent) => {
+      const t = e.target as Node
+      const insideNav = navRef.current?.contains(t)
+      const insideDrawer = drawerRef.current?.contains(t)
       if (!insideNav) setDropdownOpenIdx(null)
       if (isDrawerOpen && !insideDrawer) setIsDrawerOpen(false)
     }
-    const onKey = (e) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setDropdownOpenIdx(null)
         setIsDrawerOpen(false)
@@ -126,14 +131,14 @@ export default function Nav() {
     }
   }, [isDrawerOpen])
 
-  const toggleDropdown = (idx) =>
+  const toggleDropdown = (idx: number) =>
     setDropdownOpenIdx((prev) => (prev === idx ? null : idx))
-  const toggleMobileDropdown = (idx) =>
+  const toggleMobileDropdown = (idx: number) =>
     setMobileDropdownOpenIdx((prev) => (prev === idx ? null : idx))
 
   return (
     <nav
-      ref={navRef}
+      ref={navRef as React.RefObject<HTMLElement>}
       className='bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700'
     >
       <div className='mx-auto max-w-screen-xl flex items-center justify-between p-4'>
@@ -164,12 +169,15 @@ export default function Nav() {
                       aria-haspopup='menu'
                       aria-expanded={dropdownOpenIdx === idx}
                       onClick={() => toggleDropdown(idx)}
-                      onKeyDown={(e) => {
+                      onKeyDown={(
+                        e: React.KeyboardEvent<HTMLButtonElement>
+                      ) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           e.preventDefault()
                           toggleDropdown(idx)
                         }
                       }}
+                      type='button'
                     >
                       {item.title}
                       <svg
@@ -211,7 +219,7 @@ export default function Nav() {
                   </>
                 ) : (
                   <Link
-                    href={item.href}
+                    href={item.href as string}
                     className='py-2 px-1 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'
                   >
                     {item.title}
@@ -236,20 +244,14 @@ export default function Nav() {
                   }
                 >
                   <span
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                                ${
-                                  theme === 'dark'
-                                    ? 'bg-slate-600'
-                                    : 'bg-slate-300'
-                                }`}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'
+                    }`}
                   >
                     <span
-                      className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform
-                                  ${
-                                    theme === 'dark'
-                                      ? 'translate-x-5'
-                                      : 'translate-x-0'
-                                  }`}
+                      className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                        theme === 'dark' ? 'translate-x-5' : 'translate-x-0'
+                      }`}
                     />
                   </span>
                 </button>
@@ -265,6 +267,7 @@ export default function Nav() {
           aria-controls='mobile-drawer'
           aria-expanded={isDrawerOpen}
           aria-label='Open main menu'
+          type='button'
         >
           <svg className='w-5 h-5' viewBox='0 0 17 14' fill='none'>
             <path
@@ -284,13 +287,14 @@ export default function Nav() {
           aria-label='Close menu'
           onClick={() => setIsDrawerOpen(false)}
           className='fixed inset-0 z-40 bg-black/30 md:hidden'
+          type='button'
         />
       )}
 
       {/* Mobile drawer */}
       <aside
         id='mobile-drawer'
-        ref={drawerRef}
+        ref={drawerRef as React.RefObject<HTMLElement>}
         className={`fixed right-0 top-0 h-full w-4/5 max-w-sm z-50 transform bg-slate-50 dark:bg-slate-900 shadow-xl transition-transform duration-200 md:hidden ${
           isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
@@ -320,20 +324,14 @@ export default function Nav() {
                   {theme === 'dark' ? 'Dark' : 'Light'}
                 </span>
                 <span
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors
-                              ${
-                                theme === 'dark'
-                                  ? 'bg-slate-600'
-                                  : 'bg-slate-300'
-                              }`}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'
+                  }`}
                 >
                   <span
-                    className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform
-                                ${
-                                  theme === 'dark'
-                                    ? 'translate-x-5'
-                                    : 'translate-x-0'
-                                }`}
+                    className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+                      theme === 'dark' ? 'translate-x-5' : 'translate-x-0'
+                    }`}
                   />
                 </span>
               </button>
@@ -350,6 +348,7 @@ export default function Nav() {
                       className='flex w-full items-center justify-between p-2 text-sm font-medium rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100'
                       aria-expanded={mobileDropdownOpenIdx === idx}
                       aria-controls={`mobile-sub-${idx}`}
+                      type='button'
                     >
                       <span>{item.title}</span>
                       <svg
@@ -388,7 +387,7 @@ export default function Nav() {
                   </>
                 ) : (
                   <Link
-                    href={item.href}
+                    href={item.href as string}
                     onClick={() => setIsDrawerOpen(false)}
                     className='block p-2 text-sm font-medium rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100'
                   >
