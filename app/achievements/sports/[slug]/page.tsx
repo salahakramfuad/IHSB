@@ -1,8 +1,6 @@
-// app/achievements/[slug]/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
 import { getBySlug } from '../data'
-// top of file
 import LightboxGallery from '../../_components/LightboxGallery'
 
 function formatDate(iso: string) {
@@ -17,9 +15,11 @@ function formatDate(iso: string) {
 export default async function AchievementDetail({
   params
 }: {
-  params: { slug: string }
+  // key part: params is a Promise in Next 15 App Router
+  params: Promise<{ slug: string }>
 }) {
-  const achievement = getBySlug(params.slug)
+  const { slug } = await params
+  const achievement = getBySlug(slug)
 
   if (!achievement) {
     return (
@@ -49,7 +49,6 @@ export default async function AchievementDetail({
           </Link>
         </nav>
 
-        {/* Header */}
         <header className='mb-6'>
           <h1 className='text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-[#E6EEF2]'>
             {achievement.title}
@@ -72,7 +71,6 @@ export default async function AchievementDetail({
           </div>
         </header>
 
-        {/* Lead image + long description */}
         <div className='overflow-hidden rounded-2xl bg-white dark:bg-[#111827] ring-1 ring-black/5 dark:ring-white/10'>
           <div className='relative h-72 w-full'>
             <Image
@@ -91,7 +89,6 @@ export default async function AchievementDetail({
           </div>
         </div>
 
-        {/* Gallery */}
         {achievement.photos?.length ? (
           <section className='mt-8'>
             <h2 className='text-lg font-semibold text-gray-900 dark:text-[#E6EEF2] mb-3'>
