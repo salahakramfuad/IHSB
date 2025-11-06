@@ -34,7 +34,7 @@ function useTheme() {
   return { theme, toggle, mounted }
 }
 
-export default function Nav(): JSX.Element {
+export default function Nav() {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const [dropdownOpenIdx, setDropdownOpenIdx] = useState<number | null>(null)
   const [mobileDropdownOpenIdx, setMobileDropdownOpenIdx] = useState<
