@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import '../styles/global.css'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
+import ThemeCSSVars from '../components/ThemeCSSVars'
 
 export const metadata: Metadata = {
   title: 'IHSB',
@@ -17,6 +18,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
+        <ThemeCSSVars />
         <div className='gradient scroll-smooth' />
         <main>
           <Nav />

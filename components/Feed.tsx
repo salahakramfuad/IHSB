@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { lightTheme, darkTheme } from '../constants/Colors' // adjust alias if needed
+import ThemeCSSVars from './ThemeCSSVars' // injects CSS variables for light/dark themes
 
 // ---------- Helper ----------
 const picsum = (seed: string, w: number, h: number): string =>
@@ -116,42 +116,14 @@ const partners: { name: string; img: string }[] = [
   { name: 'Eco-Schools', img: picsum('partner-eco', 300, 200) }
 ]
 
-// ---------- Helper for Theme Variables ----------
-const cssVars = (t: Record<string, string>): string => `
-  --primary:${t.primary};
-  --secondary:${t.secondary};
-  --accent:${t.accent};
-  --bg:${t.background};
-  --surface:${t.surface};
-  --text:${t.text};
-  --text-2:${t.textSecondary};
-  --border:${t.border};
-  --info:${t.info};
-  --success:${t.success};
-  --warning:${t.warning};
-  --error:${t.error};
-`
-
-const COPYRIGHT_YEAR = 2025
-
 // ---------- Page ----------
 export default function Feed() {
   return (
     <>
-      {/* Inject theme variables */}
-      <style
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: `
-            :root{ ${cssVars(lightTheme)} }
-            .dark{ ${cssVars(darkTheme)} }
-          `
-        }}
-      />
+      <ThemeCSSVars />
 
-      <main className='w-full bg-[var(--bg)] text-[var(--text)]'>
-        {/* Hero */}
-        <section aria-label='Hero' className='relative isolate'>
+      <main className='w-full'>
+        <section aria-label='Hero' className='relative isolate w-full'>
           <div className='absolute inset-0 -z-10'>
             <Image
               src={picsum('hero-campus', 2400, 1400)}
@@ -176,13 +148,24 @@ export default function Feed() {
             <div className='mt-10 flex flex-wrap gap-4'>
               <Link
                 href='/admissions/apply'
-                className='inline-flex items-center rounded-full bg-[var(--warning)] px-6 py-3 font-semibold text-gray-900 shadow hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--warning)]/40'
+                className='inline-flex items-center rounded-full px-6 py-3 font-semibold shadow focus:outline-none focus-visible:ring-2'
+                style={{
+                  background: 'var(--warning)',
+                  color: '#0b1220',
+                  boxShadow:
+                    '0 8px 24px -8px color-mix(in oklab, var(--warning) 60%, transparent)'
+                }}
               >
                 Apply Now
               </Link>
               <Link
                 href='/visit'
-                className='inline-flex items-center rounded-full border border-white/70 px-6 py-3 font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60'
+                className='inline-flex items-center rounded-full px-6 py-3 font-semibold focus:outline-none focus-visible:ring-2'
+                style={{
+                  border: '1px solid rgba(255,255,255,.7)',
+                  color: 'white',
+                  background: 'transparent'
+                }}
               >
                 Book a Campus Tour
               </Link>
@@ -192,10 +175,16 @@ export default function Feed() {
               {highlights.map((h) => (
                 <div
                   key={h.k}
-                  className='rounded-2xl bg-white/10 p-5 backdrop-blur'
+                  className='rounded-2xl p-5 backdrop-blur'
+                  style={{
+                    background:
+                      'color-mix(in oklab, var(--surface) 10%, transparent)',
+                    border:
+                      '1px solid color-mix(in oklab, var(--border) 60%, transparent)'
+                  }}
                 >
                   <dt className='text-sm text-white/80'>{h.k}</dt>
-                  <dd className='mt-1 text-3xl font-bold'>{h.v}</dd>
+                  <dd className='mt-1 text-3xl font-bold text-white'>{h.v}</dd>
                 </div>
               ))}
             </dl>
@@ -217,7 +206,11 @@ export default function Feed() {
               {programs.map((p) => (
                 <article
                   key={p.title}
-                  className='overflow-hidden rounded-2xl bg-[var(--surface)] shadow ring-1 ring-[var(--border)] transition-shadow hover:shadow-lg'
+                  className='overflow-hidden rounded-2xl shadow transition-shadow hover:shadow-lg ring-1'
+                  style={{
+                    background: 'var(--surface)',
+                    borderColor: 'var(--border)'
+                  }}
                 >
                   <div className='relative h-40'>
                     <Image
@@ -236,7 +229,8 @@ export default function Feed() {
                     </p>
                     <Link
                       href={p.href}
-                      className='mt-4 inline-block font-medium text-[var(--primary)] hover:underline'
+                      className='mt-4 inline-block font-medium hover:underline'
+                      style={{ color: 'var(--primary)' }}
                     >
                       Explore program →
                     </Link>
@@ -244,6 +238,40 @@ export default function Feed() {
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Notices */}
+        <section aria-labelledby='notices-h' className='py-4'>
+          <div className='mx-auto max-w-7xl px-4'>
+            <h2 id='notices-h' className='text-2xl font-semibold'>
+              Notices
+            </h2>
+            <ul className='mt-4 grid gap-4 sm:grid-cols-3'>
+              {notices.map((n) => (
+                <li
+                  key={n.title}
+                  className='rounded-2xl ring-1 p-4'
+                  style={{
+                    background: 'var(--surface)',
+                    borderColor: 'var(--border)'
+                  }}
+                >
+                  <div className='text-sm' style={{ color: 'var(--primary)' }}>
+                    {n.date}
+                  </div>
+                  <div className='mt-1 font-medium'>{n.title}</div>
+                  <p className='mt-1 text-sm text-[var(--text-2)]'>{n.text}</p>
+                  <Link
+                    href={n.href}
+                    className='mt-2 inline-block text-sm font-medium hover:underline'
+                    style={{ color: 'var(--primary)' }}
+                  >
+                    Details →
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -256,7 +284,8 @@ export default function Feed() {
               </h2>
               <Link
                 href='/news'
-                className='font-medium text-[var(--primary)] hover:underline'
+                className='font-medium hover:underline'
+                style={{ color: 'var(--primary)' }}
               >
                 Read all news →
               </Link>
@@ -266,7 +295,11 @@ export default function Feed() {
               {news.map((item) => (
                 <article
                   key={item.title}
-                  className='overflow-hidden rounded-2xl bg-[var(--surface)] shadow ring-1 ring-[var(--border)] transition-shadow hover:shadow-lg'
+                  className='overflow-hidden rounded-2xl shadow transition-shadow hover:shadow-lg ring-1'
+                  style={{
+                    background: 'var(--surface)',
+                    borderColor: 'var(--border)'
+                  }}
                 >
                   <div className='relative h-44'>
                     <Image
@@ -282,7 +315,8 @@ export default function Feed() {
                     <h3 className='text-lg font-semibold'>{item.title}</h3>
                     <Link
                       href={item.href}
-                      className='mt-3 inline-block font-medium text-[var(--primary)] hover:underline'
+                      className='mt-3 inline-block font-medium hover:underline'
+                      style={{ color: 'var(--primary)' }}
                     >
                       Read more →
                     </Link>
@@ -304,13 +338,46 @@ export default function Feed() {
               {testimonials.map((t, idx) => (
                 <figure
                   key={idx}
-                  className='rounded-2xl bg-[var(--surface)] p-6 shadow ring-1 ring-[var(--border)]'
+                  className='rounded-2xl p-6 shadow ring-1'
+                  style={{
+                    background: 'var(--surface)',
+                    borderColor: 'var(--border)'
+                  }}
                 >
                   <blockquote>“{t.quote}”</blockquote>
                   <figcaption className='mt-4 text-sm font-medium text-[var(--text-2)]'>
                     {t.name}
                   </figcaption>
                 </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Partners */}
+        <section aria-labelledby='partners-h' className='py-12'>
+          <div className='mx-auto max-w-7xl px-4'>
+            <h2 id='partners-h' className='text-xl font-semibold'>
+              Accreditation & Partners
+            </h2>
+            <div className='mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4'>
+              {partners.map((p) => (
+                <div
+                  key={p.name}
+                  className='flex items-center justify-center rounded-xl ring-1 p-4'
+                  style={{
+                    background: 'var(--surface)',
+                    borderColor: 'var(--border)'
+                  }}
+                >
+                  <Image
+                    src={p.img}
+                    alt={p.name}
+                    width={180}
+                    height={100}
+                    className='object-contain'
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -340,11 +407,17 @@ export default function Feed() {
                 type='email'
                 required
                 placeholder='you@example.com'
-                className='w-full flex-1 rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-3 shadow focus:border-[var(--primary)] focus:outline-none'
+                className='w-full flex-1 rounded-full px-4 py-3 shadow focus:outline-none'
+                style={{
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text)'
+                }}
               />
               <button
                 type='submit'
-                className='rounded-full bg-[var(--primary)] px-6 py-3 font-semibold text-white shadow hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[var(--primary)]/40'
+                className='rounded-full px-6 py-3 font-semibold shadow hover:opacity-90 focus-visible:ring-2'
+                style={{ background: 'var(--primary)', color: 'white' }}
               >
                 Subscribe
               </button>
