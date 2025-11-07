@@ -17,9 +17,11 @@ function formatDate(iso?: string) {
 export default async function SportsAchievementDetail({
   params
 }: {
-  params: { slug: string }
+  // ✅ Next 15+: params is a Promise
+  params: Promise<{ slug: string }>
 }) {
-  const achievement = getBySlug(params.slug)
+  const { slug } = await params
+  const achievement = getBySlug(slug)
 
   if (!achievement) {
     return (
