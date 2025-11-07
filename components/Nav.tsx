@@ -151,14 +151,16 @@ export default function Nav() {
             priority
             className='object-contain'
           />
+
+          {/* Show name from md and up (you asked earlier) */}
           <div className='hidden md:flex flex-col text-xl font-semibold text-slate-800 dark:text-slate-100 leading-tight'>
             <span className='text-center'>International Hope</span>
             <span className='text-center'>School Bangladesh</span>
           </div>
         </Link>
 
-        {/* Desktop menu + SWITCH on same row */}
-        <div className='hidden md:block'>
+        {/* Desktop menu visible from lg+ */}
+        <div className='hidden lg:block'>
           <ul className='flex items-center gap-6'>
             {menuItems.map((item, idx) => (
               <li key={idx} className='relative'>
@@ -260,10 +262,10 @@ export default function Nav() {
           </ul>
         </div>
 
-        {/* Mobile burger (switch is inside the drawer header) */}
+        {/* Burger button visible on small + medium (hidden on lg+) */}
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className='md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 dark:focus-visible:ring-slate-600'
+          className='lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 dark:focus-visible:ring-slate-600'
           aria-controls='mobile-drawer'
           aria-expanded={isDrawerOpen}
           aria-label='Open main menu'
@@ -281,21 +283,21 @@ export default function Nav() {
         </button>
       </div>
 
-      {/* Backdrop */}
+      {/* Backdrop for small + medium */}
       {isDrawerOpen && (
         <button
           aria-label='Close menu'
           onClick={() => setIsDrawerOpen(false)}
-          className='fixed inset-0 z-40 bg-black/30 md:hidden'
+          className='fixed inset-0 z-40 bg-black/30 lg:hidden'
           type='button'
         />
       )}
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer for small + medium */}
       <aside
         id='mobile-drawer'
         ref={drawerRef as React.RefObject<HTMLElement>}
-        className={`fixed right-0 top-0 h-full w-4/5 max-w-sm z-50 transform bg-slate-50 dark:bg-slate-900 shadow-xl transition-transform duration-200 md:hidden ${
+        className={`fixed right-0 top-0 h-full w-4/5 max-w-sm z-50 transform bg-slate-50 dark:bg-slate-900 shadow-xl transition-transform duration-200 lg:hidden ${
           isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         aria-hidden={!isDrawerOpen}
