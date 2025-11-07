@@ -1,9 +1,10 @@
 'use client'
 
 import Image from 'next/image'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { faker } from '@faker-js/faker'
+import LightboxGallery from '../../components/LightboxGallery'
 
 type Facility = { name: string; image: string }
 type Tab = 'IGCSE' | 'A Levels'
@@ -106,49 +107,15 @@ function useFakerData() {
   return { gallery, testimonials, staff }
 }
 
-function useBodyScrollLock(locked: boolean) {
-  useEffect(() => {
-    if (!locked) return
-    const { overflow } = document.body.style
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = overflow
-    }
-  }, [locked])
-}
-
 export default function UttaraSeniorSection() {
   const [activeTab, setActiveTab] = useState<Tab>('IGCSE')
-  const [lightboxOpen, setLightboxOpen] = useState(false)
-  const [photoIndex, setPhotoIndex] = useState(0)
   const { gallery, testimonials, staff } = useFakerData()
-  useBodyScrollLock(lightboxOpen)
 
-  const openLightbox = useCallback((idx: number) => {
-    setPhotoIndex(idx)
-    setLightboxOpen(true)
-  }, [])
-
-  const closeLightbox = useCallback(() => setLightboxOpen(false), [])
-
-  const onKey = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (!lightboxOpen) return
-      if (e.key === 'Escape') closeLightbox()
-      if (e.key === 'ArrowRight') setPhotoIndex((p) => (p + 1) % gallery.length)
-      if (e.key === 'ArrowLeft')
-        setPhotoIndex((p) => (p - 1 + gallery.length) % gallery.length)
-    },
-    [lightboxOpen, gallery.length, closeLightbox]
-  )
-
-  const lightboxRef = useRef<HTMLDivElement | null>(null)
+  // Map your gallery objects to string[] for LightboxGallery
+  const photoSrcs = useMemo(() => gallery.map((g) => g.src), [gallery])
 
   return (
-    <div
-      className='min-h-screen bg-white text-[#11181C] dark:bg-[#0D1117] dark:text-[#E6EEF2]'
-      onKeyDown={onKey}
-    >
+    <div className='min-h-screen bg-white text-[#11181C] dark:bg-[#0D1117] dark:text-[#E6EEF2]'>
       {/* Hero */}
       <section className='relative overflow-hidden'>
         {/* Make overlay ignore clicks so tabs are clickable */}
@@ -329,7 +296,7 @@ export default function UttaraSeniorSection() {
           </div>
         </motion.section>
 
-        {/* Gallery */}
+        {/* Gallery (replaced with LightboxGallery) */}
         <motion.section
           className='mb-12'
           initial={{ opacity: 0, y: 12 }}
@@ -340,92 +307,14 @@ export default function UttaraSeniorSection() {
           <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-4'>
             Gallery
           </h2>
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {gallery.map((g, idx) => (
-              <button
-                key={g.src}
-                onClick={() => openLightbox(idx)}
-                className='group relative rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500'
-                aria-label={`Open image: ${g.caption}`}
-              >
-                <div className='relative aspect-[4/3]'>
-                  <Image
-                    src={g.src}
-                    alt={g.caption}
-                    fill
-                    className='object-cover transition-transform group-hover:scale-105'
-                    unoptimized
-                    sizes='(max-width:768px) 50vw, (max-width:1200px) 25vw, 25vw'
-                  />
-                </div>
-                <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity grid place-items-center'>
-                  <span className='text-white text-sm font-medium'>View</span>
-                </div>
-              </button>
-            ))}
-          </div>
 
-          {/* Lightbox */}
-          <AnimatePresence>
-            {lightboxOpen && (
-              <motion.div
-                ref={lightboxRef}
-                className='fixed inset-0 z-50 bg-black/90 backdrop-blur-sm grid place-items-center p-4'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                role='dialog'
-                aria-modal='true'
-                aria-label='Image viewer'
-                onClick={(e) => {
-                  if (e.target === lightboxRef.current) closeLightbox()
-                }}
-              >
-                <button
-                  onClick={closeLightbox}
-                  className='absolute top-4 right-4 text-white/90 hover:text-white text-3xl'
-                  aria-label='Close'
-                >
-                  ×
-                </button>
-                <div className='w-full max-w-5xl'>
-                  <div className='relative w-full aspect-[16/9]'>
-                    <Image
-                      src={gallery[photoIndex].src}
-                      alt={gallery[photoIndex].caption}
-                      fill
-                      className='object-contain'
-                      unoptimized
-                      sizes='100vw'
-                    />
-                  </div>
-                  <p className='text-white/90 mt-3 text-center'>
-                    {gallery[photoIndex].caption}
-                  </p>
-                  <div className='mt-4 flex items-center justify-between'>
-                    <button
-                      onClick={() =>
-                        setPhotoIndex(
-                          (p) => (p - 1 + gallery.length) % gallery.length
-                        )
-                      }
-                      className='px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white'
-                    >
-                      ← Prev
-                    </button>
-                    <button
-                      onClick={() =>
-                        setPhotoIndex((p) => (p + 1) % gallery.length)
-                      }
-                      className='px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white'
-                    >
-                      Next →
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <LightboxGallery
+            images={photoSrcs}
+            thumbs={photoSrcs}
+            leadTitle='Uttara Senior Section'
+            leadCaption='Campus Gallery'
+            className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'
+          />
         </motion.section>
 
         {/* Staff (faker) */}

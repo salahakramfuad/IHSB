@@ -1,7 +1,8 @@
+// app/achievements/[slug]/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
 import { getBySlug } from '../data'
-import LightboxGallery from '../../_components/LightboxGallery'
+import LightboxGallery from '../../../../components/LightboxGallery'
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-GB', {
@@ -15,10 +16,9 @@ function formatDate(iso: string) {
 export default async function AchievementDetail({
   params
 }: {
-  // key part: params is a Promise in Next 15 App Router
-  params: Promise<{ slug: string }>
+  params: { slug: string }
 }) {
-  const { slug } = await params
+  const { slug } = params
   const achievement = getBySlug(slug)
 
   if (!achievement) {
@@ -39,6 +39,10 @@ export default async function AchievementDetail({
       </div>
     )
   }
+
+  const photos = achievement.photos?.length
+    ? achievement.photos
+    : [achievement.image]
 
   return (
     <div className='bg-gradient-to-b from-gray-50 to-gray-100 dark:from-[#0D1117] dark:to-[#0D1117] px-4 py-10 sm:px-6 lg:px-8'>
@@ -89,27 +93,20 @@ export default async function AchievementDetail({
           </div>
         </div>
 
-        {achievement.photos?.length ? (
+        {photos.length ? (
           <section className='mt-8'>
-            <h2 className='text-lg font-semibold text-gray-900 dark:text-[#E6EEF2] mb-3'>
+            <h2 className='mb-3 text-lg font-semibold text-gray-900 dark:text-[#E6EEF2]'>
               Event Photos
             </h2>
-            <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4'>
-              {achievement.photos.map((src, i) => (
-                <div
-                  key={i}
-                  className='relative aspect-[4/3] overflow-hidden rounded-xl ring-1 ring-black/5 dark:ring-white/10'
-                >
-                  <Image
-                    src={src}
-                    alt={`${achievement.title} photo ${i + 1}`}
-                    fill
-                    sizes='(max-width: 768px) 50vw, 25vw'
-                    className='object-cover'
-                  />
-                </div>
-              ))}
-            </div>
+            <LightboxGallery
+              images={photos}
+              thumbs={photos}
+              leadTitle={achievement.title}
+              leadCaption={`${formatDate(achievement.date)}${
+                achievement.location ? ' • ' + achievement.location : ''
+              }`}
+              className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4'
+            />
           </section>
         ) : null}
       </div>
