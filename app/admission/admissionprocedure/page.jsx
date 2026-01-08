@@ -58,21 +58,21 @@ const ApplicationProcedure = () => {
                   </h3>
                   <p className='text-gray-700'>
                     Submit the Admission Application Form along with:
-                    <ul className='list-disc list-inside mt-2 space-y-1'>
-                      <li>
-                        2 recent passport-size photos of the student (in color).
-                      </li>
-                      <li>
-                        A photocopy of the Birth Certificate attested by a
-                        Notary Public.
-                      </li>
-                      <li>A photocopy of the last year’s report card.</li>
-                      <li>
-                        Business cards of parents or guardians (if available).
-                      </li>
-                      <li>Passport photocopy of the student (if available).</li>
-                    </ul>
                   </p>
+                  <ul className='list-disc list-inside mt-2 space-y-1 text-gray-700'>
+                    <li>
+                      2 recent passport-size photos of the student (in color).
+                    </li>
+                    <li>
+                      A photocopy of the Birth Certificate attested by a
+                      Notary Public.
+                    </li>
+                    <li>A photocopy of the last year's report card.</li>
+                    <li>
+                      Business cards of parents or guardians (if available).
+                    </li>
+                    <li>Passport photocopy of the student (if available).</li>
+                  </ul>
                 </div>
               </div>
 

@@ -1,40 +1,34 @@
-// app/ThemeCSSVars.tsx
+// components/ThemeCSSVars.tsx
 'use client'
 
 /**
- * Injects CSS variables for light/dark themes.
- * Dark mode is toggled by adding/removing the `dark` class on <html>.
- * (You already have a useTheme hook elsewhere that does this.)
+ * Injects CSS variables for light theme with academic color palette.
+ * Green is the primary color, with blue and yellow as accents.
  */
 export default function ThemeCSSVars() {
   return (
     <style
-      // global so variables apply site-wide
       dangerouslySetInnerHTML={{
         __html: `
 :root {
-  --text: #11181C;
+  --text: #111827;
   --text-2: color-mix(in oklab, var(--text) 70%, transparent);
   --background: #FFFFFF;
-  --surface: #F7F9FA;
+  --surface: #F9FAFB;
+  --surface-alt: #F3F4F6;
   --border: rgba(0,0,0,0.12);
-  --primary: #3F6D85;
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --primary-light: #34d399;
+  --accent-blue: #2563eb;
+  --accent-blue-light: #3b82f6;
+  --accent-yellow: #facc15;
+  --accent-yellow-alt: #fbbf24;
   --tint: #0A7EA4;
-  --warning: #F8E16C; /* used by "Apply Now" */
+  --warning: #facc15;
 }
 
-html.dark {
-  --background: #0D1117;
-  --text: #E6EEF2;
-  --text-2: color-mix(in oklab, var(--text) 70%, transparent);
-  --surface: #111827; /* can vary by elevation */
-  --border: rgba(255,255,255,0.12);
-  --primary: #95C6E2;
-  --tint: #95C6E2;
-  --warning: #E4C85A;
-}
-
-/* Body background/text to reflect variables (optional but convenient) */
+/* Body background/text to reflect variables */
 body {
   color: var(--text);
   background: var(--background);

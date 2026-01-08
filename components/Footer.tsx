@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer
       role='contentinfo'
-      className='bg-slate-900 text-slate-100 border-t border-slate-700'
+      className='bg-gray-900 text-white border-t border-gray-800'
     >
       <div className='container mx-auto px-4 py-10'>
         {/* Top: Logo / Quick Links / Contact */}
@@ -32,7 +32,7 @@ export default function Footer() {
                 className='object-contain'
               />
             </Link>
-            <p className='mt-4 text-slate-400 text-sm'>
+            <p className='mt-4 text-gray-400 text-sm'>
               International Hope School Bangladesh
             </p>
           </div>
@@ -42,20 +42,20 @@ export default function Footer() {
             aria-label='Footer quick links'
             className='basis-60 grow text-center sm:text-left'
           >
-            <h3 className='font-semibold mb-4 text-slate-100'>Quick Links</h3>
-            <ul className='space-y-2 text-slate-400'>
+            <h3 className='font-semibold mb-4 text-white'>Quick Links</h3>
+            <ul className='space-y-2 text-gray-400'>
               <li>
                 <Link
                   href='/about'
-                  className='hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+                  className='hover:text-primary-green-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded transition-colors'
                 >
                   About Us
                 </Link>
               </li>
               <li>
                 <Link
-                  href='/admissions'
-                  className='hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+                  href='/admission'
+                  className='hover:text-primary-green-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded transition-colors'
                 >
                   Admissions
                 </Link>
@@ -63,7 +63,7 @@ export default function Footer() {
               <li>
                 <Link
                   href='/academics'
-                  className='hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+                  className='hover:text-primary-green-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded transition-colors'
                 >
                   Academics
                 </Link>
@@ -71,7 +71,7 @@ export default function Footer() {
               <li>
                 <Link
                   href='/contact'
-                  className='hover:text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+                  className='hover:text-primary-green-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded transition-colors'
                 >
                   Contact
                 </Link>
@@ -81,31 +81,37 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className='basis-60 grow text-center sm:text-left'>
-            <h3 className='font-semibold mb-4 text-slate-100'>
+            <h3 className='font-semibold mb-4 text-white'>
               Contact Information
             </h3>
-            <address className='not-italic text-sm text-slate-400 space-y-2'>
+            <address className='not-italic text-sm text-gray-400 space-y-2'>
               <p>
-                <strong className='font-semibold text-slate-200'>
+                <strong className='font-semibold text-gray-200'>
                   Address:
                 </strong>{' '}
                 Plot: 7, Road: 6, Sector: 4, Uttara, Dhaka-1230
               </p>
               <p>
-                <strong className='font-semibold text-slate-200'>Phone:</strong>{' '}
-                <a href='tel:+880248956999' className='hover:text-blue-400'>
+                <strong className='font-semibold text-gray-200'>Phone:</strong>{' '}
+                <a
+                  href='tel:+880248956999'
+                  className='hover:text-primary-green-400 transition-colors'
+                >
                   +880 2 4895 6999
                 </a>
                 {', '}
-                <a href='tel:+8801706054122' className='hover:text-blue-400'>
+                <a
+                  href='tel:+8801706054122'
+                  className='hover:text-primary-green-400 transition-colors'
+                >
                   017 0605 4122
                 </a>
               </p>
               <p>
-                <strong className='font-semibold text-slate-200'>Email:</strong>{' '}
+                <strong className='font-semibold text-gray-200'>Email:</strong>{' '}
                 <a
                   href='mailto:info@ihsb.edu.bd'
-                  className='hover:text-blue-400'
+                  className='hover:text-primary-green-400 transition-colors'
                 >
                   info@ihsb.edu.bd
                 </a>
@@ -115,7 +121,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom: Social + Copyright */}
-        <div className='border-t border-slate-700 pt-6 text-center'>
+        <div className='border-t border-gray-800 pt-6 text-center'>
           <div
             className='flex justify-center gap-5 mb-4'
             aria-label='Social links'
@@ -126,7 +132,7 @@ export default function Footer() {
               target='_blank'
               rel='noopener noreferrer'
               aria-label='Facebook (opens in a new tab)'
-              className='text-slate-400 hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+              className='text-gray-400 hover:text-primary-green-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
             >
               <svg
                 className='h-6 w-6'
@@ -143,7 +149,7 @@ export default function Footer() {
               target='_blank'
               rel='noopener noreferrer'
               aria-label='Twitter (opens in a new tab)'
-              className='text-slate-400 hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+              className='text-gray-400 hover:text-primary-green-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
             >
               <svg
                 className='h-6 w-6'
@@ -160,7 +166,7 @@ export default function Footer() {
               target='_blank'
               rel='noopener noreferrer'
               aria-label='Instagram (opens in a new tab)'
-              className='text-slate-400 hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+              className='text-gray-400 hover:text-primary-green-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
             >
               <svg
                 className='h-6 w-6'
@@ -177,7 +183,7 @@ export default function Footer() {
               target='_blank'
               rel='noopener noreferrer'
               aria-label='LinkedIn (opens in a new tab)'
-              className='text-slate-400 hover:text-blue-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/40 rounded'
+              className='text-gray-400 hover:text-primary-green-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
             >
               <svg
                 className='h-6 w-6'
@@ -190,7 +196,7 @@ export default function Footer() {
             </a>
           </div>
 
-          <p className='text-sm text-slate-400'>
+          <p className='text-sm text-gray-400'>
             &copy; {COPYRIGHT_YEAR} International Hope School Bangladesh. All
             Rights Reserved.
           </p>

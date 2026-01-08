@@ -7,33 +7,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 type SubLink = { title: string; href: string }
 type MenuItem = { title: string; href?: string; subLinks?: SubLink[] }
 
-function useTheme() {
-  const [mounted, setMounted] = useState<boolean>(false)
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
-
-  useEffect(() => {
-    const saved = localStorage.getItem('theme') as 'light' | 'dark' | null
-    const systemDark = window.matchMedia?.(
-      '(prefers-color-scheme: dark)'
-    ).matches
-    const initial: 'light' | 'dark' = saved || (systemDark ? 'dark' : 'light')
-    setTheme(initial)
-    document.documentElement.classList.toggle('dark', initial === 'dark')
-    setMounted(true)
-  }, [])
-
-  const toggle = () => {
-    setTheme((prev) => {
-      const next: 'light' | 'dark' = prev === 'dark' ? 'light' : 'dark'
-      document.documentElement.classList.toggle('dark', next === 'dark')
-      localStorage.setItem('theme', next)
-      return next
-    })
-  }
-
-  return { theme, toggle, mounted }
-}
-
 export default function Nav() {
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
   const [dropdownOpenIdx, setDropdownOpenIdx] = useState<number | null>(null)
@@ -43,8 +16,6 @@ export default function Nav() {
 
   const navRef = useRef<HTMLElement | null>(null)
   const drawerRef = useRef<HTMLElement | null>(null)
-
-  const { theme, toggle, mounted } = useTheme()
 
   const menuItems: MenuItem[] = useMemo(
     () => [
@@ -139,7 +110,7 @@ export default function Nav() {
   return (
     <nav
       ref={navRef as React.RefObject<HTMLElement>}
-      className='bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700'
+      className='bg-white border-b border-gray-200 shadow-sm'
     >
       <div className='mx-auto max-w-screen-xl flex items-center justify-between p-4'>
         <Link href='/' className='flex items-center gap-3'>
@@ -152,8 +123,7 @@ export default function Nav() {
             className='object-contain'
           />
 
-          {/* Show name from md and up (you asked earlier) */}
-          <div className='hidden md:flex flex-col text-xl font-semibold text-slate-800 dark:text-slate-100 leading-tight'>
+          <div className='hidden md:flex flex-col text-xl font-semibold text-gray-900 leading-tight'>
             <span className='text-center'>International Hope</span>
             <span className='text-center'>School Bangladesh</span>
           </div>
@@ -167,7 +137,7 @@ export default function Nav() {
                 {item.subLinks ? (
                   <>
                     <button
-                      className='flex items-center gap-2 py-2 px-1 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'
+                      className='flex items-center gap-2 py-2 px-1 text-gray-700 hover:text-primary-green-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
                       aria-haspopup='menu'
                       aria-expanded={dropdownOpenIdx === idx}
                       onClick={() => toggleDropdown(idx)}
@@ -188,6 +158,7 @@ export default function Nav() {
                         }`}
                         viewBox='0 0 24 24'
                         fill='none'
+                        aria-hidden='true'
                       >
                         <path
                           d='M19 9l-7 7-7-7'
@@ -201,14 +172,14 @@ export default function Nav() {
                     {dropdownOpenIdx === idx && (
                       <div
                         role='menu'
-                        className='absolute left-0 top-full mt-2 w-56 rounded-lg bg-white dark:bg-slate-800 shadow-lg ring-1 ring-black/5 dark:ring-white/10 z-50'
+                        className='absolute left-0 top-full mt-2 w-56 rounded-lg bg-white shadow-lg ring-1 ring-black/5 z-50'
                       >
-                        <ul className='py-2 text-sm text-slate-700 dark:text-slate-200'>
+                        <ul className='py-2 text-sm text-gray-700'>
                           {item.subLinks.map((sub, sIdx) => (
                             <li key={sIdx}>
                               <Link
                                 href={sub.href}
-                                className='block px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-700/60 rounded'
+                                className='block px-4 py-2 hover:bg-gray-100 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500'
                                 onClick={() => setDropdownOpenIdx(null)}
                               >
                                 {sub.title}
@@ -222,56 +193,26 @@ export default function Nav() {
                 ) : (
                   <Link
                     href={item.href as string}
-                    className='py-2 px-1 text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'
+                    className='py-2 px-1 text-gray-700 hover:text-primary-green-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
                   >
                     {item.title}
                   </Link>
                 )}
               </li>
             ))}
-
-            {/* THEME SWITCH (desktop) */}
-            <li className='ml-2'>
-              {mounted && (
-                <button
-                  type='button'
-                  role='switch'
-                  aria-checked={theme === 'dark'}
-                  onClick={toggle}
-                  className='inline-flex items-center gap-2 group select-none'
-                  title={
-                    theme === 'dark'
-                      ? 'Switch to light mode'
-                      : 'Switch to dark mode'
-                  }
-                >
-                  <span
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'
-                    }`}
-                  >
-                    <span
-                      className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                        theme === 'dark' ? 'translate-x-5' : 'translate-x-0'
-                      }`}
-                    />
-                  </span>
-                </button>
-              )}
-            </li>
           </ul>
         </div>
 
         {/* Burger button visible on small + medium (hidden on lg+) */}
         <button
           onClick={() => setIsDrawerOpen(true)}
-          className='lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 dark:focus-visible:ring-slate-600'
+          className='lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-700 hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500'
           aria-controls='mobile-drawer'
           aria-expanded={isDrawerOpen}
           aria-label='Open main menu'
           type='button'
         >
-          <svg className='w-5 h-5' viewBox='0 0 17 14' fill='none'>
+          <svg className='w-5 h-5' viewBox='0 0 17 14' fill='none' aria-hidden='true'>
             <path
               d='M1 1h15M1 7h15M1 13h15'
               stroke='currentColor'
@@ -297,47 +238,31 @@ export default function Nav() {
       <aside
         id='mobile-drawer'
         ref={drawerRef as React.RefObject<HTMLElement>}
-        className={`fixed right-0 top-0 h-full w-4/5 max-w-sm z-50 transform bg-slate-50 dark:bg-slate-900 shadow-xl transition-transform duration-200 lg:hidden ${
+        className={`fixed right-0 top-0 h-full w-4/5 max-w-sm z-50 transform bg-white shadow-xl transition-transform duration-200 lg:hidden ${
           isDrawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
         aria-hidden={!isDrawerOpen}
       >
         <div className='p-4 space-y-4'>
           <div className='flex items-center justify-between'>
-            <span className='font-semibold text-slate-800 dark:text-slate-100'>
-              Menu
-            </span>
-
-            {/* THEME SWITCH (mobile) */}
-            {mounted && (
-              <button
-                type='button'
-                role='switch'
-                aria-checked={theme === 'dark'}
-                onClick={toggle}
-                className='inline-flex items-center gap-2 group select-none'
-                title={
-                  theme === 'dark'
-                    ? 'Switch to light mode'
-                    : 'Switch to dark mode'
-                }
+            <span className='font-semibold text-gray-900'>Menu</span>
+            <button
+              onClick={() => setIsDrawerOpen(false)}
+              className='p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500'
+              aria-label='Close menu'
+              type='button'
+            >
+              <svg
+                className='w-5 h-5'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                strokeWidth='2'
+                aria-hidden='true'
               >
-                <span className='text-xs text-slate-700 dark:text-slate-300 hidden sm:inline'>
-                  {theme === 'dark' ? 'Dark' : 'Light'}
-                </span>
-                <span
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    theme === 'dark' ? 'bg-slate-600' : 'bg-slate-300'
-                  }`}
-                >
-                  <span
-                    className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-                      theme === 'dark' ? 'translate-x-5' : 'translate-x-0'
-                    }`}
-                  />
-                </span>
-              </button>
-            )}
+                <path d='M18 6L6 18M6 6l12 12' />
+              </svg>
+            </button>
           </div>
 
           <nav className='grid gap-2'>
@@ -347,7 +272,7 @@ export default function Nav() {
                   <>
                     <button
                       onClick={() => toggleMobileDropdown(idx)}
-                      className='flex w-full items-center justify-between p-2 text-sm font-medium rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100'
+                      className='flex w-full items-center justify-between p-2 text-sm font-medium rounded-md hover:bg-gray-100 text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500'
                       aria-expanded={mobileDropdownOpenIdx === idx}
                       aria-controls={`mobile-sub-${idx}`}
                       type='button'
@@ -359,11 +284,12 @@ export default function Nav() {
                         }`}
                         viewBox='0 0 24 24'
                         fill='none'
+                        stroke='currentColor'
+                        strokeWidth='2'
+                        aria-hidden='true'
                       >
                         <path
                           d='M19 9l-7 7-7-7'
-                          stroke='currentColor'
-                          strokeWidth='2'
                           strokeLinecap='round'
                           strokeLinejoin='round'
                         />
@@ -380,7 +306,7 @@ export default function Nav() {
                           key={sIdx}
                           href={sub.href}
                           onClick={() => setIsDrawerOpen(false)}
-                          className='block p-2 text-sm rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
+                          className='block p-2 text-sm rounded-md hover:bg-gray-100 text-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500'
                         >
                           {sub.title}
                         </Link>
@@ -391,7 +317,7 @@ export default function Nav() {
                   <Link
                     href={item.href as string}
                     onClick={() => setIsDrawerOpen(false)}
-                    className='block p-2 text-sm font-medium rounded-md hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-100'
+                    className='block p-2 text-sm font-medium rounded-md hover:bg-gray-100 text-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500'
                   >
                     {item.title}
                   </Link>

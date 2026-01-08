@@ -115,7 +115,7 @@ export default function UttaraSeniorSection() {
   const photoSrcs = useMemo(() => gallery.map((g) => g.src), [gallery])
 
   return (
-    <div className='min-h-screen bg-white text-[#11181C] dark:bg-[#0D1117] dark:text-[#E6EEF2]'>
+    <div className='min-h-screen bg-white text-gray-900'>
       {/* Hero */}
       <section className='relative overflow-hidden'>
         {/* Make overlay ignore clicks so tabs are clickable */}
@@ -149,10 +149,10 @@ export default function UttaraSeniorSection() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-4'>
+          <h2 className='text-3xl font-semibold text-primary-green-600 mb-4'>
             About Us
           </h2>
-          <p className='text-gray-700 dark:text-gray-300 leading-relaxed'>
+          <p className='text-gray-700 leading-relaxed'>
             International Hope School Bangladesh is one of the flourishing
             educational institutions of Bangladesh. The Senior Section features
             an indoor stadium, gymnasium, modern labs, a rich library, a
@@ -166,13 +166,13 @@ export default function UttaraSeniorSection() {
 
         {/* Curriculum with centered Tabs */}
         <motion.section
-          className='mb-12 bg-gray-50 dark:bg-[#111827] rounded-2xl p-6 relative z-10'
+          className='mb-12 bg-gray-50 rounded-2xl p-6 relative z-10'
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-6 text-center'>
+          <h2 className='text-3xl font-semibold text-primary-green-600 mb-6 text-center'>
             IHSB Senior Section Curriculum
           </h2>
 
@@ -193,8 +193,8 @@ export default function UttaraSeniorSection() {
                   focus:ring-2 focus:ring-blue-500
                   ${
                     activeTab === tab
-                      ? 'border-blue-600 text-blue-700 dark:text-[#95C6E2] shadow-sm bg-white dark:bg-[#15202B]'
-                      : 'border-gray-200 dark:border-white/10 hover:bg-white/70 dark:hover:bg-white/5'
+                      ? 'border-primary-green-600 text-primary-green-700 shadow-sm bg-white'
+                      : 'border-gray-200 hover:bg-white/70'
                   }`}
               >
                 {tab}
@@ -213,12 +213,12 @@ export default function UttaraSeniorSection() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.25 }}
               >
-                <p className='text-gray-700 dark:text-gray-300 mb-4'>
+                <p className='text-gray-700 mb-4'>
                   Students typically choose 6–11 Cambridge IGCSE subjects.
                   Additional classes may be arranged to resolve timetable
                   conflicts.
                 </p>
-                <ul className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-gray-800 dark:text-gray-200'>
+                <ul className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-gray-800'>
                   {IGCSE_SUBJECTS.map((s) => (
                     <li
                       key={s}
@@ -239,12 +239,12 @@ export default function UttaraSeniorSection() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.25 }}
               >
-                <p className='text-gray-700 dark:text-gray-300 mb-4'>
+                <p className='text-gray-700 mb-4'>
                   IHSB offers Pearson-Edexcel A Levels and plans to commence
                   Cambridge AS & A Levels soon. Students receive structured
                   support for subject selection and university preparation.
                 </p>
-                <ul className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-gray-800 dark:text-gray-200'>
+                <ul className='grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-gray-800'>
                   {ALEVEL_SUBJECTS.map((s) => (
                     <li
                       key={s}
@@ -267,14 +267,14 @@ export default function UttaraSeniorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-4'>
+          <h2 className='text-3xl font-semibold text-primary-green-600 mb-4'>
             Facilities
           </h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             {FACILITIES.map((f) => (
               <article
                 key={f.name}
-                className='bg-white dark:bg-[#111827] rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 overflow-hidden'
+                className='bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden'
               >
                 <div className='relative aspect-[16/9]'>
                   <Image
@@ -287,7 +287,7 @@ export default function UttaraSeniorSection() {
                   />
                 </div>
                 <div className='p-4'>
-                  <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
+                  <h3 className='text-lg font-semibold text-gray-900'>
                     {f.name}
                   </h3>
                 </div>
@@ -304,7 +304,7 @@ export default function UttaraSeniorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-4'>
+          <h2 className='text-3xl font-semibold text-primary-green-600 mb-4'>
             Gallery
           </h2>
 
@@ -325,14 +325,14 @@ export default function UttaraSeniorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-4'>
+          <h2 className='text-3xl font-semibold text-primary-green-600 mb-4'>
             Section Leadership
           </h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
             {staff.map((m) => (
               <div
                 key={m.id}
-                className='bg-white dark:bg-[#111827] rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-4 text-center'
+                className='bg-white rounded-2xl shadow-sm border border-gray-100 p-4 text-center'
               >
                 <div className='relative w-28 h-28 mx-auto rounded-full overflow-hidden'>
                   <Image
@@ -343,10 +343,10 @@ export default function UttaraSeniorSection() {
                     unoptimized
                   />
                 </div>
-                <h3 className='mt-3 font-semibold text-gray-900 dark:text-gray-100'>
+                <h3 className='mt-3 font-semibold text-gray-900'>
                   {m.name}
                 </h3>
-                <p className='text-gray-600 dark:text-gray-300 text-sm'>
+                <p className='text-gray-600 text-sm'>
                   {m.role}
                 </p>
               </div>
@@ -362,14 +362,14 @@ export default function UttaraSeniorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-3xl font-semibold text-blue-700 dark:text-[#95C6E2] mb-4'>
+          <h2 className='text-3xl font-semibold text-primary-green-600 mb-4'>
             Student Voices
           </h2>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {testimonials.map((t) => (
               <figure
                 key={t.id}
-                className='bg-white dark:bg-[#111827] rounded-2xl shadow-sm border border-gray-100 dark:border-white/10 p-5'
+                className='bg-white rounded-2xl shadow-sm border border-gray-100 p-5'
               >
                 <div className='flex items-center gap-3'>
                   <div className='relative w-12 h-12 rounded-full overflow-hidden'>
@@ -382,15 +382,15 @@ export default function UttaraSeniorSection() {
                     />
                   </div>
                   <div>
-                    <figcaption className='font-medium text-gray-900 dark:text-gray-100'>
+                    <figcaption className='font-medium text-gray-900'>
                       {t.name}
                     </figcaption>
-                    <p className='text-xs text-gray-600 dark:text-gray-300'>
+                    <p className='text-xs text-gray-600'>
                       {t.grade}
                     </p>
                   </div>
                 </div>
-                <blockquote className='mt-3 text-gray-700 dark:text-gray-300'>
+                <blockquote className='mt-3 text-gray-700'>
                   {t.text}
                 </blockquote>
               </figure>
@@ -406,10 +406,10 @@ export default function UttaraSeniorSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className='text-2xl font-semibold text-teal-700 dark:text-[#95C6E2] mb-3 text-center'>
+          <h2 className='text-2xl font-semibold text-primary-green-600 mb-3 text-center'>
             Uttara Senior Section Location
           </h2>
-          <div className='rounded-2xl overflow-hidden shadow-sm border border-gray-100 dark:border-white/10 bg-white dark:bg-[#111827]'>
+          <div className='rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-white'>
             <div className='aspect-[16/9]'>
               <iframe
                 src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.797609401391!2d90.39961447539362!3d23.861319578594895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c42256771bad%3A0x662d13081edbb710!2sInternational%20Hope%20School%20Bangladesh!5e0!3m2!1sen!2sbd!4v1738793777927!5m2!1sen!2sbd'

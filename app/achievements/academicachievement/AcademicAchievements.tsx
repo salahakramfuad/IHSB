@@ -2,7 +2,6 @@
 'use client'
 import React from 'react'
 import { faker } from '@faker-js/faker'
-import { useThemeMode } from '../../../hooks/useThemeMode'
 
 interface Student {
   id: string
@@ -45,16 +44,14 @@ function makeStudents(
 }
 
 const StudentCard: React.FC<{ student: Student }> = ({ student }) => {
-  const theme = useThemeMode()
   const [imgSrc, setImgSrc] = React.useState(student.image)
 
   const handleImageError = () => setImgSrc('/assets/images/default-avatar.png')
 
   return (
     <article
-      className='flex flex-col h-full rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1'
+      className='flex flex-col h-full rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1 bg-white border-2 border-gray-100'
       aria-label={`Achievement of ${student.name}: ${student.result}`}
-      style={{ backgroundColor: theme.surface }}
     >
       {/* Portrait image area */}
       <div className='relative w-full aspect-[3/3] md:aspect-[3/3]'>
@@ -74,13 +71,8 @@ const StudentCard: React.FC<{ student: Student }> = ({ student }) => {
 
       {/* Text area */}
       <div className='p-6'>
-        <p
-          className='text-sm md:text-base'
-          style={{ color: theme.textSecondary }}
-        >
-          <span className='font-semibold' style={{ color: theme.text }}>
-            Result:
-          </span>{' '}
+        <p className='text-sm md:text-base text-gray-600'>
+          <span className='font-semibold text-gray-900'>Result:</span>{' '}
           {student.result}
         </p>
       </div>
@@ -94,14 +86,11 @@ const AchievementSection: React.FC<AchievementSectionProps> = ({
   students,
   sectionId
 }) => {
-  const theme = useThemeMode()
-
   return (
     <section className='mb-12 z-10' aria-labelledby={sectionId}>
       <h2
         id={sectionId}
-        className='text-3xl font-bold mb-6 flex items-center'
-        style={{ color: theme.text }}
+        className='text-3xl font-bold mb-6 flex items-center text-gray-900'
       >
         <span className='mr-2' aria-hidden='true'>
           {emoji}
@@ -118,8 +107,6 @@ const AchievementSection: React.FC<AchievementSectionProps> = ({
 }
 
 const AcademicAchievements: React.FC = () => {
-  const theme = useThemeMode()
-
   // Generate once per mount; deterministic via seeding.
   const data = React.useMemo(() => {
     return {
@@ -130,10 +117,7 @@ const AcademicAchievements: React.FC = () => {
   }, [])
 
   return (
-    <div
-      className='py-16 px-4 sm:px-6 lg:px-8'
-      style={{ backgroundColor: theme.background }}
-    >
+    <div className='py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-primary-green-50/30'>
       <div className='max-w-6xl mx-auto'>
         <header
           className='relative mx-auto mb-12 max-w-4xl text-center px-4'
@@ -146,27 +130,18 @@ const AcademicAchievements: React.FC = () => {
                bg-[radial-gradient(60%_60%_at_50%_10%,var(--primary)_0%,transparent_60%)]'
           />
 
-          <h1
-            className='inline-block text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight
-             bg-gradient-to-r
-             from-[var(--primary,#0EA5E9)] to-[var(--secondary,#22D3EE)]
-             bg-clip-text drop-shadow-[0_1px_0_rgba(0,0,0,0.06)]'
-          >
+          <h1 className='inline-block text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight bg-gradient-to-r from-primary-green-600 via-accent-blue-600 to-accent-purple-600 bg-clip-text text-transparent drop-shadow-[0_1px_0_rgba(0,0,0,0.06)]'>
             Academic Achievements
           </h1>
 
           {/* Accent underline */}
-          <div
-            className='mx-auto mt-3 h-1 w-24 rounded-full
-               bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]
-               shadow-[0_0_16px_2px_rgba(0,0,0,0.05)]'
-          />
+          <div className='mx-auto mt-3 h-1 w-24 rounded-full bg-gradient-to-r from-primary-green-500 to-accent-blue-500 shadow-[0_0_16px_2px_rgba(0,0,0,0.05)]' />
 
-          <p className='mt-4 text-base sm:text-lg md:text-xl leading-relaxed text-[color:var(--text-secondary)]'>
+          <p className='mt-4 text-base sm:text-lg md:text-xl leading-relaxed text-gray-700'>
             Celebrating the outstanding academic success of our students.
           </p>
 
-          <p className='mt-2 text-sm text-[color:var(--text-secondary)]/70'>
+          <p className='mt-2 text-sm text-gray-600'>
             Cambridge Curriculum • Results that inspire confidence and curiosity
           </p>
         </header>

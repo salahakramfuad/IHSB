@@ -60,7 +60,7 @@ export default function LightboxGallery({
             key={i}
             type='button'
             onClick={() => openAt(i)}
-            className='group relative aspect-[4/3] overflow-hidden rounded-xl ring-1 ring-black/5 dark:ring-white/10 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='group relative aspect-[4/3] overflow-hidden rounded-xl ring-1 ring-black/5 focus:outline-none focus:ring-2 focus:ring-primary-green-500'
           >
             <Image
               src={src}

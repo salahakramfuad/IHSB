@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ['class'],
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -13,7 +12,69 @@ module.exports = {
         inter: ['Inter', 'sans-serif']
       },
       colors: {
-        'primary-orange': '#FF5722',
+        // Academic color palette - Vibrant colors
+        'primary-green': {
+          DEFAULT: '#10b981',
+          50: '#ecfdf5',
+          100: '#d1fae5',
+          200: '#a7f3d0',
+          300: '#6ee7b7',
+          400: '#34d399',
+          500: '#10b981',
+          600: '#059669',
+          700: '#047857',
+          800: '#065f46',
+          900: '#064e3b',
+        },
+        'accent-blue': {
+          DEFAULT: '#2563eb',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#2563eb',
+          700: '#1d4ed8',
+        },
+        'accent-yellow': {
+          DEFAULT: '#facc15',
+          50: '#fefce8',
+          100: '#fef9c3',
+          400: '#facc15',
+          500: '#fbbf24',
+          600: '#eab308',
+        },
+        'accent-purple': {
+          DEFAULT: '#a855f7',
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          400: '#c084fc',
+          500: '#a855f7',
+          600: '#9333ea',
+        },
+        'accent-pink': {
+          DEFAULT: '#ec4899',
+          50: '#fdf2f8',
+          100: '#fce7f3',
+          400: '#f472b6',
+          500: '#ec4899',
+          600: '#db2777',
+        },
+        'accent-orange': {
+          DEFAULT: '#f97316',
+          50: '#fff7ed',
+          100: '#ffedd5',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+        },
+        'accent-teal': {
+          DEFAULT: '#14b8a6',
+          50: '#f0fdfa',
+          100: '#ccfbf1',
+          400: '#2dd4bf',
+          500: '#14b8a6',
+          600: '#0d9488',
+        },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
