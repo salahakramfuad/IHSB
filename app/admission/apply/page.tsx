@@ -41,12 +41,7 @@ const admissionSchema = z.object({
   motherEmail: z.string().email('Invalid email format').optional(),
 
   onMedication: z.boolean(),
-  medicationName: z
-    .string()
-    .optional()
-    .refine((val, ctx) => {
-      return ctx.data.onMedication ? val && val.length > 0 : true
-    }, 'Medication name is required when on medication'),
+  medicationName: z.string().optional(),
 
   studentPhoto: z.any(),
   birthCertificateImage: z.any(),
@@ -56,6 +51,14 @@ const admissionSchema = z.object({
 
   paymentReference: z.string().min(1, 'Payment reference is required'),
   recaptcha: z.string().min(1, 'Captcha is required')
+}).superRefine((data, ctx) => {
+  if (data.onMedication && (!data.medicationName || data.medicationName.length === 0)) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Medication name is required when on medication',
+      path: ['medicationName']
+    })
+  }
 })
 
 const steps = [
