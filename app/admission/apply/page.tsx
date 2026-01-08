@@ -114,22 +114,22 @@ export default function ApplyPage() {
       title: 'School & Student Information',
       component: (
         <>
-          <SchoolInformation register={register} errors={errors} control={control} />
-          <StudentInformation register={register} errors={errors} control={control} />
-          <AddressInformation register={register} errors={errors} control={control} />
+          <SchoolInformation register={register} errors={errors} />
+          <StudentInformation register={register} errors={errors} />
+          <AddressInformation register={register} errors={errors} />
         </>
       )
     },
     {
       title: 'Parent Information',
       component: (
-        <ParentsInformation register={register} errors={errors} control={control} />
+        <ParentsInformation register={register} errors={errors} />
       )
     },
     {
       title: 'Document Uploads',
       component: (
-        <DocumentUpload register={register} errors={errors} control={control} />
+        <DocumentUpload register={register} errors={errors} />
       )
     },
     {
@@ -138,7 +138,6 @@ export default function ApplyPage() {
         <Additionalinfo
           register={register}
           errors={errors}
-          control={control}
           onMedication={onMedication}
         />
       )
@@ -146,7 +145,7 @@ export default function ApplyPage() {
     {
       title: 'Payment Information',
       component: (
-        <PaymentInformation register={register} errors={errors} control={control} />
+        <PaymentInformation register={register} errors={errors} />
       )
     },
     {

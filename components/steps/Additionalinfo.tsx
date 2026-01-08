@@ -1,6 +1,17 @@
 import React from 'react'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
 
-const AdditionalInformation = ({ register, errors, onMedication }) => {
+interface AdditionalinfoProps {
+  register: UseFormRegister<any>
+  errors: FieldErrors<any>
+  onMedication?: string | boolean
+}
+
+const Additionalinfo: React.FC<AdditionalinfoProps> = ({
+  register,
+  errors,
+  onMedication
+}) => {
   return (
     <section className='bg-white rounded-lg shadow-sm p-6 md:p-8 border border-gray-200'>
       <div className='mb-6'>
@@ -31,7 +42,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           />
           {errors.lastSchoolAttended && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.lastSchoolAttended.message}
+              {(errors.lastSchoolAttended as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -54,7 +65,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           />
           {errors.languageSpokenAtHome && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.languageSpokenAtHome.message}
+              {(errors.languageSpokenAtHome as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -82,7 +93,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           </select>
           {errors.studentLivingWith && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.studentLivingWith.message}
+              {(errors.studentLivingWith as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -98,7 +109,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           <textarea
             id='allergiesOrSpecialNeeds'
             {...register('allergiesOrSpecialNeeds')}
-            rows='3'
+            rows={3}
             className={`mt-1 block w-full p-2 border ${
               errors.allergiesOrSpecialNeeds
                 ? 'border-red-500'
@@ -107,7 +118,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           />
           {errors.allergiesOrSpecialNeeds && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.allergiesOrSpecialNeeds.message}
+              {(errors.allergiesOrSpecialNeeds as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -158,7 +169,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
             />
             {errors.medicationName && (
               <p className='mt-1 text-sm text-red-500'>
-                {errors.medicationName.message}
+                {(errors.medicationName as { message?: string })?.message}
               </p>
             )}
           </div>
@@ -234,7 +245,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           />
           {errors.guardianDetails && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.guardianDetails.message}
+              {(errors.guardianDetails as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -250,14 +261,14 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
           <textarea
             id='otherRelevantInfo'
             {...register('otherRelevantInfo')}
-            rows='3'
+            rows={3}
             className={`mt-1 block w-full p-2 border ${
               errors.otherRelevantInfo ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
           />
           {errors.otherRelevantInfo && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.otherRelevantInfo.message}
+              {(errors.otherRelevantInfo as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -285,7 +296,7 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
         </div>
         {errors.declaration && (
           <p className='mt-2 text-sm text-red-500'>
-            {errors.declaration.message}
+            {(errors.declaration as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -293,4 +304,5 @@ const AdditionalInformation = ({ register, errors, onMedication }) => {
   )
 }
 
-export default AdditionalInformation
+export default Additionalinfo
+

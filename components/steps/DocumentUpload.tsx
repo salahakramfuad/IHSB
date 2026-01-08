@@ -1,6 +1,12 @@
 import React from 'react'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
 
-const DocumentUploads = ({ register, errors }) => {
+interface DocumentUploadProps {
+  register: UseFormRegister<any>
+  errors: FieldErrors<any>
+}
+
+const DocumentUpload: React.FC<DocumentUploadProps> = ({ register, errors }) => {
   return (
     <section className='bg-white rounded-lg shadow-sm p-6 md:p-8 border border-gray-200'>
       <div className='mb-6'>
@@ -73,7 +79,7 @@ const DocumentUploads = ({ register, errors }) => {
                     clipRule='evenodd'
                   />
                 </svg>
-                {errors.studentPhoto.message}
+                {(errors.studentPhoto as { message?: string })?.message}
               </div>
             )}
           </div>
@@ -138,7 +144,7 @@ const DocumentUploads = ({ register, errors }) => {
                     clipRule='evenodd'
                   />
                 </svg>
-                {errors.birthCertificateImage.message}
+                {(errors.birthCertificateImage as { message?: string })?.message}
               </div>
             )}
           </div>
@@ -202,7 +208,7 @@ const DocumentUploads = ({ register, errors }) => {
                     clipRule='evenodd'
                   />
                 </svg>
-                {errors.lastYearReportCardImage.message}
+                {(errors.lastYearReportCardImage as { message?: string })?.message}
               </div>
             )}
           </div>
@@ -266,7 +272,7 @@ const DocumentUploads = ({ register, errors }) => {
                     clipRule='evenodd'
                   />
                 </svg>
-                {errors.passportImage.message}
+                {(errors.passportImage as { message?: string })?.message}
               </div>
             )}
           </div>
@@ -330,7 +336,7 @@ const DocumentUploads = ({ register, errors }) => {
                     clipRule='evenodd'
                   />
                 </svg>
-                {errors.visitingCardImage.message}
+                {(errors.visitingCardImage as { message?: string })?.message}
               </div>
             )}
           </div>
@@ -363,4 +369,5 @@ const DocumentUploads = ({ register, errors }) => {
   )
 }
 
-export default DocumentUploads
+export default DocumentUpload
+

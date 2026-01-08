@@ -1,6 +1,15 @@
 import React from 'react'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
 
-const ParentInformation = ({ register, errors }) => {
+interface ParentsInformationProps {
+  register: UseFormRegister<any>
+  errors: FieldErrors<any>
+}
+
+const ParentsInformation: React.FC<ParentsInformationProps> = ({
+  register,
+  errors
+}) => {
   return (
     <section>
       <h2 className='text-xl font-semibold mb-4'>Parent Information</h2>
@@ -20,11 +29,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.fatherName ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.fatherName && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.fatherName.message}
+              {(errors.fatherName as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -44,11 +53,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.fatherOccupation ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.fatherOccupation && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.fatherOccupation.message}
+              {(errors.fatherOccupation as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -68,11 +77,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.fatherContact ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.fatherContact && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.fatherContact.message}
+              {(errors.fatherContact as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -92,11 +101,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.fatherEmail ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.fatherEmail && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.fatherEmail.message}
+              {(errors.fatherEmail as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -116,11 +125,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.motherName ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.motherName && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.motherName.message}
+              {(errors.motherName as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -140,11 +149,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.motherOccupation ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.motherOccupation && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.motherOccupation.message}
+              {(errors.motherOccupation as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -164,11 +173,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.motherContact ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.motherContact && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.motherContact.message}
+              {(errors.motherContact as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -188,11 +197,11 @@ const ParentInformation = ({ register, errors }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.motherEmail ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.motherEmail && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.motherEmail.message}
+              {(errors.motherEmail as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -201,4 +210,5 @@ const ParentInformation = ({ register, errors }) => {
   )
 }
 
-export default ParentInformation
+export default ParentsInformation
+

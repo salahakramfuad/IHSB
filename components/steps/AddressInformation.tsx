@@ -1,6 +1,15 @@
 import React from 'react'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
 
-const AddressInformation = ({ register, errors }) => {
+interface AddressInformationProps {
+  register: UseFormRegister<any>
+  errors: FieldErrors<any>
+}
+
+const AddressInformation: React.FC<AddressInformationProps> = ({
+  register,
+  errors
+}) => {
   return (
     <section>
       <h2 className='text-xl font-semibold mb-4'>Address Information</h2>
@@ -16,15 +25,15 @@ const AddressInformation = ({ register, errors }) => {
           <textarea
             id='presentAddress'
             {...register('presentAddress')}
-            rows='3'
+            rows={3}
             className={`mt-1 block w-full p-2 border ${
               errors.presentAddress ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure textarea is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.presentAddress && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.presentAddress.message}
+              {(errors.presentAddress as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -40,15 +49,15 @@ const AddressInformation = ({ register, errors }) => {
           <textarea
             id='permanentAddress'
             {...register('permanentAddress')}
-            rows='3'
+            rows={3}
             className={`mt-1 block w-full p-2 border ${
               errors.permanentAddress ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure textarea is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.permanentAddress && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.permanentAddress.message}
+              {(errors.permanentAddress as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -58,3 +67,4 @@ const AddressInformation = ({ register, errors }) => {
 }
 
 export default AddressInformation
+

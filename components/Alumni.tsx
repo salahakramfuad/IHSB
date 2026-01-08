@@ -1,8 +1,28 @@
 'use client'
 import { useState } from 'react'
 
-const AlumniComponent = () => {
-  const alumniYearData = [
+interface AlumniYearData {
+  year: string
+  count: string
+}
+
+interface HighlightedAlumni {
+  id: number
+  name: string
+  description: string
+  imageUrl: string
+}
+
+interface AlumniStory {
+  id: number
+  title: string
+  excerpt: string
+  content: string
+  imageUrl: string
+}
+
+const AlumniComponent: React.FC = () => {
+  const alumniYearData: AlumniYearData[] = [
     { year: '2023', count: '500+' },
     { year: '2022', count: '450+' },
     { year: '2021', count: '400+' }
@@ -13,28 +33,28 @@ const AlumniComponent = () => {
     return total + numericCount
   }, 0)
 
-  const highlightedAlumni = [
+  const highlightedAlumni: HighlightedAlumni[] = [
     {
       id: 1,
       name: 'John Doe',
       description: 'CEO at TechCorp',
-      imageUrl: 'https://picsum.photos/seed/alumni1/150' // Alternative placeholder image
+      imageUrl: 'https://picsum.photos/seed/alumni1/150'
     },
     {
       id: 2,
       name: 'Jane Smith',
       description: 'Founder of InnovateX',
-      imageUrl: 'https://picsum.photos/seed/alumni2/150' // Alternative placeholder image
+      imageUrl: 'https://picsum.photos/seed/alumni2/150'
     },
     {
       id: 3,
       name: 'Alex Johnson',
       description: 'Lead Engineer at FutureTech',
-      imageUrl: 'https://picsum.photos/seed/alumni3/150' // Alternative placeholder image
+      imageUrl: 'https://picsum.photos/seed/alumni3/150'
     }
   ]
 
-  const alumniStories = [
+  const alumniStories: AlumniStory[] = [
     {
       id: 1,
       title: 'My Journey After Graduation',
@@ -42,7 +62,7 @@ const AlumniComponent = () => {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae nisi nec nisi tincidunt...',
       content:
         'Full article content goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam vitae nisi nec nisi tincidunt...',
-      imageUrl: 'https://picsum.photos/seed/story1/300/200' // Alternative placeholder image
+      imageUrl: 'https://picsum.photos/seed/story1/300/200'
     },
     {
       id: 2,
@@ -51,7 +71,7 @@ const AlumniComponent = () => {
         'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae...',
       content:
         'Full article content goes here. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae...',
-      imageUrl: 'https://picsum.photos/seed/story2/300/200' // Alternative placeholder image
+      imageUrl: 'https://picsum.photos/seed/story2/300/200'
     },
     {
       id: 3,
@@ -60,12 +80,11 @@ const AlumniComponent = () => {
         'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque...',
       content:
         'Full article content goes here. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque...',
-      imageUrl: 'https://picsum.photos/seed/story3/300/200' // Alternative placeholder image
+      imageUrl: 'https://picsum.photos/seed/story3/300/200'
     }
   ]
 
-  // State to manage the currently selected story
-  const [selectedStory, setSelectedStory] = useState(null)
+  const [selectedStory, setSelectedStory] = useState<AlumniStory | null>(null)
 
   return (
     <div className='bg-gray-100 min-h-screen py-12'>
@@ -207,3 +226,4 @@ const AlumniComponent = () => {
 }
 
 export default AlumniComponent
+

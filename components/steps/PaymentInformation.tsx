@@ -1,6 +1,15 @@
 import React from 'react'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
 
-const PaymentInformation = ({ register, errors }) => {
+interface PaymentInformationProps {
+  register: UseFormRegister<any>
+  errors: FieldErrors<any>
+}
+
+const PaymentInformation: React.FC<PaymentInformationProps> = ({
+  register,
+  errors
+}) => {
   return (
     <section className='bg-white rounded-lg shadow-sm p-6 md:p-8 border border-gray-200'>
       <div className='mb-6'>
@@ -42,7 +51,7 @@ const PaymentInformation = ({ register, errors }) => {
         </div>
         {errors.paymentMethod && (
           <p className='mt-1 text-sm text-red-500'>
-            {errors.paymentMethod.message}
+            {(errors.paymentMethod as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -66,7 +75,7 @@ const PaymentInformation = ({ register, errors }) => {
         />
         {errors.sslTransactionId && (
           <p className='mt-1 text-sm text-red-500'>
-            {errors.sslTransactionId.message}
+            {(errors.sslTransactionId as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -90,7 +99,7 @@ const PaymentInformation = ({ register, errors }) => {
         />
         {errors.cardNumber && (
           <p className='mt-1 text-sm text-red-500'>
-            {errors.cardNumber.message}
+            {(errors.cardNumber as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -115,7 +124,7 @@ const PaymentInformation = ({ register, errors }) => {
           />
           {errors.expiryDate && (
             <p className='mt-1 text-sm text-red-500'>
-              {errors.expiryDate.message}
+              {(errors.expiryDate as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -138,7 +147,9 @@ const PaymentInformation = ({ register, errors }) => {
             placeholder='Enter CVV'
           />
           {errors.cvv && (
-            <p className='mt-1 text-sm text-red-500'>{errors.cvv.message}</p>
+            <p className='mt-1 text-sm text-red-500'>
+              {(errors.cvv as { message?: string })?.message}
+            </p>
           )}
         </div>
       </div>
@@ -162,7 +173,7 @@ const PaymentInformation = ({ register, errors }) => {
         />
         {errors.paymentReference && (
           <p className='mt-1 text-sm text-red-500'>
-            {errors.paymentReference.message}
+            {(errors.paymentReference as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -188,7 +199,7 @@ const PaymentInformation = ({ register, errors }) => {
         </div>
         {errors.paymentConfirmation && (
           <p className='mt-2 text-sm text-red-500'>
-            {errors.paymentConfirmation.message}
+            {(errors.paymentConfirmation as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -197,3 +208,4 @@ const PaymentInformation = ({ register, errors }) => {
 }
 
 export default PaymentInformation
+

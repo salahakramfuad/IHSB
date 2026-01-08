@@ -1,6 +1,15 @@
 import React from 'react'
+import { UseFormRegister, FieldErrors } from 'react-hook-form'
 
-const SchoolInformation = ({ register, errors, control }) => {
+interface SchoolInformationProps {
+  register: UseFormRegister<any>
+  errors: FieldErrors<any>
+}
+
+const SchoolInformation: React.FC<SchoolInformationProps> = ({
+  register,
+  errors
+}) => {
   return (
     <section>
       <h2 className='text-xl font-semibold mb-4'>School Information</h2>
@@ -19,7 +28,7 @@ const SchoolInformation = ({ register, errors, control }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.branch ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors cursor-pointer appearance-none bg-white`}
-            style={{ zIndex: 20 }} // Ensure dropdown is above other elements
+            style={{ zIndex: 20 }}
           >
             <option value=''>Select Branch</option>
             <option value='Branch A'>
@@ -31,7 +40,7 @@ const SchoolInformation = ({ register, errors, control }) => {
           </select>
           {errors.branch && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.branch.message}
+              {(errors.branch as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -52,11 +61,11 @@ const SchoolInformation = ({ register, errors, control }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.academicYear ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
           />
           {errors.academicYear && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.academicYear.message}
+              {(errors.academicYear as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -77,12 +86,12 @@ const SchoolInformation = ({ register, errors, control }) => {
             className={`mt-1 block w-full p-2 border ${
               errors.applicationNumber ? 'border-red-500' : 'border-gray-300'
             } rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 transition-colors`}
-            style={{ zIndex: 20 }} // Ensure input is above other elements
+            style={{ zIndex: 20 }}
             readOnly
           />
           {errors.applicationNumber && (
             <p className='mt-1 text-sm text-red-500' style={{ zIndex: 30 }}>
-              {errors.applicationNumber.message}
+              {(errors.applicationNumber as { message?: string })?.message}
             </p>
           )}
         </div>
@@ -92,3 +101,4 @@ const SchoolInformation = ({ register, errors, control }) => {
 }
 
 export default SchoolInformation
+

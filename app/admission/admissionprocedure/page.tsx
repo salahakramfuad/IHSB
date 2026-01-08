@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ApplicationProcedure = () => {
+const ApplicationProcedure: React.FC = () => {
   return (
     <div className='bg-gray-100 min-h-screen py-8'>
       <div className='max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8'>
@@ -110,7 +110,7 @@ const ApplicationProcedure = () => {
               {/* step 5*/}
               <div className='flex items-start bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300'>
                 <div className='flex items-center justify-center w-16 h-12 bg-purple-500 rounded-full mr-4'>
-                  <span className='text-white text-xl font-bold'>4</span>
+                  <span className='text-white text-xl font-bold'>5</span>
                 </div>
                 <div>
                   <h3 className='text-lg font-semibold text-gray-800 mb-2'>
@@ -392,3 +392,4 @@ const ApplicationProcedure = () => {
 }
 
 export default ApplicationProcedure
+

@@ -1,8 +1,13 @@
 import React from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { Controller } from 'react-hook-form'
+import { Control, Controller, FieldErrors } from 'react-hook-form'
 
-const ReCAPTCHAStep = ({ control, errors }) => {
+interface ReCAPTCHAStepProps {
+  control: Control<any>
+  errors: FieldErrors<any>
+}
+
+const ReCAPTCHAStep: React.FC<ReCAPTCHAStepProps> = ({ control, errors }) => {
   return (
     <section>
       <h2 className='text-xl font-semibold mb-4'>ReCAPTCHA</h2>
@@ -20,7 +25,7 @@ const ReCAPTCHAStep = ({ control, errors }) => {
         />
         {errors.recaptcha && (
           <p className='mt-1 text-sm text-red-500'>
-            {errors.recaptcha.message}
+            {(errors.recaptcha as { message?: string })?.message}
           </p>
         )}
       </div>
@@ -29,3 +34,4 @@ const ReCAPTCHAStep = ({ control, errors }) => {
 }
 
 export default ReCAPTCHAStep
+

@@ -1,17 +1,18 @@
+'use client'
 import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Control } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 // Step Components
-import SchoolInformation from 'components/steps/SchoolInformation.jsx'
-import StudentInformation from 'components/steps/StudentInformation.jsx'
-import AddressInformation from 'components/steps/AddressInformation.jsx'
-import ParentInformation from 'components/steps/ParentsInformation.jsx'
-import DocumentUploads from 'components/steps/DocumentUpload.jsx'
-import AdditionalInformation from 'components/steps/Additionalinfo.jsx'
-import PaymentInformation from 'components/steps/PaymentInformation.jsx'
-import ReCAPTCHAStep from 'components/steps/ReCAPTCHAStep.jsx'
+import SchoolInformation from './steps/SchoolInformation'
+import StudentInformation from './steps/StudentInformation'
+import AddressInformation from './steps/AddressInformation'
+import ParentsInformation from './steps/ParentsInformation'
+import DocumentUpload from './steps/DocumentUpload'
+import Additionalinfo from './steps/Additionalinfo'
+import PaymentInformation from './steps/PaymentInformation'
+import ReCAPTCHAStep from './steps/ReCAPTCHAStep'
 
 // Validation Schema
 const admissionSchema = z.object({
@@ -35,12 +36,7 @@ const admissionSchema = z.object({
   motherEmail: z.string().email('Invalid email format').optional(),
 
   onMedication: z.boolean(),
-  medicationName: z
-    .string()
-    .optional()
-    .refine((val, ctx) => {
-      return ctx.data.onMedication ? val && val.length > 0 : true
-    }, 'Medication name is required when on medication'),
+  medicationName: z.string().optional(),
 
   studentPhoto: z.any(),
   birthCertificateImage: z.any(),
@@ -50,9 +46,17 @@ const admissionSchema = z.object({
 
   paymentReference: z.string().min(1, 'Payment reference is required'),
   recaptcha: z.string().min(1, 'Captcha is required')
+}).superRefine((data, ctx) => {
+  if (data.onMedication && (!data.medicationName || data.medicationName.length === 0)) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'Medication name is required when on medication',
+      path: ['medicationName']
+    })
+  }
 })
 
-const AdmissionForm = () => {
+const AdmissionForm: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -72,52 +76,30 @@ const AdmissionForm = () => {
       title: 'School Information',
       component: (
         <>
-          <SchoolInformation
-            register={register}
-            errors={errors}
-            control={control}
-          />
-          <StudentInformation
-            register={register}
-            errors={errors}
-            control={control}
-          />
-          <AddressInformation
-            register={register}
-            errors={errors}
-            control={control}
-          />
+          <SchoolInformation register={register} errors={errors} />
+          <StudentInformation register={register} errors={errors} />
+          <AddressInformation register={register} errors={errors} />
         </>
       )
     },
-
     {
       title: 'Parent Information',
       component: (
-        <ParentInformation
-          register={register}
-          errors={errors}
-          control={control}
-        />
+        <ParentsInformation register={register} errors={errors} />
       )
     },
     {
       title: 'Document Uploads',
       component: (
-        <DocumentUploads
-          register={register}
-          errors={errors}
-          control={control}
-        />
+        <DocumentUpload register={register} errors={errors} />
       )
     },
     {
       title: 'Additional Information',
       component: (
-        <AdditionalInformation
+        <Additionalinfo
           register={register}
           errors={errors}
-          control={control}
           onMedication={onMedication}
         />
       )
@@ -125,11 +107,7 @@ const AdmissionForm = () => {
     {
       title: 'Payment Information',
       component: (
-        <PaymentInformation
-          register={register}
-          errors={errors}
-          control={control}
-        />
+        <PaymentInformation register={register} errors={errors} />
       )
     },
     {
@@ -142,13 +120,13 @@ const AdmissionForm = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length))
   const prevStep = () => setCurrentStep((prevStep) => Math.max(prevStep - 1, 1))
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     const formData = new FormData()
     Object.entries(data).forEach(([key, value]) => {
       if (value instanceof FileList) {
-        formData.append(key, value[0])
+        formData.append(key, (value as FileList)[0])
       } else {
-        formData.append(key, value)
+        formData.append(key, value as string)
       }
     })
 
@@ -208,3 +186,4 @@ const AdmissionForm = () => {
 }
 
 export default AdmissionForm
+

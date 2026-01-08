@@ -14,7 +14,15 @@ const alumniYearData = [
   { year: '2019', count: '350+' }
 ]
 
-const highlightedAlumni = [
+interface HighlightedAlumni {
+  id: number
+  name: string
+  description: string
+  achievement: string
+  imageUrl: string
+}
+
+const highlightedAlumni: HighlightedAlumni[] = [
   {
     id: 1,
     name: 'Dr. Sarah Ahmed',
@@ -59,7 +67,18 @@ const highlightedAlumni = [
   }
 ]
 
-const alumniStories = [
+interface AlumniStory {
+  id: number
+  title: string
+  excerpt: string
+  content: string
+  author: string
+  authorRole: string
+  imageUrl: string
+  date: string
+}
+
+const alumniStories: AlumniStory[] = [
   {
     id: 1,
     title: 'From IHSB to Global Impact',
@@ -99,7 +118,7 @@ const alumniStories = [
 ]
 
 export default function AlumniPage() {
-  const [selectedStory, setSelectedStory] = useState(null)
+  const [selectedStory, setSelectedStory] = useState<AlumniStory | null>(null)
 
   const totalAlumni = alumniYearData.reduce((total, item) => {
     const numericCount = parseInt(item.count.replace('+', ''), 10)
@@ -337,3 +356,4 @@ export default function AlumniPage() {
     </main>
   )
 }
+
