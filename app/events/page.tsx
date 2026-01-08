@@ -76,7 +76,7 @@ const events = [
 export default function EventsPage() {
   return (
     <main className='min-h-screen bg-gray-50'>
-      <Section background='primary-green'>
+      <Section background='green' className='bg-primary-green-600'>
         <div className='max-w-4xl mx-auto text-center text-white'>
           <h1 className='text-4xl md:text-5xl font-bold mb-4'>
             Upcoming Events
