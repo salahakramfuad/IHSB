@@ -326,7 +326,7 @@ export default function FeesPage() {
             </Card>
 
             {/* Transport Fees */}
-            {fees.transport && (
+            {'transport' in fees && fees.transport && (
               <Card
                 className={`border-2 ${activeCampusData?.borderColor} ${activeCampusData?.bgColor}`}
               >
@@ -354,7 +354,7 @@ export default function FeesPage() {
             )}
 
             {/* Hostel Fees */}
-            {fees.hostel && (
+            {'hostel' in fees && fees.hostel && (
               <Card
                 className={`border-2 ${activeCampusData?.borderColor} ${activeCampusData?.bgColor}`}
               >
