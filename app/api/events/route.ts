@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllEvents, createEvent } from '@/lib/firestore/events'
+import { getAllEventsAdmin, createEvent } from '@/lib/firestore/events'
 import { Event } from '@/data/events'
 
 export async function GET() {
   try {
-    const events = await getAllEvents()
+    // For admin API, return full document data including creator info
+    const events = await getAllEventsAdmin()
     return NextResponse.json({ events })
   } catch (error: any) {
     console.error('Error fetching events:', error)
@@ -40,7 +41,8 @@ export async function POST(request: NextRequest) {
       registrationUrl: body.registrationUrl
     }
 
-    const id = await createEvent(eventData)
+    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    const id = await createEvent(eventData, creatorEmail)
     return NextResponse.json({ id, ...eventData })
   } catch (error: any) {
     console.error('Error creating event:', error)

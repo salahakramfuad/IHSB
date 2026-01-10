@@ -18,6 +18,10 @@ export interface EventDocument extends Omit<Event, 'date'> {
   date: Timestamp | string
   createdAt?: Timestamp
   updatedAt?: Timestamp
+  createdBy?: string
+  createdByEmail?: string
+  updatedBy?: string
+  updatedByEmail?: string
 }
 
 // Convert Firestore document to Event
@@ -38,11 +42,21 @@ const docToEvent = (doc: any): Event => {
   }
 }
 
-// Get all events
+// Get all events (for public use - returns Event type)
 export const getAllEvents = async (): Promise<Event[]> => {
   const q = query(collection(db, 'events'), orderBy('date', 'asc'))
   const snapshot = await getDocs(q)
   return snapshot.docs.map(docToEvent)
+}
+
+// Get all events with full document data (for admin use)
+export const getAllEventsAdmin = async (): Promise<EventDocument[]> => {
+  const q = query(collection(db, 'events'), orderBy('date', 'asc'))
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  } as EventDocument))
 }
 
 // Get featured events
@@ -80,7 +94,7 @@ export const getUpcomingEvents = async (): Promise<Event[]> => {
     .filter(event => new Date(event.date) >= now)
 }
 
-// Get single event
+// Get single event (for public use)
 export const getEventById = async (id: string): Promise<Event | null> => {
   const docRef = doc(db, 'events', id)
   const docSnap = await getDoc(docRef)
@@ -92,20 +106,37 @@ export const getEventById = async (id: string): Promise<Event | null> => {
   return docToEvent(docSnap)
 }
 
+// Get single event with full document data (for admin use)
+export const getEventByIdAdmin = async (id: string): Promise<EventDocument | null> => {
+  const docRef = doc(db, 'events', id)
+  const docSnap = await getDoc(docRef)
+  
+  if (!docSnap.exists()) {
+    return null
+  }
+  
+  return {
+    id: docSnap.id,
+    ...docSnap.data()
+  } as EventDocument
+}
+
 // Create event
-export const createEvent = async (eventData: Omit<Event, 'id'>): Promise<string> => {
+export const createEvent = async (eventData: Omit<Event, 'id'>, creatorEmail?: string): Promise<string> => {
   const eventRef = collection(db, 'events')
   const docRef = await addDoc(eventRef, {
     ...eventData,
     date: Timestamp.fromDate(new Date(eventData.date)),
     createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now()
+    updatedAt: Timestamp.now(),
+    createdByEmail: creatorEmail || null,
+    createdBy: creatorEmail || null
   })
   return docRef.id
 }
 
 // Update event
-export const updateEvent = async (id: string, eventData: Partial<Event>): Promise<void> => {
+export const updateEvent = async (id: string, eventData: Partial<Event>, updaterEmail?: string): Promise<void> => {
   const docRef = doc(db, 'events', id)
   const updateData: any = {
     ...eventData,
@@ -115,6 +146,18 @@ export const updateEvent = async (id: string, eventData: Partial<Event>): Promis
   if (eventData.date) {
     updateData.date = Timestamp.fromDate(new Date(eventData.date))
   }
+  
+  if (updaterEmail) {
+    updateData.updatedByEmail = updaterEmail
+    updateData.updatedBy = updaterEmail
+  }
+  
+  // Remove any undefined values
+  Object.keys(updateData).forEach(key => {
+    if (updateData[key] === undefined) {
+      delete updateData[key]
+    }
+  })
   
   await updateDoc(docRef, updateData)
 }

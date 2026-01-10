@@ -40,7 +40,8 @@ export async function PUT(
     }
 
     const body = await request.json()
-    await updateSportsAchievement(params.id, body)
+    const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    await updateSportsAchievement(params.id, body, updaterEmail)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {

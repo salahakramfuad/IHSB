@@ -23,6 +23,10 @@ export interface NewsDocument {
   date: Timestamp | string // ISO date string or Firestore Timestamp
   createdAt?: Timestamp
   updatedAt?: Timestamp
+  createdBy?: string
+  createdByEmail?: string
+  updatedBy?: string
+  updatedByEmail?: string
 }
 
 // Get all news (sorted by date, newest first)
@@ -101,12 +105,14 @@ export const getNewsById = async (id: string): Promise<NewsDocument | null> => {
 }
 
 // Create news
-export const createNews = async (newsData: Omit<NewsDocument, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+export const createNews = async (newsData: Omit<NewsDocument, 'id' | 'createdAt' | 'updatedAt'>, creatorEmail?: string): Promise<string> => {
   const newsRef = collection(db, 'news')
   const data: any = {
     ...newsData,
     createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now()
+    updatedAt: Timestamp.now(),
+    createdByEmail: creatorEmail || null,
+    createdBy: creatorEmail || null
   }
   
   // Convert date string to Timestamp if needed
@@ -119,7 +125,7 @@ export const createNews = async (newsData: Omit<NewsDocument, 'id' | 'createdAt'
 }
 
 // Update news
-export const updateNews = async (id: string, newsData: Partial<NewsDocument>): Promise<void> => {
+export const updateNews = async (id: string, newsData: Partial<NewsDocument>, updaterEmail?: string): Promise<void> => {
   const docRef = doc(db, 'news', id)
   const updateData: any = {
     ...newsData,
@@ -131,8 +137,20 @@ export const updateNews = async (id: string, newsData: Partial<NewsDocument>): P
     updateData.date = Timestamp.fromDate(new Date(updateData.date))
   }
   
+  if (updaterEmail) {
+    updateData.updatedByEmail = updaterEmail
+    updateData.updatedBy = updaterEmail
+  }
+  
   // Remove id if present
   delete updateData.id
+  
+  // Remove any undefined values
+  Object.keys(updateData).forEach(key => {
+    if (updateData[key] === undefined) {
+      delete updateData[key]
+    }
+  })
   
   await updateDoc(docRef, updateData)
 }

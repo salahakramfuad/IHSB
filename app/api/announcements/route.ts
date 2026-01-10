@@ -53,7 +53,8 @@ export async function POST(request: NextRequest) {
       expiresAt: body.expiresAt
     }
 
-    const id = await createAnnouncement(announcementData)
+    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    const id = await createAnnouncement(announcementData, creatorEmail)
     return NextResponse.json({ id, ...announcementData })
   } catch (error: any) {
     console.error('Error creating announcement:', error)

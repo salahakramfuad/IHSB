@@ -3,14 +3,16 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { SportsAchievementDocument } from '@/lib/firestore/sports'
-import { Trash2, Edit, Plus, Trophy } from 'lucide-react'
+import { Plus, Trophy } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import Image from 'next/image'
+import DataTable, { Column } from '@/components/admin/DataTable'
+import EditModal, { FormField } from '@/components/admin/EditModal'
 
 export default function SportsPage() {
   const [achievements, setAchievements] = useState<SportsAchievementDocument[]>([])
   const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
+  const [editingAchievement, setEditingAchievement] = useState<SportsAchievementDocument | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     fetchAchievements()
@@ -22,37 +24,54 @@ export default function SportsPage() {
       const data = await response.json()
       setAchievements(data.achievements || [])
     } catch (error) {
-      // Silently handle error
       setAchievements([])
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this achievement?')) {
-      return
+  const handleEdit = (achievement: SportsAchievementDocument) => {
+    setEditingAchievement(achievement)
+    setIsModalOpen(true)
+  }
+
+  const handleSave = async (data: Partial<SportsAchievementDocument>) => {
+    if (!editingAchievement?.id) return
+
+    const token = await getAuthToken()
+    const response = await fetch(`/api/sports/${editingAchievement.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to update achievement')
     }
 
-    setDeleting(id)
-    try {
-      const token = await getAuthToken()
-      const response = await fetch(`/api/sports/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+    await fetchAchievements()
+    setIsModalOpen(false)
+    setEditingAchievement(null)
+  }
 
-      if (response.ok) {
-        setAchievements(achievements.filter(a => a.id !== id))
-      } else {
-        alert('Failed to delete achievement')
+  const handleDelete = async (achievement: SportsAchievementDocument) => {
+    if (!achievement.id) return
+
+    const token = await getAuthToken()
+    const response = await fetch(`/api/sports/${achievement.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
-    } catch (error) {
-      alert('Failed to delete achievement. Please try again.')
-    } finally {
-      setDeleting(null)
+    })
+
+    if (response.ok) {
+      await fetchAchievements()
+    } else {
+      throw new Error('Failed to delete achievement')
     }
   }
 
@@ -63,103 +82,167 @@ export default function SportsPage() {
     return user.getIdToken()
   }
 
-  if (loading) {
-    return (
-      <div className="p-6 lg:p-8">
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading achievements...</p>
-        </div>
-      </div>
-    )
+  const formatDate = (value: any): string => {
+    if (!value) return 'N/A'
+    try {
+      if (typeof value === 'string') {
+        return new Date(value).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      }
+      return 'N/A'
+    } catch {
+      return 'N/A'
+    }
   }
+
+  const sportsFields: FormField[] = [
+    { key: 'title', label: 'Title', type: 'text', required: true },
+    { key: 'slug', label: 'Slug', type: 'text', required: true, placeholder: 'url-friendly-slug' },
+    {
+      key: 'sport',
+      label: 'Sport',
+      type: 'select',
+      required: true,
+      options: [
+        { value: 'Football', label: 'Football' },
+        { value: 'Basketball', label: 'Basketball' },
+        { value: 'Badminton', label: 'Badminton' },
+        { value: 'Chess', label: 'Chess' },
+        { value: 'Events', label: 'Events' }
+      ]
+    },
+    {
+      key: 'placement',
+      label: 'Placement',
+      type: 'select',
+      required: true,
+      options: [
+        { value: 'Champion', label: 'Champion' },
+        { value: 'Runner-up', label: 'Runner-up' },
+        { value: 'Participant', label: 'Participant' },
+        { value: 'Award', label: 'Award' }
+      ]
+    },
+    { key: 'description', label: 'Description', type: 'textarea', required: true, rows: 4 },
+    { key: 'longDescription', label: 'Long Description', type: 'textarea', rows: 6 },
+    { key: 'date', label: 'Date', type: 'date', required: true },
+    { key: 'location', label: 'Location', type: 'text' },
+    { key: 'image', label: 'Main Image', type: 'image', required: true },
+    { key: 'photos', label: 'Additional Photos', type: 'images' }
+  ]
+
+  const columns: Column<SportsAchievementDocument>[] = [
+    {
+      key: 'title',
+      label: 'Title',
+      render: (item) => (
+        <div className="max-w-xs">
+          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          {item.description && (
+            <div className="text-xs text-gray-500 truncate mt-1 line-clamp-2">{item.description}</div>
+          )}
+        </div>
+      )
+    },
+    {
+      key: 'sport',
+      label: 'Sport',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-green-100 text-primary-green-800">
+          {item.sport}
+        </span>
+      )
+    },
+    {
+      key: 'placement',
+      label: 'Placement',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-accent-yellow-100 text-accent-yellow-800">
+          {item.placement}
+        </span>
+      )
+    },
+    {
+      key: 'date',
+      label: 'Date',
+      render: (item) => (
+        <span className="text-sm text-gray-600">{formatDate(item.date)}</span>
+      )
+    },
+    {
+      key: 'location',
+      label: 'Location',
+      render: (item) => (
+        <span className="text-sm text-gray-600">{item.location || 'N/A'}</span>
+      )
+    },
+    {
+      key: 'createdByEmail',
+      label: 'Created By',
+      render: (item) => (
+        <span className="text-sm text-gray-600">
+          {item.createdByEmail || item.createdBy || 'Unknown'}
+        </span>
+      )
+    },
+    {
+      key: 'createdAt',
+      label: 'Created',
+      render: (item) => (
+        <span className="text-sm text-gray-500">
+          {item.createdAt && typeof item.createdAt === 'object' && 'seconds' in item.createdAt
+            ? formatDate(new Date(item.createdAt.seconds * 1000))
+            : formatDate(item.createdAt)}
+        </span>
+      )
+    }
+  ]
 
   return (
     <div className="p-6 lg:p-8">
       <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Sports & Achievements</h1>
-              <p className="text-gray-600">Manage sports achievements and events</p>
-            </div>
-            <Link href="/admin/sports/new">
-              <Button variant="primary" className="flex items-center gap-2">
-                <Plus size={20} />
-                Add Achievement
-              </Button>
-            </Link>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Sports & Achievements</h1>
+            <p className="text-gray-600">Manage sports achievements and events</p>
           </div>
-
-          {achievements.length === 0 ? (
-            <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-              <Trophy className="mx-auto text-gray-400 mb-4" size={48} />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No achievements yet</h3>
-              <p className="text-gray-600 mb-4">Get started by adding your first sports achievement</p>
-              <Link href="/admin/sports/new">
-                <Button variant="primary">Add Achievement</Button>
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {achievements.map((achievement) => (
-                <div
-                  key={achievement.id}
-                  className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  {achievement.image && (
-                    <div className="relative h-48 w-full">
-                      <Image
-                        src={achievement.image}
-                        alt={achievement.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-semibold px-2 py-1 rounded bg-primary-green-100 text-primary-green-800">
-                        {achievement.sport}
-                      </span>
-                      <span className="text-xs font-semibold px-2 py-1 rounded bg-accent-yellow-100 text-accent-yellow-800">
-                        {achievement.placement}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">{achievement.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {new Date(achievement.date).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{achievement.description}</p>
-                    <div className="flex gap-2">
-                      <Link
-                        href={`/admin/sports/${achievement.id}`}
-                        className="flex-1"
-                      >
-                        <Button variant="outline" size="sm" className="w-full flex items-center justify-center gap-2">
-                          <Edit size={16} />
-                          Edit
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(achievement.id!)}
-                        disabled={deleting === achievement.id}
-                        className="text-red-600 hover:text-red-700 hover:border-red-300"
-                      >
-                        {deleting === achievement.id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
-                        ) : (
-                          <Trash2 size={16} />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <Link href="/admin/sports/new">
+            <Button variant="primary" className="flex items-center gap-2">
+              <Plus size={20} />
+              Add Achievement
+            </Button>
+          </Link>
         </div>
+
+        <DataTable
+          data={achievements}
+          columns={columns}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          searchable={true}
+          searchPlaceholder="Search achievements by title, description, or location..."
+          searchKeys={['title', 'description', 'location', 'sport']}
+          loading={loading}
+          emptyMessage="No achievements found. Add your first sports achievement to get started."
+          getItemId={(item) => item.id || ''}
+        />
+
+        <EditModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false)
+            setEditingAchievement(null)
+          }}
+          onSave={handleSave}
+          data={editingAchievement}
+          fields={sportsFields}
+          title="Edit Sports Achievement"
+          loading={loading}
+        />
+      </div>
     </div>
   )
 }

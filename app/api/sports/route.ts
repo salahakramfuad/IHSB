@@ -26,7 +26,8 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const id = await createSportsAchievement(body)
+    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    const id = await createSportsAchievement(body, creatorEmail)
     return NextResponse.json({ id, ...body })
   } catch (error: any) {
     console.error('Error creating sports achievement:', error)

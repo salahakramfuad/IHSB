@@ -48,7 +48,8 @@ export async function POST(request: NextRequest) {
       date: body.date || new Date().toISOString()
     }
 
-    const id = await createNews(newsData)
+    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    const id = await createNews(newsData, creatorEmail)
     return NextResponse.json({ id, ...newsData })
   } catch (error: any) {
     console.error('Error creating news:', error)

@@ -24,6 +24,10 @@ export interface AnnouncementDocument {
   expiresAt?: Timestamp | string
   createdAt?: Timestamp
   updatedAt?: Timestamp
+  createdBy?: string
+  createdByEmail?: string
+  updatedBy?: string
+  updatedByEmail?: string
 }
 
 // Get all announcements (uses client SDK - for admin dashboard client components)
@@ -155,19 +159,23 @@ export const getAnnouncementById = async (id: string): Promise<AnnouncementDocum
 }
 
 // Create announcement
-export const createAnnouncement = async (announcementData: Omit<AnnouncementDocument, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+export const createAnnouncement = async (announcementData: Omit<AnnouncementDocument, 'id' | 'createdAt' | 'updatedAt'>, creatorEmail?: string): Promise<string> => {
   const announcementRef = collection(db, 'announcements')
+  const { expiresAt, ...restData } = announcementData
   const data: any = {
-    ...announcementData,
+    ...restData,
     isActive: announcementData.isActive !== undefined ? announcementData.isActive : true,
     createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now()
+    updatedAt: Timestamp.now(),
+    createdByEmail: creatorEmail || null,
+    createdBy: creatorEmail || null
   }
   
-  if (announcementData.expiresAt) {
-    data.expiresAt = typeof announcementData.expiresAt === 'string'
-      ? Timestamp.fromDate(new Date(announcementData.expiresAt))
-      : announcementData.expiresAt
+  // Only include expiresAt if it has a value (not undefined or null)
+  if (expiresAt !== undefined && expiresAt !== null) {
+    data.expiresAt = typeof expiresAt === 'string'
+      ? Timestamp.fromDate(new Date(expiresAt))
+      : expiresAt
   }
   
   const docRef = await addDoc(announcementRef, data)
@@ -175,21 +183,40 @@ export const createAnnouncement = async (announcementData: Omit<AnnouncementDocu
 }
 
 // Update announcement
-export const updateAnnouncement = async (id: string, announcementData: Partial<AnnouncementDocument>): Promise<void> => {
+export const updateAnnouncement = async (id: string, announcementData: Partial<AnnouncementDocument>, updaterEmail?: string): Promise<void> => {
   const docRef = doc(db, 'announcements', id)
+  const { expiresAt, ...restData } = announcementData
   const updateData: any = {
-    ...announcementData,
+    ...restData,
     updatedAt: Timestamp.now()
   }
   
-  if (announcementData.expiresAt) {
-    updateData.expiresAt = typeof announcementData.expiresAt === 'string'
-      ? Timestamp.fromDate(new Date(announcementData.expiresAt))
-      : announcementData.expiresAt
+  // Only include expiresAt if it has a value (not undefined)
+  // If it's explicitly set to null, include it to clear the field
+  if (expiresAt !== undefined) {
+    if (expiresAt === null) {
+      updateData.expiresAt = null
+    } else {
+      updateData.expiresAt = typeof expiresAt === 'string'
+        ? Timestamp.fromDate(new Date(expiresAt))
+        : expiresAt
+    }
+  }
+  
+  if (updaterEmail) {
+    updateData.updatedByEmail = updaterEmail
+    updateData.updatedBy = updaterEmail
   }
   
   // Remove id if present
   delete updateData.id
+  
+  // Remove any undefined values
+  Object.keys(updateData).forEach(key => {
+    if (updateData[key] === undefined) {
+      delete updateData[key]
+    }
+  })
   
   await updateDoc(docRef, updateData)
 }

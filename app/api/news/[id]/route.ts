@@ -48,7 +48,8 @@ export async function PUT(
     if (body.category !== undefined) updateData.category = body.category
     if (body.date !== undefined) updateData.date = body.date
 
-    await updateNews(params.id, updateData)
+    const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    await updateNews(params.id, updateData, updaterEmail)
     
     const updatedNews = await getNewsById(params.id)
     return NextResponse.json({ news: updatedNews })

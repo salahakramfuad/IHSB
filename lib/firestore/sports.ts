@@ -30,6 +30,10 @@ export interface SportsAchievementDocument {
   longDescription?: string
   createdAt?: Timestamp
   updatedAt?: Timestamp
+  createdBy?: string
+  createdByEmail?: string
+  updatedBy?: string
+  updatedByEmail?: string
 }
 
 // Get all sports achievements
@@ -76,25 +80,39 @@ export const getSportsAchievementBySlug = async (slug: string): Promise<SportsAc
 }
 
 // Create achievement
-export const createSportsAchievement = async (achievementData: Omit<SportsAchievementDocument, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
+export const createSportsAchievement = async (achievementData: Omit<SportsAchievementDocument, 'id' | 'createdAt' | 'updatedAt'>, creatorEmail?: string): Promise<string> => {
   const achievementRef = collection(db, 'sports')
   const docRef = await addDoc(achievementRef, {
     ...achievementData,
     createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now()
+    updatedAt: Timestamp.now(),
+    createdByEmail: creatorEmail || null,
+    createdBy: creatorEmail || null
   })
   return docRef.id
 }
 
 // Update achievement
-export const updateSportsAchievement = async (id: string, achievementData: Partial<SportsAchievementDocument>): Promise<void> => {
+export const updateSportsAchievement = async (id: string, achievementData: Partial<SportsAchievementDocument>, updaterEmail?: string): Promise<void> => {
   const docRef = doc(db, 'sports', id)
   const updateData: any = {
     ...achievementData,
     updatedAt: Timestamp.now()
   }
   
+  if (updaterEmail) {
+    updateData.updatedByEmail = updaterEmail
+    updateData.updatedBy = updaterEmail
+  }
+  
   delete updateData.id
+  
+  // Remove any undefined values
+  Object.keys(updateData).forEach(key => {
+    if (updateData[key] === undefined) {
+      delete updateData[key]
+    }
+  })
   
   await updateDoc(docRef, updateData)
 }

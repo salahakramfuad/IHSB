@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Event } from '@/data/events'
-import { Trash2, Edit, Plus, Calendar } from 'lucide-react'
+import { EventDocument } from '@/lib/firestore/events'
+import { Plus, Calendar } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import Image from 'next/image'
+import DataTable, { Column } from '@/components/admin/DataTable'
+import EditModal, { FormField } from '@/components/admin/EditModal'
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<Event[]>([])
+  const [events, setEvents] = useState<EventDocument[]>([])
   const [loading, setLoading] = useState(true)
-  const [deleting, setDeleting] = useState<string | null>(null)
+  const [editingEvent, setEditingEvent] = useState<EventDocument | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     fetchEvents()
@@ -20,39 +22,57 @@ export default function EventsPage() {
     try {
       const response = await fetch('/api/events')
       const data = await response.json()
+      // Map events to include full document data
       setEvents(data.events || [])
     } catch (error) {
-      // Silently handle error
       setEvents([])
     } finally {
       setLoading(false)
     }
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this event?')) {
-      return
+  const handleEdit = (event: EventDocument) => {
+    setEditingEvent(event)
+    setIsModalOpen(true)
+  }
+
+  const handleSave = async (data: Partial<EventDocument>) => {
+    if (!editingEvent?.id) return
+
+    const token = await getAuthToken()
+    const response = await fetch(`/api/events/${editingEvent.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to update event')
     }
 
-    setDeleting(id)
-    try {
-      const token = await getAuthToken()
-      const response = await fetch(`/api/events/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+    await fetchEvents()
+    setIsModalOpen(false)
+    setEditingEvent(null)
+  }
 
-      if (response.ok) {
-        setEvents(events.filter(e => e.id !== id))
-      } else {
-        alert('Failed to delete event')
+  const handleDelete = async (event: EventDocument) => {
+    if (!event.id) return
+
+    const token = await getAuthToken()
+    const response = await fetch(`/api/events/${event.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
       }
-    } catch (error) {
-      alert('Failed to delete event. Please try again.')
-    } finally {
-      setDeleting(null)
+    })
+
+    if (response.ok) {
+      await fetchEvents()
+    } else {
+      throw new Error('Failed to delete event')
     }
   }
 
@@ -63,102 +83,171 @@ export default function EventsPage() {
     return user.getIdToken()
   }
 
-  if (loading) {
-    return (
-      <div className="p-6 lg:p-8">
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading events...</p>
-        </div>
-      </div>
-    )
+  const formatDate = (value: any): string => {
+    if (!value) return 'N/A'
+    try {
+      if (value instanceof Date) {
+        return value.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      }
+      if (value && typeof value === 'object' && 'seconds' in value) {
+        return new Date(value.seconds * 1000).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      }
+      if (typeof value === 'string') {
+        return new Date(value).toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        })
+      }
+      return 'N/A'
+    } catch {
+      return 'N/A'
+    }
   }
+
+  const eventFields: FormField[] = [
+    { key: 'title', label: 'Title', type: 'text', required: true },
+    { key: 'description', label: 'Description', type: 'textarea', required: true, rows: 4 },
+    { key: 'date', label: 'Date', type: 'date', required: true },
+    { key: 'time', label: 'Time', type: 'text', placeholder: 'e.g., 10:00 AM - 2:00 PM' },
+    { key: 'location', label: 'Location', type: 'text' },
+    {
+      key: 'category',
+      label: 'Category',
+      type: 'select',
+      required: true,
+      options: [
+        { value: 'academic', label: 'Academic' },
+        { value: 'sports', label: 'Sports' },
+        { value: 'cultural', label: 'Cultural' },
+        { value: 'admission', label: 'Admission' },
+        { value: 'other', label: 'Other' }
+      ]
+    },
+    { key: 'image', label: 'Image', type: 'image' },
+    { key: 'featured', label: 'Featured Event', type: 'checkbox' },
+    { key: 'registrationRequired', label: 'Registration Required', type: 'checkbox' },
+    { key: 'registrationUrl', label: 'Registration URL', type: 'url' }
+  ]
+
+  const columns: Column<EventDocument>[] = [
+    {
+      key: 'title',
+      label: 'Title',
+      render: (item) => (
+        <div className="max-w-xs">
+          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          {item.description && (
+            <div className="text-xs text-gray-500 truncate mt-1">{item.description}</div>
+          )}
+        </div>
+      )
+    },
+    {
+      key: 'date',
+      label: 'Date',
+      render: (item) => (
+        <div>
+          <div className="text-sm text-gray-900">{formatDate(item.date)}</div>
+          {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
+        </div>
+      )
+    },
+    {
+      key: 'location',
+      label: 'Location',
+      render: (item) => <span className="text-sm text-gray-600">{item.location || 'N/A'}</span>
+    },
+    {
+      key: 'category',
+      label: 'Category',
+      render: (item) => (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-green-100 text-primary-green-800">
+          {item.category}
+        </span>
+      )
+    },
+    {
+      key: 'featured',
+      label: 'Featured',
+      render: (item) => (
+        item.featured ? (
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-accent-yellow-100 text-accent-yellow-800">
+            Yes
+          </span>
+        ) : (
+          <span className="text-xs text-gray-400">No</span>
+        )
+      )
+    },
+    {
+      key: 'createdByEmail',
+      label: 'Created By',
+      render: (item) => (
+        <span className="text-sm text-gray-600">
+          {item.createdByEmail || item.createdBy || 'Unknown'}
+        </span>
+      )
+    },
+    {
+      key: 'createdAt',
+      label: 'Created',
+      render: (item) => (
+        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+      )
+    }
+  ]
 
   return (
     <div className="p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Events</h1>
-              <p className="text-gray-600">Manage school events and activities</p>
-            </div>
-            <Link href="/admin/events/new">
-              <Button variant="primary" className="flex items-center gap-2">
-                <Plus size={20} />
-                Create Event
-              </Button>
-            </Link>
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Events</h1>
+            <p className="text-gray-600">Manage school events and activities</p>
           </div>
-
-          {events.length === 0 ? (
-            <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-              <Calendar className="mx-auto text-gray-400 mb-4" size={48} />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No events yet</h3>
-              <p className="text-gray-600 mb-4">Get started by creating your first event</p>
-              <Link href="/admin/events/new">
-                <Button variant="primary">Create Event</Button>
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {events.map((event) => (
-                <div
-                  key={event.id}
-                  className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  {event.image && (
-                    <div className="relative h-48 w-full">
-                      <Image
-                        src={event.image}
-                        alt={event.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-primary-green-600">
-                        {new Date(event.date).toLocaleDateString()}
-                      </span>
-                      {event.featured && (
-                        <span className="text-xs bg-accent-yellow-100 text-accent-yellow-800 px-2 py-1 rounded">
-                          Featured
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">{event.title}</h3>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{event.description}</p>
-                    <div className="flex gap-2">
-                      <Link
-                        href={`/admin/events/${event.id}`}
-                        className="flex-1"
-                      >
-                        <Button variant="outline" size="sm" className="w-full flex items-center justify-center gap-2">
-                          <Edit size={16} />
-                          Edit
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(event.id!)}
-                        disabled={deleting === event.id}
-                        className="text-red-600 hover:text-red-700 hover:border-red-300"
-                      >
-                        {deleting === event.id ? (
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
-                        ) : (
-                          <Trash2 size={16} />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <Link href="/admin/events/new">
+            <Button variant="primary" className="flex items-center gap-2">
+              <Plus size={20} />
+              Create Event
+            </Button>
+          </Link>
         </div>
+
+        <DataTable
+          data={events}
+          columns={columns}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          searchable={true}
+          searchPlaceholder="Search events by title, description, location..."
+          searchKeys={['title', 'description', 'location']}
+          loading={loading}
+          emptyMessage="No events found. Create your first event to get started."
+          getItemId={(item) => item.id || ''}
+        />
+
+        <EditModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false)
+            setEditingEvent(null)
+          }}
+          onSave={handleSave}
+          data={editingEvent}
+          fields={eventFields}
+          title="Edit Event"
+          loading={loading}
+        />
+      </div>
     </div>
   )
 }

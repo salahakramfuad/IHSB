@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getEventById, updateEvent, deleteEvent } from '@/lib/firestore/events'
+import { getEventByIdAdmin, updateEvent, deleteEvent } from '@/lib/firestore/events'
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const event = await getEventById(params.id)
+    const event = await getEventByIdAdmin(params.id)
     
     if (!event) {
       return NextResponse.json(
@@ -40,7 +40,8 @@ export async function PUT(
     }
 
     const body = await request.json()
-    await updateEvent(params.id, body)
+    const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    await updateEvent(params.id, body, updaterEmail)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {
