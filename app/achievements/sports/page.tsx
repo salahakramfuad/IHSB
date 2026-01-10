@@ -1,7 +1,9 @@
-// app/achievements/page.tsx
+// app/achievements/sports/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
-import { getBaseAchievements, deriveStats } from './data'
+import { getSportsAchievements, calculateSportsStats } from '@/lib/services/sportsService'
+import type { SportsAchievementDocument } from '@/lib/services/sportsService'
+import ImageWithLightbox from '@/components/ImageWithLightbox'
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-GB', {
@@ -13,8 +15,9 @@ function formatDate(iso: string) {
 }
 
 export default async function AchievementsPage() {
-  const data = getBaseAchievements() // latest first (server)
-  const stats = deriveStats(data)
+  // Fetch from Firestore (server-side)
+  const data = await getSportsAchievements()
+  const stats = calculateSportsStats(data)
 
   return (
     <div className='bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4 sm:px-6 lg:px-8'>
@@ -77,11 +80,18 @@ export default async function AchievementsPage() {
         </section>
 
         {/* Cards */}
-        <div
-          role='list'
-          className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'
-        >
-          {data.map((a) => (
+        {data.length === 0 ? (
+          <div className='text-center py-12'>
+            <p className='text-gray-600 text-lg'>
+              No sports achievements available at this time.
+            </p>
+          </div>
+        ) : (
+          <div
+            role='list'
+            className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'
+          >
+            {data.map((a) => (
             <Link
               key={a.id}
               href={`/achievements/sports/${a.slug}`}
@@ -95,14 +105,17 @@ export default async function AchievementsPage() {
               >
                 {/* Media */}
                 <div className='relative h-48 w-full'>
-                  <Image
-                    src={a.image}
-                    alt={a.title}
-                    fill
-                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                    className='object-cover'
-                    priority={false}
-                  />
+                  {a.image && (
+                    <ImageWithLightbox
+                      src={a.image}
+                      alt={a.title}
+                      fill
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                      className='object-cover'
+                      priority={false}
+                      gallery={a.photos && a.photos.length > 0 ? [a.image, ...a.photos.filter(p => p && p.trim() !== '')] : undefined}
+                    />
+                  )}
                   {/* Decorative layers must not intercept pointer */}
                   <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent' />
                   <div className='pointer-events-none absolute bottom-0 left-0 right-0 p-4 flex items-end justify-between gap-2'>
@@ -137,7 +150,8 @@ export default async function AchievementsPage() {
               </article>
             </Link>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )

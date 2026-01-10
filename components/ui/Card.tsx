@@ -1,6 +1,6 @@
 import React from 'react'
 import { cn } from '../../lib/utils'
-import Image from 'next/image'
+import ImageWithLightbox from '../ImageWithLightbox'
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
@@ -24,9 +24,9 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         )}
         {...props}
       >
-        {image && (
+        {image && image.src && image.src.trim() !== '' && (
           <div className='relative w-full aspect-video'>
-            <Image
+            <ImageWithLightbox
               src={image.src}
               alt={image.alt}
               fill

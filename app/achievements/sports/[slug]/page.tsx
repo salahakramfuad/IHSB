@@ -1,8 +1,10 @@
 // app/achievements/sports/[slug]/page.tsx
 import Image from 'next/image'
 import Link from 'next/link'
-import { getBySlug } from '../data'
+import { getSportsAchievement } from '@/lib/services/sportsService'
 import LightboxGallery from '../../../../components/LightboxGallery'
+import ImageWithLightbox from '@/components/ImageWithLightbox'
+import type { SportsAchievementDocument } from '@/lib/services/sportsService'
 
 function formatDate(iso?: string) {
   if (!iso) return ''
@@ -17,11 +19,11 @@ function formatDate(iso?: string) {
 export default async function SportsAchievementDetail({
   params
 }: {
-  // ✅ Next 15+: params is a Promise
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const achievement = getBySlug(slug)
+  // Fetch from Firestore (server-side)
+  const achievement = await getSportsAchievement(slug)
 
   if (!achievement) {
     return (
@@ -43,9 +45,11 @@ export default async function SportsAchievementDetail({
     )
   }
 
-  const photos: string[] = achievement.photos?.length
-    ? achievement.photos
-    : [achievement.image]
+  const photos: string[] = achievement.photos && achievement.photos.length > 0
+    ? achievement.photos.filter(p => p && typeof p === 'string' && p.trim() !== '')
+    : achievement.image && typeof achievement.image === 'string' && achievement.image.trim() !== ''
+    ? [achievement.image]
+    : []
 
   return (
     <div className='relative z-10 px-4 py-10 sm:px-6 lg:px-8 bg-[var(--background)] [color:var(--text)]'>
@@ -103,16 +107,19 @@ export default async function SportsAchievementDetail({
         </header>
 
         <article className='overflow-hidden rounded-2xl ring-1 ring-[var(--border)] bg-[var(--surface)]'>
-          <div className='relative h-72 w-full'>
-            <Image
-              src={achievement.image}
-              alt={achievement.title}
-              fill
-              sizes='100vw'
-              className='object-cover'
-              priority
-            />
-          </div>
+          {achievement.image && typeof achievement.image === 'string' && achievement.image.trim() !== '' && (
+            <div className='relative h-72 w-full'>
+              <ImageWithLightbox
+                src={achievement.image}
+                alt={achievement.title}
+                fill
+                sizes='100vw'
+                className='object-cover'
+                priority
+                gallery={photos.length > 0 ? photos : undefined}
+              />
+            </div>
+          )}
           <div className='p-6'>
             <p className='leading-relaxed text-[var(--textSecondary)]'>
               {achievement.longDescription || achievement.description}

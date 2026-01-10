@@ -100,3 +100,59 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Lightbox animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Prevent image flickering on hover transforms - hardware acceleration */
+.will-change-transform {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Fix for Next.js Image flickering on hover transforms */
+.group:hover [class*="scale"],
+[class*="group-hover:scale"] {
+  transform: translateZ(0) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1));
+  -webkit-transform: translateZ(0) scale(var(--tw-scale-x, 1), var(--tw-scale-y, 1));
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Ensure smooth image transitions - prevent flicker */
+.group\/image:hover img,
+[class*="group-hover"] img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: auto;
+}
+
+/* Optimize Next.js Image transforms */
+.next-image-wrapper {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}

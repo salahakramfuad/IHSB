@@ -5,8 +5,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'picsum.photos' },
-      { protocol: 'https', hostname: 'images.unsplash.com' } // for Faker/Picsum images
-      // { protocol: 'https', hostname: 'loremflickr.com' }, // add if you use LoremFlickr
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'res.cloudinary.com' } // Cloudinary images
     ]
   }
 }

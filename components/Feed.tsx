@@ -5,6 +5,10 @@ import React from 'react'
 import Button from './ui/Button'
 import Card from './ui/Card'
 import Section from './ui/Section'
+import AnnouncementsServer from './AnnouncementsServer'
+import AnnouncementBanner from './AnnouncementBanner'
+import NewsServer from './NewsServer'
+import ImageWithLightbox from './ImageWithLightbox'
 
 // ---------- Helper ----------
 // TODO: Replace with actual school images when available
@@ -60,29 +64,7 @@ const programs: {
   }
 ]
 
-const notices: { date: string; title: string; text: string; href: string; color: string }[] = [
-  {
-    date: 'Nov 25',
-    title: 'Admissions Open Day',
-    text: 'Campus tours, Q&A with faculty, and student panels. RSVP required.',
-    href: '/events',
-    color: 'bg-accent-blue-50 border-accent-blue-200'
-  },
-  {
-    date: 'Dec 04',
-    title: 'Scholarship Webinar',
-    text: 'Merit and needs-based awards overview with live counseling.',
-    href: '/academics/scholarship',
-    color: 'bg-accent-yellow-50 border-accent-yellow-200'
-  },
-  {
-    date: 'Jan 10',
-    title: 'IB Diploma Info Night',
-    text: 'Subject choices, CAS, EE & TOK—parents and Grade 9–10 students welcome.',
-    href: '/academics/curriculumn',
-    color: 'bg-primary-green-50 border-primary-green-200'
-  }
-]
+// Notices are now fetched dynamically from Firestore via Announcements component
 
 const news: { title: string; img: string; href: string }[] = [
   {
@@ -139,11 +121,16 @@ const partners: { name: string; img: string }[] = [
 // ---------- Page ----------
 export default function Feed() {
   return (
-    <main className='w-full'>
+    <div className='w-full'>
+      {/* High-Priority Announcement Banner */}
+      <div>
+        <AnnouncementBanner />
+      </div>
+      
       {/* Hero Section with vibrant gradient */}
       <section aria-label='Hero' className='relative isolate w-full overflow-hidden'>
         <div className='absolute inset-0 -z-10'>
-          <Image
+          <ImageWithLightbox
             src={picsum('hero-campus', 2400, 1400)}
             alt='IHSB campus with students and modern facilities'
             fill
@@ -230,32 +217,21 @@ export default function Feed() {
         </div>
       </Section>
 
-      {/* Notices - Colorful cards */}
-      <Section background='gray' aria-labelledby='notices-h'>
+      {/* Announcements - Server-side rendered from Firestore */}
+      <Section background='gray' aria-labelledby='announcements-h'>
         <div className='max-w-7xl mx-auto'>
-          <h2 id='notices-h' className='text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center'>
-            Important Notices
-          </h2>
-          <ul className='grid gap-6 sm:grid-cols-3'>
-            {notices.map((n) => (
-              <li
-                key={n.title}
-                className={`${n.color} rounded-2xl border-2 p-6 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1`}
-              >
-                <div className='text-sm font-bold text-primary-green-600 mb-2'>
-                  {n.date}
-                </div>
-                <div className='text-xl font-bold text-gray-900 mb-2'>{n.title}</div>
-                <p className='text-sm text-gray-700 mb-4 leading-relaxed'>{n.text}</p>
-                <Link
-                  href={n.href}
-                  className='inline-block text-sm font-semibold text-primary-green-600 hover:text-primary-green-700 transition-colors'
-                >
-                  Details →
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className='flex items-center justify-between mb-8'>
+            <h2 id='announcements-h' className='text-3xl md:text-4xl font-bold text-gray-900'>
+              Important Announcements
+            </h2>
+            <Link
+              href='/announcements'
+              className='font-semibold text-primary-green-600 hover:text-primary-green-700 transition-colors text-lg'
+            >
+              See All →
+            </Link>
+          </div>
+          <AnnouncementsServer limit={3} />
         </div>
       </Section>
 
@@ -267,42 +243,14 @@ export default function Feed() {
               News & Highlights
             </h2>
             <Link
-              href='/events'
+              href='/news'
               className='font-semibold text-primary-green-600 hover:text-primary-green-700 transition-colors text-lg'
             >
-              Read all news →
+              See all news →
             </Link>
           </div>
 
-          <div className='grid grid-cols-1 gap-8 sm:grid-cols-3'>
-            {news.map((item, idx) => (
-              <Card
-                key={item.title}
-                image={{
-                  src: item.img,
-                  alt: item.title
-                }}
-                className='group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden'
-              >
-                <div className={`relative -mt-4 -mx-6 mb-4`}>
-                  <div className={`h-1 bg-gradient-to-r ${
-                    idx === 0 ? 'from-accent-blue-500 to-accent-blue-600' :
-                    idx === 1 ? 'from-accent-purple-500 to-accent-pink-500' :
-                    'from-primary-green-500 to-accent-teal-500'
-                  } rounded-t-xl`}></div>
-                </div>
-                <h3 className='text-lg font-bold text-gray-900 group-hover:text-primary-green-600 transition-colors'>
-                  {item.title}
-                </h3>
-                <Link
-                  href={item.href}
-                  className='mt-3 inline-block font-semibold text-primary-green-600 hover:text-primary-green-700 transition-colors'
-                >
-                  Read more →
-                </Link>
-              </Card>
-            ))}
-          </div>
+          <NewsServer limit={3} />
         </div>
       </Section>
 
@@ -355,7 +303,7 @@ export default function Feed() {
                   'border-accent-yellow-200 bg-accent-yellow-50'
                 }`}
               >
-                <Image
+                <ImageWithLightbox
                   src={p.img}
                   alt={p.name}
                   width={180}
@@ -432,6 +380,6 @@ export default function Feed() {
           })
         }}
       />
-    </main>
+    </div>
   )
 }

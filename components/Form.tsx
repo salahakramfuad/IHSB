@@ -121,12 +121,7 @@ const AdmissionForm: React.FC = () => {
   const prevStep = () => setCurrentStep((prevStep) => Math.max(prevStep - 1, 1))
 
   const onSubmit = async (data: any) => {
-    // Log form data for debugging (remove in production)
-    console.log('Form submission data:', data)
-    
-    // TODO: Implement API endpoint when backend is ready
-    // The form data is ready to be sent to the backend API
-    
+    // Form submission handled by admission apply page
     alert('Form submitted successfully! Your application has been received. We will contact you soon.')
   }
 

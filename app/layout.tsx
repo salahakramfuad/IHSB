@@ -2,9 +2,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import '../styles/global.css'
-import Nav from '../components/Nav'
-import Footer from '../components/Footer'
-import ThemeCSSVars from '../components/ThemeCSSVars'
+import LayoutWrapper from '../components/LayoutWrapper'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ihsb.edu.bd'),
@@ -63,6 +61,11 @@ export const metadata: Metadata = {
   },
 }
 
+/**
+ * Root layout - provides html/body structure
+ * LayoutWrapper conditionally renders Nav/Footer based on route
+ * Admin routes are excluded from public navigation
+ */
 export default function RootLayout({
   children
 }: {
@@ -71,13 +74,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className='w-full'>
-        <ThemeCSSVars />
-        <div className='gradient scroll-smooth' />
-        <main>
-          <Nav />
-          {children}
-          <Footer />
-        </main>
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   )

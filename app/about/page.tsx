@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import ImageWithLightbox from '@/components/ImageWithLightbox'
 import type { Metadata } from 'next'
 import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'
@@ -174,7 +175,7 @@ export default function AboutPage() {
           </h2>
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
             <div className='relative aspect-video rounded-xl overflow-hidden shadow-lg'>
-              <Image
+              <ImageWithLightbox
                 src='/assets/images/ihsb.png'
                 alt='IHSB Campus'
                 fill
@@ -182,7 +183,7 @@ export default function AboutPage() {
               />
             </div>
             <div className='relative aspect-video rounded-xl overflow-hidden shadow-lg'>
-              <Image
+              <ImageWithLightbox
                 src='/assets/images/teachers.png'
                 alt='IHSB Teachers'
                 fill
@@ -190,7 +191,7 @@ export default function AboutPage() {
               />
             </div>
             <div className='relative aspect-video rounded-xl overflow-hidden shadow-lg'>
-              <Image
+              <ImageWithLightbox
                 src='/assets/images/students.png'
                 alt='IHSB Students'
                 fill

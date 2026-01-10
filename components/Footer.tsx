@@ -200,6 +200,16 @@ export default function Footer() {
             &copy; {COPYRIGHT_YEAR} International Hope School Bangladesh. All
             Rights Reserved.
           </p>
+          
+          <div className='mt-4'>
+            <Link
+              href='/admin/login'
+              className='inline-block text-xs text-gray-500 hover:text-gray-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 rounded'
+              aria-label='Admin Login'
+            >
+              Admin Login
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
