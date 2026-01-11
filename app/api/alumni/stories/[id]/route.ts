@@ -4,10 +4,11 @@ import { getAlumniStoryById, updateAlumniStory, deleteAlumniStory } from '@/lib/
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const story = await getAlumniStoryById(params.id)
+    const { id } = await params
+    const story = await getAlumniStoryById(id)
     
     if (!story) {
       return NextResponse.json(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -39,9 +40,10 @@ export async function PUT(
       )
     }
 
+    const { id } = await params
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateAlumniStory(params.id, body, updaterEmail)
+    await updateAlumniStory(id, body, updaterEmail)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {
@@ -55,7 +57,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -66,7 +68,8 @@ export async function DELETE(
       )
     }
 
-    await deleteAlumniStory(params.id)
+    const { id } = await params
+    await deleteAlumniStory(id)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {

@@ -91,12 +91,12 @@ export default async function AnnouncementsPage() {
                           <div className='flex items-center gap-2 text-primary-green-600'>
                             <Calendar className='w-4 h-4' />
                             <time className='text-sm font-semibold' dateTime={announcement.createdAt?.seconds ? new Date(announcement.createdAt.seconds * 1000).toISOString() : ''}>
-                              {dateInfo.full}
+                              {typeof dateInfo === 'object' ? dateInfo.full : dateInfo}
                             </time>
                           </div>
                           <div className='flex items-center gap-1 text-gray-500 text-xs'>
                             <Clock className='w-3 h-3' />
-                            <span>{dateInfo.time}</span>
+                            <span>{typeof dateInfo === 'object' ? dateInfo.time : ''}</span>
                           </div>
                           {announcement.priority === 'high' && (
                             <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-semibold'>

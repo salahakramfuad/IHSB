@@ -4,10 +4,11 @@ import { getSportsAchievementById, updateSportsAchievement, deleteSportsAchievem
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const achievement = await getSportsAchievementById(params.id)
+    const { id } = await params
+    const achievement = await getSportsAchievementById(id)
     
     if (!achievement) {
       return NextResponse.json(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -39,9 +40,10 @@ export async function PUT(
       )
     }
 
+    const { id } = await params
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateSportsAchievement(params.id, body, updaterEmail)
+    await updateSportsAchievement(id, body, updaterEmail)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {
@@ -55,7 +57,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -66,7 +68,8 @@ export async function DELETE(
       )
     }
 
-    await deleteSportsAchievement(params.id)
+    const { id } = await params
+    await deleteSportsAchievement(id)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {

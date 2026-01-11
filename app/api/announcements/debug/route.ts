@@ -21,16 +21,16 @@ export async function GET(request: NextRequest) {
     const allDocs = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }))
+    })) as any[]
 
     // Analyze the data
     const analysis = {
       total: allDocs.length,
-      featured: allDocs.filter(d => d.featured === true).length,
-      active: allDocs.filter(d => d.isActive !== false).length,
-      activeAndFeatured: allDocs.filter(d => d.featured === true && d.isActive !== false).length,
-      withExpiration: allDocs.filter(d => d.expiresAt).length,
-      documents: allDocs.map(doc => ({
+      featured: allDocs.filter((d: any) => d.featured === true).length,
+      active: allDocs.filter((d: any) => d.isActive !== false).length,
+      activeAndFeatured: allDocs.filter((d: any) => d.featured === true && d.isActive !== false).length,
+      withExpiration: allDocs.filter((d: any) => d.expiresAt).length,
+      documents: allDocs.map((doc: any) => ({
         id: doc.id,
         title: doc.title || 'N/A',
         featured: doc.featured ?? 'not set',

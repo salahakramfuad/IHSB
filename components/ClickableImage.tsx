@@ -21,7 +21,7 @@ export default function ClickableImage({
   const [isOpen, setIsOpen] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const imageArray = images || (src ? [typeof src === 'string' ? src : src.src] : [])
+  const imageArray = images || (src ? [typeof src === 'string' ? src : (typeof src === 'object' && 'src' in src && typeof src.src === 'string' ? src.src : '')] : []).filter((img: string) => img !== '')
 
   const handleClick = () => {
     if (onClick) {
@@ -31,9 +31,10 @@ export default function ClickableImage({
 
     if (lightbox && imageArray.length > 0) {
       // Find the index of the current image
-      const index = imageArray.findIndex(
-        (img) => img === (typeof src === 'string' ? src : src?.src)
-      )
+      const currentSrc = typeof src === 'string' 
+        ? src 
+        : (typeof src === 'object' && src && 'src' in src && typeof src.src === 'string' ? src.src : '')
+      const index = imageArray.findIndex((img) => img === currentSrc)
       setCurrentIndex(index >= 0 ? index : 0)
       setIsOpen(true)
     }

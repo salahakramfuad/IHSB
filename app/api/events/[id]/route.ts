@@ -4,10 +4,11 @@ import { getEventByIdAdmin, updateEvent, deleteEvent } from '@/lib/firestore/eve
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const event = await getEventByIdAdmin(params.id)
+    const { id } = await params
+    const event = await getEventByIdAdmin(id)
     
     if (!event) {
       return NextResponse.json(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -39,9 +40,10 @@ export async function PUT(
       )
     }
 
+    const { id } = await params
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateEvent(params.id, body, updaterEmail)
+    await updateEvent(id, body, updaterEmail)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {
@@ -55,7 +57,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -66,7 +68,8 @@ export async function DELETE(
       )
     }
 
-    await deleteEvent(params.id)
+    const { id } = await params
+    await deleteEvent(id)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {

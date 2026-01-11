@@ -86,8 +86,8 @@ export const getActiveAnnouncements = async (): Promise<AnnouncementDocument[]> 
           let expiresAt: Timestamp | null = null
           if (announcement.expiresAt instanceof Timestamp) {
             expiresAt = announcement.expiresAt
-          } else if (announcement.expiresAt.seconds) {
-            expiresAt = Timestamp.fromMillis(announcement.expiresAt.seconds * 1000)
+          } else if (typeof announcement.expiresAt === 'object' && announcement.expiresAt && 'seconds' in announcement.expiresAt) {
+            expiresAt = Timestamp.fromMillis((announcement.expiresAt as any).seconds * 1000)
           } else if (typeof announcement.expiresAt === 'string') {
             expiresAt = Timestamp.fromDate(new Date(announcement.expiresAt))
           }

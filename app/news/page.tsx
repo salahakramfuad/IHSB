@@ -120,7 +120,7 @@ export default async function NewsPage() {
                       <div className='flex items-center gap-2 mb-3 text-primary-green-600'>
                         <Calendar className='w-4 h-4' />
                         <time className='text-sm font-semibold' dateTime={item.date instanceof Date ? item.date.toISOString() : typeof item.date === 'string' ? item.date : ''}>
-                          {dateInfo.short}
+                          {typeof dateInfo === 'object' ? dateInfo.short : dateInfo}
                         </time>
                       </div>
 

@@ -12,11 +12,11 @@ export async function debugAnnouncements() {
     const allDocs = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
-    }))
+    })) as any[]
     
     console.log('=== All Announcements in Firestore ===')
     console.log(`Total documents: ${allDocs.length}`)
-    allDocs.forEach((doc, index) => {
+    allDocs.forEach((doc: any, index) => {
       console.log(`\n[${index + 1}] ID: ${doc.id}`)
       console.log(`  Title: ${doc.title || 'N/A'}`)
       console.log(`  Featured: ${doc.featured}`)

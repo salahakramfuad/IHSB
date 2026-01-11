@@ -71,7 +71,11 @@ export default function EditAnnouncementPage() {
         },
         body: JSON.stringify({
           ...formData,
-          expiresAt: formData.expiresAt ? new Date(formData.expiresAt).toISOString() : undefined
+          expiresAt: formData.expiresAt 
+            ? (typeof formData.expiresAt === 'string' 
+                ? new Date(formData.expiresAt).toISOString() 
+                : undefined)
+            : undefined
         })
       })
 
@@ -195,14 +199,10 @@ export default function EditAnnouncementPage() {
 
             <div>
               <DatePicker
-                value={formData.expiresAt 
-                  ? (typeof formData.expiresAt === 'string' 
-                      ? formData.expiresAt.includes('T') && formData.expiresAt.length === 16
-                        ? formData.expiresAt
-                        : new Date(formData.expiresAt).toISOString().slice(0, 16)
-                      : typeof formData.expiresAt === 'object' && 'seconds' in formData.expiresAt
-                        ? new Date(formData.expiresAt.seconds * 1000).toISOString().slice(0, 16)
-                        : new Date(formData.expiresAt).toISOString().slice(0, 16))
+                value={formData.expiresAt && typeof formData.expiresAt === 'string' 
+                  ? (formData.expiresAt.includes('T') && formData.expiresAt.length === 16
+                      ? formData.expiresAt
+                      : new Date(formData.expiresAt).toISOString().slice(0, 16))
                   : ''}
                 onChange={(value) => {
                   if (value) {

@@ -4,10 +4,11 @@ import { updateNews, deleteNews, getNewsById } from '@/lib/firestore/news'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const news = await getNewsById(params.id)
+    const { id } = await params
+    const news = await getNewsById(id)
     
     if (!news) {
       return NextResponse.json(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -39,6 +40,7 @@ export async function PUT(
       )
     }
 
+    const { id } = await params
     const body = await request.json()
     const updateData: any = {}
 
@@ -49,9 +51,9 @@ export async function PUT(
     if (body.date !== undefined) updateData.date = body.date
 
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateNews(params.id, updateData, updaterEmail)
+    await updateNews(id, updateData, updaterEmail)
     
-    const updatedNews = await getNewsById(params.id)
+    const updatedNews = await getNewsById(id)
     return NextResponse.json({ news: updatedNews })
   } catch (error: any) {
     console.error('Error updating news:', error)
@@ -64,7 +66,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -75,7 +77,8 @@ export async function DELETE(
       )
     }
 
-    await deleteNews(params.id)
+    const { id } = await params
+    await deleteNews(id)
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error deleting news:', error)

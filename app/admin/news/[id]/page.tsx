@@ -81,7 +81,11 @@ export default function EditNewsPage() {
         },
         body: JSON.stringify({
           ...formData,
-          date: formData.date ? new Date(formData.date).toISOString() : new Date().toISOString()
+          date: formData.date 
+            ? (typeof formData.date === 'string' 
+                ? new Date(formData.date).toISOString() 
+                : new Date().toISOString())
+            : new Date().toISOString()
         })
       })
 
@@ -180,7 +184,7 @@ export default function EditNewsPage() {
                 Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
-                value={formData.date}
+                value={typeof formData.date === 'string' ? formData.date : ''}
                 onChange={(date) => setFormData({ ...formData, date: date || new Date().toISOString().split('T')[0] })}
                 type="date"
               />

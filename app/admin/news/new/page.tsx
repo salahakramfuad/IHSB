@@ -124,7 +124,7 @@ export default function NewNewsPage() {
                 Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
-                value={formData.date}
+                value={typeof formData.date === 'string' ? formData.date : new Date().toISOString().split('T')[0]}
                 onChange={(date) => setFormData({ ...formData, date: date || new Date().toISOString().split('T')[0] })}
                 type="date"
               />

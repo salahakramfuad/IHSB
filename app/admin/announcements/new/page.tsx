@@ -147,7 +147,7 @@ export default function NewAnnouncementPage() {
 
             <div>
               <DatePicker
-                value={formData.expiresAt ? (typeof formData.expiresAt === 'string' ? formData.expiresAt : new Date(formData.expiresAt).toISOString().slice(0, 16)) : ''}
+                value={formData.expiresAt ? (typeof formData.expiresAt === 'string' ? formData.expiresAt : '') : ''}
                 onChange={(value) => {
                   if (value) {
                     // Convert datetime-local format to ISO string

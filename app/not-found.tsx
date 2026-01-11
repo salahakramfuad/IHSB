@@ -1,13 +1,11 @@
+'use client'
+
 import Link from 'next/link'
-import { Metadata } from 'next'
+import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 
-export const metadata: Metadata = {
-  title: 'Page Not Found',
-  description: 'The page you are looking for could not be found.'
-}
-
 export default function NotFound() {
+  const router = useRouter()
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 to-primary-green-50/20 flex items-center justify-center px-4">
       <div className="max-w-2xl mx-auto text-center">
@@ -29,13 +27,13 @@ export default function NotFound() {
               Go to Homepage
             </Button>
           </Link>
-          <Button
-            variant="outline"
-            onClick={() => window.history.back()}
-            className="w-full sm:w-auto"
-          >
-            Go Back
-          </Button>
+            <Button
+              variant="outline"
+              onClick={() => router.back()}
+              className="w-full sm:w-auto"
+            >
+              Go Back
+            </Button>
         </div>
 
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">

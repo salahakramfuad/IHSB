@@ -4,10 +4,11 @@ import { getAdmissionById, updateAdmission } from '@/lib/firestore/admissions'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const admission = await getAdmissionById(params.id)
+    const { id } = await params
+    const admission = await getAdmissionById(id)
     
     if (!admission) {
       return NextResponse.json(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -39,8 +40,9 @@ export async function PUT(
       )
     }
 
+    const { id } = await params
     const body = await request.json()
-    await updateAdmission(params.id, body)
+    await updateAdmission(id, body)
     
     return NextResponse.json({ success: true })
   } catch (error: any) {

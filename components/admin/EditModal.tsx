@@ -43,7 +43,7 @@ export default function EditModal<T extends Record<string, any>>({
   useEffect(() => {
     if (data && isOpen) {
       // Initialize form data with existing data
-      const initialData: Partial<T> = {}
+      const initialData: any = {}
       fields.forEach((field) => {
         if (data[field.key] !== undefined && data[field.key] !== null) {
           // Handle date fields
@@ -63,8 +63,9 @@ export default function EditModal<T extends Record<string, any>>({
                 }
                 
                 if (!isNaN(date.getTime())) {
+                  let formattedDate: string
                   if (field.type === 'date') {
-                    initialData[field.key] = date.toISOString().split('T')[0] as any
+                    formattedDate = date.toISOString().split('T')[0]
                   } else {
                     // datetime-local format: YYYY-MM-DDTHH:mm
                     const year = date.getFullYear()
@@ -72,15 +73,16 @@ export default function EditModal<T extends Record<string, any>>({
                     const day = String(date.getDate()).padStart(2, '0')
                     const hours = String(date.getHours()).padStart(2, '0')
                     const minutes = String(date.getMinutes()).padStart(2, '0')
-                    initialData[field.key] = `${year}-${month}-${day}T${hours}:${minutes}` as any
+                    formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`
                   }
+                  (initialData as any)[field.key] = formattedDate
                 }
               } catch {
                 // Skip invalid dates
               }
             }
           } else {
-            initialData[field.key] = data[field.key]
+            (initialData as any)[field.key] = data[field.key]
           }
         } else if (field.type === 'checkbox') {
           initialData[field.key] = false as any
@@ -109,7 +111,7 @@ export default function EditModal<T extends Record<string, any>>({
       }
 
       // Prepare data for API
-      const submitData: Partial<T> = { ...formData }
+      const submitData: any = { ...formData }
 
       // Convert date strings to proper format
       fields.forEach((field) => {

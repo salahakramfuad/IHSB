@@ -4,10 +4,11 @@ import { getAlumniYearStatsByYear, createOrUpdateAlumniYearStats, calculateYearS
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { year: string } }
+  { params }: { params: Promise<{ year: string }> }
 ) {
   try {
-    const stats = await getAlumniYearStatsByYear(params.year)
+    const { year } = await params
+    const stats = await getAlumniYearStatsByYear(year)
     
     if (!stats) {
       return NextResponse.json(
@@ -28,7 +29,7 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { year: string } }
+  { params }: { params: Promise<{ year: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -39,6 +40,7 @@ export async function PUT(
       )
     }
 
+    const { year } = await params
     const body = await request.json()
     const { count, autoCalculated, recalculate } = body
 
@@ -46,9 +48,9 @@ export async function PUT(
 
     if (recalculate === true) {
       // Auto-calculate for this year
-      const calculatedCount = await calculateYearStats(params.year)
-      await createOrUpdateAlumniYearStats(params.year, calculatedCount, true, creatorEmail)
-      return NextResponse.json({ success: true, year: params.year, count: calculatedCount, autoCalculated: true })
+      const calculatedCount = await calculateYearStats(year)
+      await createOrUpdateAlumniYearStats(year, calculatedCount, true, creatorEmail)
+      return NextResponse.json({ success: true, year, count: calculatedCount, autoCalculated: true })
     }
 
     if (!count) {
@@ -59,7 +61,7 @@ export async function PUT(
     }
 
     await createOrUpdateAlumniYearStats(
-      params.year,
+      year,
       count,
       autoCalculated !== undefined ? autoCalculated : false,
       creatorEmail
@@ -77,7 +79,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { year: string } }
+  { params }: { params: Promise<{ year: string }> }
 ) {
   try {
     const decodedToken = await verifyAdminToken(request)
@@ -88,7 +90,8 @@ export async function DELETE(
       )
     }
 
-    const stats = await getAlumniYearStatsByYear(params.year)
+    const { year } = await params
+    const stats = await getAlumniYearStatsByYear(year)
     if (!stats || !stats.id) {
       return NextResponse.json(
         { error: 'Year statistics not found' },
