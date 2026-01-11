@@ -180,6 +180,24 @@ export default function Feed() {
         </div>
       </section>
 
+      {/* Announcements - Server-side rendered from Firestore */}
+      <Section background='gray' aria-labelledby='announcements-h'>
+        <div className='max-w-7xl mx-auto'>
+          <div className='flex items-center justify-between mb-8'>
+            <h2 id='announcements-h' className='text-3xl md:text-4xl font-bold text-gray-900'>
+              Important Announcements
+            </h2>
+            <Link
+              href='/announcements'
+              className='font-semibold text-primary-green-600 hover:text-primary-green-700 transition-colors text-lg'
+            >
+              See All →
+            </Link>
+          </div>
+          <AnnouncementsServer limit={3} />
+        </div>
+      </Section>
+
       {/* Academic Pathways - Colorful */}
       <Section background='white' aria-labelledby='programs-h'>
         <div className='max-w-7xl mx-auto'>
@@ -214,24 +232,6 @@ export default function Feed() {
               </Card>
             ))}
           </div>
-        </div>
-      </Section>
-
-      {/* Announcements - Server-side rendered from Firestore */}
-      <Section background='gray' aria-labelledby='announcements-h'>
-        <div className='max-w-7xl mx-auto'>
-          <div className='flex items-center justify-between mb-8'>
-            <h2 id='announcements-h' className='text-3xl md:text-4xl font-bold text-gray-900'>
-              Important Announcements
-            </h2>
-            <Link
-              href='/announcements'
-              className='font-semibold text-primary-green-600 hover:text-primary-green-700 transition-colors text-lg'
-            >
-              See All →
-            </Link>
-          </div>
-          <AnnouncementsServer limit={3} />
         </div>
       </Section>
 

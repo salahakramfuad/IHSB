@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/admin/Sidebar'
 import ImageUpload from '@/components/admin/ImageUpload'
+import DatePicker from '@/components/admin/DatePicker'
 import Button from '@/components/ui/Button'
 import { SportsAchievementDocument, Sport, Placement } from '@/lib/firestore/sports'
 
@@ -162,15 +163,12 @@ export default function NewSportsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Date <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  required
+                <DatePicker
                   value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  onChange={(value) => setFormData({ ...formData, date: value })}
+                  label="Date"
+                  required={true}
+                  type="date"
                 />
               </div>
 

@@ -11,6 +11,10 @@ import {
   Megaphone, 
   Trophy,
   Newspaper,
+  GraduationCap,
+  Users,
+  BookOpen,
+  BarChart3,
   LogOut,
   Menu,
   X
@@ -24,6 +28,10 @@ const menuItems = [
   { href: '/admin/announcements', label: 'Announcements', icon: Megaphone },
   { href: '/admin/news', label: 'News', icon: Newspaper },
   { href: '/admin/sports', label: 'Sports & Achievements', icon: Trophy },
+  { href: '/admin/academic-achievements', label: 'Academic Achievements', icon: GraduationCap },
+  { href: '/admin/alumni/featured', label: 'Featured Alumni', icon: Users },
+  { href: '/admin/alumni/stories', label: 'Alumni Stories', icon: BookOpen },
+  { href: '/admin/alumni/stats', label: 'Alumni Statistics', icon: BarChart3 },
 ]
 
 export default function Sidebar() {

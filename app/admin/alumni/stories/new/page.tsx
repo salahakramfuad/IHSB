@@ -4,26 +4,24 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/admin/Sidebar'
 import ImageUpload from '@/components/admin/ImageUpload'
-import DatePicker from '@/components/admin/DatePicker'
 import Button from '@/components/ui/Button'
-import { Event } from '@/data/events'
+import { AlumniStoryDocument } from '@/lib/firestore/alumni'
 
-export default function NewEventPage() {
+export default function NewAlumniStoryPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   
-  const [formData, setFormData] = useState<Omit<Event, 'id'>>({
+  const [formData, setFormData] = useState<Omit<AlumniStoryDocument, 'id' | 'createdAt' | 'updatedAt'>>({
     title: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0],
-    time: '',
-    location: '',
-    image: '',
-    category: 'other',
-    featured: false,
-    registrationRequired: false,
-    registrationUrl: ''
+    excerpt: '',
+    content: '',
+    author: '',
+    authorRole: '',
+    imageUrl: '',
+    date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    published: false,
+    featured: false
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +31,7 @@ export default function NewEventPage() {
 
     try {
       const token = await getAuthToken()
-      const response = await fetch('/api/events', {
+      const response = await fetch('/api/alumni/stories', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,10 +43,10 @@ export default function NewEventPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create event')
+        throw new Error(data.error || 'Failed to create alumni story')
       }
 
-      router.push('/admin/events')
+      router.push('/admin/alumni/stories')
     } catch (err: any) {
       setError(err.message)
       setLoading(false)
@@ -69,8 +67,8 @@ export default function NewEventPage() {
       <main className="lg:pl-64 p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Event</h1>
-            <p className="text-gray-600">Add a new event to the school calendar</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Alumni Story</h1>
+            <p className="text-gray-600">Add a new alumni story or testimonial</p>
           </div>
 
           <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
@@ -95,77 +93,81 @@ export default function NewEventPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description <span className="text-red-500">*</span>
+                Excerpt <span className="text-red-500">*</span>
               </label>
               <textarea
                 required
-                rows={4}
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={3}
+                value={formData.excerpt}
+                onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                placeholder="Short summary of the story..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Content <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                required
+                rows={8}
+                value={formData.content}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                placeholder="Full story content..."
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <DatePicker
-                  value={formData.date}
-                  onChange={(value) => setFormData({ ...formData, date: value })}
-                  label="Date"
-                  required={true}
-                  type="date"
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Author <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.author}
+                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
                 />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Time
+                  Author Role <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g., 10:00 AM - 2:00 PM"
-                  value={formData.time}
-                  onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                  required
+                  placeholder="e.g., Software Engineer"
+                  value={formData.authorRole}
+                  onChange={(e) => setFormData({ ...formData, authorRole: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Location
-              </label>
-              <input
-                type="text"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+              <ImageUpload
+                value={formData.imageUrl}
+                onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+                label="Story Image"
+                required={true}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Category <span className="text-red-500">*</span>
+                Date <span className="text-red-500">*</span>
               </label>
-              <select
+              <input
+                type="text"
                 required
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value as Event['category'] })}
+                placeholder="e.g., March 2024"
+                value={formData.date}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
-              >
-                <option value="academic">Academic</option>
-                <option value="sports">Sports</option>
-                <option value="cultural">Cultural</option>
-                <option value="admission">Admission</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div>
-              <ImageUpload
-                value={formData.image}
-                onChange={(url) => setFormData({ ...formData, image: url })}
-                label="Event Image"
               />
             </div>
 
@@ -173,37 +175,23 @@ export default function NewEventPage() {
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={formData.featured}
-                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                  checked={formData.published}
+                  onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
                   className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Featured Event</span>
+                <span className="text-sm font-medium text-gray-700">Published</span>
               </label>
 
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  checked={formData.registrationRequired}
-                  onChange={(e) => setFormData({ ...formData, registrationRequired: e.target.checked })}
+                  checked={formData.featured}
+                  onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                   className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Registration Required</span>
+                <span className="text-sm font-medium text-gray-700">Featured</span>
               </label>
             </div>
-
-            {formData.registrationRequired && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Registration URL
-                </label>
-                <input
-                  type="url"
-                  value={formData.registrationUrl}
-                  onChange={(e) => setFormData({ ...formData, registrationUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
-                />
-              </div>
-            )}
 
             <div className="flex gap-4 pt-4">
               <Button
@@ -212,7 +200,7 @@ export default function NewEventPage() {
                 disabled={loading}
                 className="flex-1"
               >
-                {loading ? 'Creating...' : 'Create Event'}
+                {loading ? 'Creating...' : 'Create Story'}
               </Button>
               <Button
                 type="button"

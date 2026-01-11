@@ -1,13 +1,13 @@
 // components/AcademicAchievements.tsx
 'use client'
 import React from 'react'
-import { faker } from '@faker-js/faker'
+import { AcademicAchievementDocument } from '@/lib/firestore/academicAchievements'
 
 interface Student {
   id: string
   name: string
   result: string
-  image: string
+  image?: string
 }
 
 interface AchievementSectionProps {
@@ -17,36 +17,10 @@ interface AchievementSectionProps {
   sectionId: string
 }
 
-const RESULTS_OLEVEL = ['6A* 2A', '5A* 3A', '7A* 1A', '6A* 1A 1B', '4A* 4A']
-const RESULTS_AS = ['4A', '3A 1B', '2A* 2A', '3A* 1A']
-const RESULTS_ALEVEL = ['4A*', '3A* 1A', '2A* 2A', '2A* 1A 1B']
-
-function makeStudents(
-  count: number,
-  idPrefix: string,
-  resultPool: string[]
-): Student[] {
-  return Array.from({ length: count }, (_, i) => {
-    faker.seed(2025 * (i + 1) + idPrefix.length)
-
-    const seed = `${idPrefix}-${i + 1}`
-
-    return {
-      id: `${idPrefix}-${i + 1}-${faker.string.alphanumeric(4).toLowerCase()}`,
-      name: faker.person.fullName(),
-      result: faker.helpers.arrayElement(resultPool),
-      // FIX: build Picsum URL manually; v8 types don’t allow `seed` option
-      image: `https://picsum.photos/seed/${encodeURIComponent(
-        seed
-      )}/800/500?blur=1`
-    }
-  })
-}
-
 const StudentCard: React.FC<{ student: Student }> = ({ student }) => {
-  const [imgSrc, setImgSrc] = React.useState(student.image)
+  const [imgSrc, setImgSrc] = React.useState(student.image || '')
 
-  const handleImageError = () => setImgSrc('/assets/images/default-avatar.png')
+  const handleImageError = () => setImgSrc('')
 
   return (
     <article
@@ -54,19 +28,32 @@ const StudentCard: React.FC<{ student: Student }> = ({ student }) => {
       aria-label={`Achievement of ${student.name}: ${student.result}`}
     >
       {/* Portrait image area */}
-      <div className='relative w-full aspect-[3/3] md:aspect-[3/3]'>
-        <img
-          src={imgSrc}
-          alt={student.name}
-          className='absolute inset-0 w-full h-full object-cover'
-          loading='lazy'
-          onError={handleImageError}
-        />
-        <div className='absolute inset-0 bg-black/30 flex items-end p-4'>
-          <h3 className='text-lg md:text-xl font-bold text-white line-clamp-1'>
-            {student.name}
-          </h3>
-        </div>
+      <div className='relative w-full aspect-[3/3] md:aspect-[3/3] bg-gradient-to-br from-primary-green-100 to-accent-blue-100'>
+        {student.image ? (
+          <>
+            <img
+              src={imgSrc}
+              alt={student.name}
+              className='absolute inset-0 w-full h-full object-cover'
+              loading='lazy'
+              onError={handleImageError}
+            />
+            <div className='absolute inset-0 bg-black/30 flex items-end p-4'>
+              <h3 className='text-lg md:text-xl font-bold text-white line-clamp-1'>
+                {student.name}
+              </h3>
+            </div>
+          </>
+        ) : (
+          <div className='absolute inset-0 flex items-center justify-center'>
+            <div className='text-center p-4'>
+              <div className='text-4xl mb-2'>🎓</div>
+              <h3 className='text-lg md:text-xl font-bold text-gray-800 line-clamp-2'>
+                {student.name}
+              </h3>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Text area */}
@@ -107,14 +94,57 @@ const AchievementSection: React.FC<AchievementSectionProps> = ({
 }
 
 const AcademicAchievements: React.FC = () => {
-  // Generate once per mount; deterministic via seeding.
-  const data = React.useMemo(() => {
-    return {
-      oLevel: makeStudents(6, 'ol', RESULTS_OLEVEL),
-      asLevel: makeStudents(6, 'asl', RESULTS_AS),
-      aLevel: makeStudents(6, 'al', RESULTS_ALEVEL)
-    }
+  const [achievements, setAchievements] = React.useState<AcademicAchievementDocument[]>([])
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    fetchAchievements()
   }, [])
+
+  const fetchAchievements = async () => {
+    try {
+      const response = await fetch('/api/academic-achievements')
+      const data = await response.json()
+      setAchievements(data.achievements || [])
+    } catch (error) {
+      console.error('Error fetching academic achievements:', error)
+      setAchievements([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Convert Firestore data to Student format
+  const data = React.useMemo(() => {
+    const oLevel = achievements
+      .filter(a => a.session === 'O Level')
+      .map(a => ({
+        id: a.id || '',
+        name: a.name,
+        result: a.result,
+        image: a.image
+      }))
+    
+    const asLevel = achievements
+      .filter(a => a.session === 'AS Level')
+      .map(a => ({
+        id: a.id || '',
+        name: a.name,
+        result: a.result,
+        image: a.image
+      }))
+    
+    const aLevel = achievements
+      .filter(a => a.session === 'A Level')
+      .map(a => ({
+        id: a.id || '',
+        name: a.name,
+        result: a.result,
+        image: a.image
+      }))
+    
+    return { oLevel, asLevel, aLevel }
+  }, [achievements])
 
   return (
     <div className='py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-primary-green-50/30'>
@@ -146,24 +176,39 @@ const AcademicAchievements: React.FC = () => {
           </p>
         </header>
 
-        <AchievementSection
-          sectionId='o-level'
-          title='O Level Achievements'
-          emoji='🎓'
-          students={data.oLevel}
-        />
-        <AchievementSection
-          sectionId='as-level'
-          title='AS Level Achievements'
-          emoji='📚'
-          students={data.asLevel}
-        />
-        <AchievementSection
-          sectionId='a-level'
-          title='A Level Achievements'
-          emoji='🏆'
-          students={data.aLevel}
-        />
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading achievements...</p>
+          </div>
+        ) : (
+          <>
+            <AchievementSection
+              sectionId='o-level'
+              title='O Level Achievements'
+              emoji='🎓'
+              students={data.oLevel}
+            />
+            <AchievementSection
+              sectionId='as-level'
+              title='AS Level Achievements'
+              emoji='📚'
+              students={data.asLevel}
+            />
+            <AchievementSection
+              sectionId='a-level'
+              title='A Level Achievements'
+              emoji='🏆'
+              students={data.aLevel}
+            />
+          </>
+        )}
+        
+        {!loading && achievements.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No academic achievements available at this time.</p>
+          </div>
+        )}
       </div>
     </div>
   )
