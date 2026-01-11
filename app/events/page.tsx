@@ -1,11 +1,22 @@
 import React from 'react'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import { getAllEvents } from '@/lib/firestore/events'
 import type { Event } from '@/data/events'
+
+export const metadata: Metadata = {
+  title: 'Events',
+  description:
+    'Stay updated with upcoming events at IHSB - school functions, competitions, cultural programs, and special activities.',
+  openGraph: {
+    title: 'Events | IHSB',
+    description: 'Discover upcoming events and activities at International Hope School Bangladesh.'
+  }
+}
 
 export default async function EventsPage() {
   // Server-side fetch for better performance

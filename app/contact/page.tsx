@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState, FormEvent, ChangeEvent } from 'react'
-import type { Metadata } from 'next'
 import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
+
+// Note: Metadata is exported from layout.tsx for client components
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({

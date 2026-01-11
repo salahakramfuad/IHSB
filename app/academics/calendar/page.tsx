@@ -1,11 +1,13 @@
 'use client'
 
 import React, { useState, useMemo } from 'react'
-import type { Metadata } from 'next'
 import PageHeader from '../../../components/ui/PageHeader'
 import Section from '../../../components/ui/Section'
 import Card from '../../../components/ui/Card'
 import { format, startOfYear, addMonths, isSameDay, parseISO } from 'date-fns'
+
+// Note: Metadata cannot be exported from client components
+// Add metadata in a parent layout if needed
 
 export default function CalendarPage() {
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear())

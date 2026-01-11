@@ -1,20 +1,35 @@
 import React from 'react'
+import type { Metadata } from 'next'
+import PageHeader from '../../../components/ui/PageHeader'
+import Section from '../../../components/ui/Section'
+
+export const metadata: Metadata = {
+  title: 'Admission Procedure',
+  description:
+    'Learn about the admission procedure at IHSB - steps to apply, required documents, admission test, interview, and important guidelines.',
+  openGraph: {
+    title: 'Admission Procedure | IHSB',
+    description: 'Complete guide to the admission process at International Hope School Bangladesh.'
+  }
+}
 
 const ApplicationProcedure: React.FC = () => {
   return (
-    <div className='bg-gray-100 min-h-screen py-8'>
-      <div className='max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8'>
-        {/* Header */}
-        <div className='text-center mb-8'>
-          <h1 className='text-3xl font-bold text-gray-800'>
-            Application Procedure
-          </h1>
-          <p className='mt-2 text-gray-600'>
-            International Hope School Bangladesh (IHSB)
-          </p>
-        </div>
-
-        {/* Academic Year Information */}
+    <main className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-green-50/20'>
+      <Section background='white'>
+        <PageHeader
+          title='Admission Procedure'
+          subtitle='Complete guide to applying for admission at International Hope School Bangladesh'
+          breadcrumbs={[
+            { label: 'Home', href: '/' },
+            { label: 'Admissions', href: '/admission' },
+            { label: 'Admission Procedure' }
+          ]}
+        />
+      </Section>
+      <Section background='gray' container={false}>
+        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+          {/* Academic Year Information */}
         <div className='mb-6'>
           <h2 className='text-xl font-semibold text-gray-800'>Academic Year</h2>
           <p className='mt-2 text-gray-700'>
@@ -204,6 +219,7 @@ const ApplicationProcedure: React.FC = () => {
               </div>
             </div>
           </div>
+          </div>
 
           {/* Admission Policy */}
           <div>
@@ -386,8 +402,8 @@ const ApplicationProcedure: React.FC = () => {
             </p>
           </div>
         </div>
-      </div>
-    </div>
+      </Section>
+    </main>
   )
 }
 
