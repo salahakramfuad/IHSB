@@ -3,8 +3,17 @@ import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllEventsAdmin, createEvent } from '@/lib/firestore/events'
 import { Event } from '@/data/events'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Verify admin token for admin API access
+    const decodedToken = await verifyAdminToken(request)
+    if (!decodedToken) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     // For admin API, return full document data including creator info
     const events = await getAllEventsAdmin()
     return NextResponse.json({ events })

@@ -2,8 +2,17 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllSportsAchievements, createSportsAchievement } from '@/lib/firestore/sports'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Verify admin token for admin API access
+    const decodedToken = await verifyAdminToken(request)
+    if (!decodedToken) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const achievements = await getAllSportsAchievements()
     return NextResponse.json({ achievements })
   } catch (error: any) {

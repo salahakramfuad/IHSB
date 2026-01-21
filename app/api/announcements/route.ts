@@ -18,7 +18,14 @@ export async function GET(request: NextRequest) {
     } else if (active) {
       announcements = await getActiveAnnouncements()
     } else {
-      // For admin dashboard, get all announcements
+      // For admin dashboard, get all announcements - requires authentication
+      const decodedToken = await verifyAdminToken(request)
+      if (!decodedToken) {
+        return NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        )
+      }
       announcements = await getAllAnnouncements()
     }
 

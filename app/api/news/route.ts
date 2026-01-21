@@ -16,6 +16,14 @@ export async function GET(request: NextRequest) {
       const { getLatestNews } = await import('@/lib/firestore/news')
       news = await getLatestNews(parseInt(limit, 10))
     } else {
+      // Getting all news requires admin authentication
+      const decodedToken = await verifyAdminToken(request)
+      if (!decodedToken) {
+        return NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        )
+      }
       news = await getAllNews()
     }
 
