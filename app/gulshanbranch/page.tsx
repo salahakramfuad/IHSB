@@ -1,18 +1,21 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import type { Metadata } from 'next'
-import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'
 import Card from '../../components/ui/Card'
+import Button from '../../components/ui/Button'
 import LightboxGallery from '../../components/LightboxGallery'
+import ImageWithLightbox from '../../components/ImageWithLightbox'
+import { schoolInfo } from '@/data/schoolInfo'
 
 export const metadata: Metadata = {
-  title: 'Gulshan Branch',
+  title: 'Gulshan Branch | Primary & Middle Section',
   description:
-    'Gulshan Primary & Middle Section of IHSB - Providing quality pre and primary-school education in a caring, stimulating environment.',
+    'Gulshan Primary & Middle Section of IHSB - Providing quality pre and primary-school education in a caring, stimulating environment in the heart of Gulshan.',
   openGraph: {
     title: 'Gulshan Branch | IHSB',
-    description: 'Discover our Gulshan campus offering preschool, primary, and middle section programs.'
+    description: 'Discover our Gulshan campus offering preschool, primary, and middle section programs with modern facilities and experienced educators.'
   }
 }
 
@@ -28,107 +31,255 @@ const features = [
   {
     title: 'Caring Environment',
     description:
-      'A stimulating environment where children develop physical, intellectual, emotional, and social skills.',
+      'A stimulating environment where children develop physical, intellectual, emotional, and social skills through play-based and structured learning.',
     icon: '❤️',
-    color: 'from-accent-pink-400 to-accent-pink-600'
+    color: 'from-accent-pink-400 to-accent-pink-600',
+    bgColor: 'bg-accent-pink-50',
+    borderColor: 'border-accent-pink-200'
   },
   {
     title: 'Confident Teachers',
     description:
-      'Well-trained, confident teachers who deliver curriculum fostering each child\'s uniqueness.',
+      'Well-trained, confident teachers who deliver curriculum fostering each child\'s uniqueness and individuality while working towards common goals.',
     icon: '👩‍🏫',
-    color: 'from-accent-blue-400 to-accent-blue-600'
+    color: 'from-accent-blue-400 to-accent-blue-600',
+    bgColor: 'bg-accent-blue-50',
+    borderColor: 'border-accent-blue-200'
   },
   {
     title: 'Independent Learning',
     description:
-      'Children are encouraged to become independent learners through structured and spontaneous activities.',
+      'Children are encouraged to become independent learners through structured and spontaneous activities that build confidence and curiosity.',
     icon: '🚀',
-    color: 'from-primary-green-400 to-primary-green-600'
+    color: 'from-primary-green-400 to-primary-green-600',
+    bgColor: 'bg-primary-green-50',
+    borderColor: 'border-primary-green-200'
   },
   {
     title: 'Fun Learning',
     description:
-      'Discovering that learning is fun through engaging activities and experiences.',
+      'Discovering that learning is fun through engaging activities, hands-on experiences, and creative exploration that sparks lifelong curiosity.',
     icon: '🎉',
-    color: 'from-accent-yellow-400 to-accent-orange-500'
+    color: 'from-accent-yellow-400 to-accent-orange-500',
+    bgColor: 'bg-accent-yellow-50',
+    borderColor: 'border-accent-yellow-200'
   }
 ]
 
+const programs = [
+  {
+    title: 'Preschool',
+    description: 'Early years foundation for ages 3-5',
+    age: 'Ages 3-5',
+    icon: '🎨'
+  },
+  {
+    title: 'Primary',
+    description: 'Grades 1-5 with Cambridge curriculum',
+    age: 'Grades 1-5',
+    icon: '📚'
+  },
+  {
+    title: 'Middle School',
+    description: 'Grades 6-8 preparing for secondary',
+    age: 'Grades 6-8',
+    icon: '🔬'
+  }
+]
+
+const branchInfo = schoolInfo.branches.gulshanPrimaryMiddle
+
 export default function GulshanBranchPage() {
   return (
-    <main className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-accent-pink-50/30'>
-      {/* Hero Section */}
-      <section className='relative bg-gradient-to-br from-primary-green-600 via-accent-teal-600 to-accent-blue-600 text-white py-20 md:py-28'>
-        <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='max-w-4xl mx-auto text-center'>
-            <h1 className='text-4xl sm:text-5xl md:text-6xl font-extrabold mb-6'>
-              Gulshan Primary & Middle Section
+    <main className='min-h-screen bg-white'>
+      {/* Enhanced Hero Section */}
+      <section className='relative isolate w-full min-h-[85vh] flex items-center overflow-hidden'>
+        {/* Background with Parallax */}
+        <div className='absolute inset-0 -z-10'>
+          <ImageWithLightbox
+            src='/assets/images/ihsb.png'
+            alt='Gulshan Branch Campus'
+            fill
+            priority
+            sizes='100vw'
+            className='object-cover scale-110'
+          />
+          {/* Multi-layer Gradient Overlay */}
+          <div className='absolute inset-0 bg-gradient-to-br from-accent-teal-900/85 via-primary-green-900/80 to-accent-blue-900/85' />
+          <div className='absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent' />
+          {/* Dark overlay for better text readability */}
+          <div className='absolute inset-0 bg-black/40' />
+          
+          {/* Background Decorative Elements */}
+          <div className='absolute top-20 left-10 w-64 h-64 bg-accent-yellow-400/10 rounded-full blur-3xl' />
+          <div className='absolute bottom-20 right-10 w-80 h-80 bg-accent-pink-400/10 rounded-full blur-3xl' />
+          <div className='absolute top-1/2 left-1/3 w-48 h-48 bg-accent-blue-400/10 rounded-full blur-3xl' />
+        </div>
+
+        {/* Content */}
+        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36 text-white relative z-10 w-full'>
+          <div className='max-w-4xl'>
+            {/* Badge */}
+            <div className='mb-6'>
+              <span className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-semibold text-white/90'>
+                <span className='w-2 h-2 bg-accent-yellow-400 rounded-full animate-pulse'></span>
+                Primary & Middle Section
+              </span>
+            </div>
+
+            {/* Main Heading */}
+            <h1 className='text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]'>
+              <span className='block'>Gulshan Branch</span>
+              <span className='block bg-gradient-to-r from-white via-accent-yellow-200 to-white bg-clip-text text-transparent mt-2'>
+                Primary & Middle Section
+              </span>
             </h1>
-            <p className='text-lg sm:text-xl text-green-50 mb-4'>
-              House: 9, Road: 111, Gulshan-2, Dhaka-1212
-            </p>
-            <p className='text-base sm:text-lg text-green-100'>
-              Tel: +880 2 222284242, +88 01791715556
-            </p>
+
+            {/* Location & Contact */}
+            <div className='mt-8 space-y-4'>
+              <div className='flex items-start gap-3 text-lg sm:text-xl text-white/90'>
+                <svg className='w-6 h-6 mt-1 flex-shrink-0 text-accent-yellow-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' />
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
+                </svg>
+                <p className='leading-relaxed'>{branchInfo.address}</p>
+              </div>
+              <div className='flex items-center gap-3 text-lg sm:text-xl text-white/90'>
+                <svg className='w-6 h-6 flex-shrink-0 text-accent-yellow-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' />
+                </svg>
+                <div className='flex flex-wrap gap-2'>
+                  {branchInfo.phone.map((phone, idx) => (
+                    <a key={idx} href={`tel:${phone.replace(/\s/g, '')}`} className='hover:text-accent-yellow-400 transition-colors'>
+                      {phone}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className='mt-10 flex flex-wrap gap-4'>
+              <Link href='/admission/apply'>
+                <Button 
+                  size='lg' 
+                  variant='primary' 
+                  className='bg-accent-yellow-400 text-gray-900 hover:bg-accent-yellow-500 shadow-2xl text-lg px-8 py-4 rounded-xl font-bold'
+                >
+                  Apply Now ✨
+                </Button>
+              </Link>
+              <Link href='/contact'>
+                <Button 
+                  size='lg' 
+                  variant='outline' 
+                  className='border-2 border-white/90 text-white hover:bg-white/20 backdrop-blur-md text-lg px-8 py-4 rounded-xl font-semibold'
+                >
+                  Contact Us
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* About Section - Modern Design */}
       <Section background='white'>
-        <div className='max-w-6xl mx-auto'>
-          {/* About Section */}
-          <Card className='mb-8 border-2 border-primary-green-200 bg-primary-green-50'>
-            <div className='h-2 bg-gradient-to-r from-primary-green-500 to-primary-green-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
-            <h2 className='text-3xl font-bold text-gray-900 mb-4 flex items-center gap-3'>
-              <span className='text-4xl'>🏛️</span>
-              About Our Section
-            </h2>
-            <p className='text-lg text-gray-700 leading-relaxed'>
-              The early years are crucial for children's holistic development. A
-              quality pre and primary-school education provides children with
-              opportunities to build self-confidence, learn social skills, and
-              develop learning dispositions. These build a strong foundation for
-              children's future learning and success.
-            </p>
-          </Card>
+        <div className='max-w-7xl mx-auto'>
+          <div className='grid lg:grid-cols-2 gap-8 mb-16'>
+            {/* About Card */}
+            <Card className='border-2 border-primary-green-200 bg-gradient-to-br from-primary-green-50 to-white hover:shadow-2xl transition-all duration-300'>
+              <div className='h-2 bg-gradient-to-r from-primary-green-500 to-primary-green-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+              <div className='flex items-center gap-4 mb-6'>
+                <div className='w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-green-500 to-primary-green-600 flex items-center justify-center text-4xl'>
+                  🏛️
+                </div>
+                <h2 className='text-3xl font-bold text-gray-900'>
+                  About Our Section
+                </h2>
+              </div>
+              <p className='text-lg text-gray-700 leading-relaxed mb-4'>
+                The early years are crucial for children's holistic development. A
+                quality pre and primary-school education provides children with
+                opportunities to build self-confidence, learn social skills, and
+                develop learning dispositions.
+              </p>
+              <p className='text-lg text-gray-700 leading-relaxed'>
+                These build a strong foundation for children's future learning and success, 
+                preparing them for academic excellence and personal growth.
+              </p>
+            </Card>
 
-          {/* Our Aim Section */}
-          <Card className='mb-8 border-2 border-accent-pink-200 bg-accent-pink-50'>
-            <div className='h-2 bg-gradient-to-r from-accent-pink-500 to-accent-pink-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
-            <h2 className='text-3xl font-bold text-gray-900 mb-4 flex items-center gap-3'>
-              <span className='text-4xl'>🎯</span>
-              Our Aim
-            </h2>
-            <p className='text-lg text-gray-700 leading-relaxed'>
-              The School provides a caring, stimulating environment where your
-              child will be given the time and opportunity to develop his/her
-              physical, intellectual, emotional, and social skills. Our
-              well-trained, confident teachers deliver the curriculum in ways that
-              foster a child's uniqueness and individuality as they work towards
-              common goals. Children are encouraged to become independent learners
-              and to discover that learning is fun through structured and
-              spontaneous activities.
-            </p>
-          </Card>
+            {/* Our Aim Card */}
+            <Card className='border-2 border-accent-pink-200 bg-gradient-to-br from-accent-pink-50 to-white hover:shadow-2xl transition-all duration-300'>
+              <div className='h-2 bg-gradient-to-r from-accent-pink-500 to-accent-pink-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+              <div className='flex items-center gap-4 mb-6'>
+                <div className='w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-pink-500 to-accent-pink-600 flex items-center justify-center text-4xl'>
+                  🎯
+                </div>
+                <h2 className='text-3xl font-bold text-gray-900'>
+                  Our Aim
+                </h2>
+              </div>
+              <p className='text-lg text-gray-700 leading-relaxed'>
+                The School provides a caring, stimulating environment where your
+                child will be given the time and opportunity to develop his/her
+                physical, intellectual, emotional, and social skills. Our
+                well-trained, confident teachers deliver the curriculum in ways that
+                foster a child's uniqueness and individuality as they work towards
+                common goals.
+              </p>
+            </Card>
+          </div>
 
-          {/* Features Grid */}
-          <div className='mb-12'>
-            <h2 className='text-3xl font-bold text-center mb-8 bg-gradient-to-r from-primary-green-600 to-accent-pink-600 bg-clip-text text-transparent'>
-              What We Offer
-            </h2>
+          {/* Programs Offered */}
+          <div className='mb-16'>
+            <div className='text-center mb-12'>
+              <h2 className='text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-green-600 via-accent-teal-600 to-accent-blue-600 bg-clip-text text-transparent'>
+                Programs Offered
+              </h2>
+              <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
+                Comprehensive educational programs designed to nurture young minds from preschool through middle school
+              </p>
+            </div>
+            <div className='grid md:grid-cols-3 gap-6'>
+              {programs.map((program, idx) => (
+                <Card
+                  key={idx}
+                  className='text-center border-2 border-gray-200 hover:border-primary-green-300 hover:shadow-xl transition-all duration-300'
+                >
+                  <div className='h-2 bg-gradient-to-r from-primary-green-500 via-accent-teal-500 to-accent-blue-500 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+                  <div className='text-6xl mb-4 transform hover:scale-110 transition-transform duration-300 inline-block'>{program.icon}</div>
+                  <h3 className='text-2xl font-bold text-gray-900 mb-2'>{program.title}</h3>
+                  <p className='text-sm text-primary-green-600 font-semibold mb-3'>{program.age}</p>
+                  <p className='text-gray-600 leading-relaxed'>{program.description}</p>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Features Grid - Enhanced */}
+          <div className='mb-16'>
+            <div className='text-center mb-12'>
+              <h2 className='text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-accent-pink-600 to-accent-yellow-500 bg-clip-text text-transparent'>
+                What We Offer
+              </h2>
+              <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
+                Our comprehensive approach ensures every child receives the support and opportunities they need to thrive
+              </p>
+            </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
               {features.map((feature, index) => (
                 <Card
                   key={index}
-                  className='text-center hover:shadow-2xl transition-all transform hover:-translate-y-2 border-2 border-gray-200'
+                  className={`text-center hover:shadow-2xl transition-all duration-300 border-2 ${feature.borderColor} ${feature.bgColor}`}
                 >
-                  <div className={`h-1 bg-gradient-to-r ${feature.color} rounded-t-xl -mx-6 -mt-6 mb-4`}></div>
-                  <div className='text-5xl mb-4'>{feature.icon}</div>
-                  <h3 className='text-lg font-bold text-gray-900 mb-2'>
+                  <div className={`h-2 bg-gradient-to-r ${feature.color} rounded-t-xl -mx-6 -mt-6 mb-6`}></div>
+                  <div className='text-6xl mb-4 transform hover:scale-110 hover:rotate-12 transition-all duration-300 inline-block'>{feature.icon}</div>
+                  <h3 className='text-xl font-bold text-gray-900 mb-3'>
                     {feature.title}
                   </h3>
-                  <p className='text-sm text-gray-600 leading-relaxed'>
+                  <p className='text-sm text-gray-700 leading-relaxed'>
                     {feature.description}
                   </p>
                 </Card>
@@ -136,51 +287,105 @@ export default function GulshanBranchPage() {
             </div>
           </div>
 
-          {/* Campus Life Gallery */}
-          <Card className='mb-8 border-2 border-accent-blue-200'>
-            <div className='h-2 bg-gradient-to-r from-accent-blue-500 to-accent-blue-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
-            <h2 className='text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3'>
-              <span className='text-4xl'>📸</span>
-              Campus Life
-            </h2>
-            <LightboxGallery
-              images={campusImages}
-              className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'
-            />
-          </Card>
+          {/* Campus Life Gallery - Enhanced */}
+          <div className='mb-16'>
+            <div className='text-center mb-8'>
+              <h2 className='text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-accent-blue-600 to-accent-purple-600 bg-clip-text text-transparent'>
+                Campus Life
+              </h2>
+              <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
+                Experience the vibrant learning environment at our Gulshan campus
+              </p>
+            </div>
+            <Card className='border-2 border-accent-blue-200 bg-gradient-to-br from-accent-blue-50 to-white hover:shadow-2xl transition-all duration-300'>
+              <div className='h-2 bg-gradient-to-r from-accent-blue-500 to-accent-blue-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+              <LightboxGallery
+                images={campusImages}
+                className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'
+              />
+            </Card>
+          </div>
 
-          {/* Contact Section */}
-          <Card className='mb-8 bg-gradient-to-br from-accent-blue-50 to-primary-green-50 border-2 border-accent-blue-200'>
-            <div className='h-2 bg-gradient-to-r from-accent-blue-500 to-primary-green-500 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
-            <h2 className='text-3xl font-bold text-gray-900 mb-4 flex items-center gap-3'>
-              <span className='text-4xl'>📞</span>
-              Contact Us
-            </h2>
-            <div className='space-y-3 text-lg text-gray-700'>
-              <p>
-                <strong>Address:</strong> House: 9, Road: 111, Gulshan-2, Dhaka-1212
-              </p>
-              <p>
-                <strong>Tel:</strong> +880 2 222284242, +88 01791715556
-              </p>
+          {/* Contact Section - Modern Design */}
+          <Card className='mb-8 bg-gradient-to-br from-accent-blue-50 via-primary-green-50 to-accent-teal-50 border-2 border-accent-blue-200 hover:shadow-2xl transition-all duration-300'>
+            <div className='h-2 bg-gradient-to-r from-accent-blue-500 via-primary-green-500 to-accent-teal-500 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+            <div className='flex items-center gap-4 mb-6'>
+              <div className='w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-blue-500 to-primary-green-500 flex items-center justify-center text-4xl'>
+                📞
+              </div>
+              <h2 className='text-3xl font-bold text-gray-900'>
+                Contact Us
+              </h2>
+            </div>
+            <div className='grid md:grid-cols-2 gap-6'>
+              <div className='space-y-4'>
+                <div className='flex items-start gap-3'>
+                  <svg className='w-6 h-6 mt-1 text-primary-green-600 flex-shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' />
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
+                  </svg>
+                  <div>
+                    <h3 className='font-semibold text-gray-900 mb-1'>Address</h3>
+                    <p className='text-gray-700'>{branchInfo.address}</p>
+                  </div>
+                </div>
+                <div className='flex items-start gap-3'>
+                  <svg className='w-6 h-6 mt-1 text-primary-green-600 flex-shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' />
+                  </svg>
+                  <div>
+                    <h3 className='font-semibold text-gray-900 mb-1'>Phone</h3>
+                    <div className='space-y-1'>
+                      {branchInfo.phone.map((phone, idx) => (
+                        <a key={idx} href={`tel:${phone.replace(/\s/g, '')}`} className='block text-primary-green-600 hover:text-primary-green-700 transition-colors'>
+                          {phone}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className='flex items-start gap-3'>
+                  <svg className='w-6 h-6 mt-1 text-primary-green-600 flex-shrink-0' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' />
+                  </svg>
+                  <div>
+                    <h3 className='font-semibold text-gray-900 mb-1'>Email</h3>
+                    <a href={`mailto:${branchInfo.email}`} className='text-primary-green-600 hover:text-primary-green-700 transition-colors'>
+                      {branchInfo.email}
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className='flex items-center justify-center'>
+                <Link href='/contact' className='w-full'>
+                  <Button size='lg' variant='primary' className='w-full bg-primary-green-600 hover:bg-primary-green-700 text-white text-lg py-4 rounded-xl font-semibold'>
+                    Get in Touch
+                  </Button>
+                </Link>
+              </div>
             </div>
           </Card>
         </div>
       </Section>
 
-      {/* Map Section */}
+      {/* Map Section - Enhanced */}
       <Section background='gray'>
-        <div className='max-w-6xl mx-auto'>
-          <Card className='border-2 border-primary-green-200'>
-            <div className='h-2 bg-gradient-to-r from-primary-green-500 to-primary-green-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
-            <h2 className='text-2xl font-bold text-center text-gray-900 mb-6'>
-              Gulshan Primary & Middle Section Location
+        <div className='max-w-7xl mx-auto'>
+          <div className='text-center mb-8'>
+            <h2 className='text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary-green-600 to-accent-teal-600 bg-clip-text text-transparent'>
+              Find Us
             </h2>
-            <div className='rounded-lg overflow-hidden shadow-lg'>
+            <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
+              Visit our Gulshan campus located in the heart of Dhaka
+            </p>
+          </div>
+            <Card className='border-2 border-primary-green-200 bg-white hover:shadow-2xl transition-all duration-300 overflow-hidden'>
+            <div className='h-2 bg-gradient-to-r from-primary-green-500 via-accent-teal-500 to-primary-green-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+            <div className='rounded-xl overflow-hidden shadow-2xl border-2 border-gray-200'>
               <iframe
                 src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.7964749134976!2d90.41484727539148!3d23.79026077864317!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c701d7d26cdb%3A0xdfc79709eafbc5df!2sInternational%20Hope%20School%20Bangladesh%20Gulshan%20Branch!5e0!3m2!1sen!2sbd!4v1738794555096!5m2!1sen!2sbd'
                 width='100%'
-                height='450'
+                height='500'
                 style={{ border: 0 }}
                 allowFullScreen
                 loading='lazy'
@@ -188,6 +393,11 @@ export default function GulshanBranchPage() {
                 title='Gulshan Branch Map'
                 className='w-full'
               />
+            </div>
+            <div className='mt-6 p-4 bg-gradient-to-r from-primary-green-50 to-accent-teal-50 rounded-lg border border-primary-green-200'>
+              <p className='text-center text-gray-700 font-medium'>
+                <span className='font-semibold text-primary-green-700'>Location:</span> {branchInfo.address}
+              </p>
             </div>
           </Card>
         </div>

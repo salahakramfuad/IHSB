@@ -39,19 +39,44 @@ export async function POST(request: NextRequest) {
     // Input validation is handled below to prevent abuse
     const body = await request.json()
     
-    // Validate required fields
-    if (!body.name || !body.email || !body.phone) {
+    // Validate required fields based on AdmissionDocument interface
+    const requiredFields = [
+      'branch',
+      'academicYear',
+      'surname',
+      'studentName',
+      'dateOfBirth',
+      'gender',
+      'nationality',
+      'classAppliedFor',
+      'presentAddress',
+      'permanentAddress',
+      'fatherName',
+      'fatherContact',
+      'motherName',
+      'motherContact',
+      'paymentReference'
+    ]
+
+    const missingFields = requiredFields.filter(field => !body[field])
+    if (missingFields.length > 0) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, email, phone' },
+        { error: `Missing required fields: ${missingFields.join(', ')}` },
         { status: 400 }
       )
     }
 
-    // Validate email format
+    // Validate email format if provided
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(body.email)) {
+    if (body.fatherEmail && !emailRegex.test(body.fatherEmail)) {
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: 'Invalid father email format' },
+        { status: 400 }
+      )
+    }
+    if (body.motherEmail && !emailRegex.test(body.motherEmail)) {
+      return NextResponse.json(
+        { error: 'Invalid mother email format' },
         { status: 400 }
       )
     }
@@ -61,19 +86,62 @@ export async function POST(request: NextRequest) {
     const { id, ...bodyWithoutId } = body
     
     const sanitizedData = {
-      name: String(bodyWithoutId.name).trim().substring(0, 200),
-      email: String(bodyWithoutId.email).trim().substring(0, 200),
-      phone: String(bodyWithoutId.phone).trim().substring(0, 50),
-      grade: bodyWithoutId.grade ? String(bodyWithoutId.grade).trim().substring(0, 50) : undefined,
-      message: bodyWithoutId.message ? String(bodyWithoutId.message).trim().substring(0, 2000) : undefined,
-      status: 'pending' as const
-      // Note: createdAt is added automatically by createAdmission function
+      // Basic Information
+      branch: String(bodyWithoutId.branch).trim().substring(0, 100),
+      academicYear: String(bodyWithoutId.academicYear).trim().substring(0, 50),
+      applicationNumber: bodyWithoutId.applicationNumber 
+        ? String(bodyWithoutId.applicationNumber).trim().substring(0, 100)
+        : `APP-${Date.now()}`,
+      classAppliedFor: String(bodyWithoutId.classAppliedFor).trim().substring(0, 50),
+      
+      // Student Information
+      surname: String(bodyWithoutId.surname).trim().substring(0, 100),
+      studentName: String(bodyWithoutId.studentName).trim().substring(0, 100),
+      dateOfBirth: String(bodyWithoutId.dateOfBirth).trim().substring(0, 50),
+      gender: String(bodyWithoutId.gender).trim().substring(0, 20),
+      nationality: String(bodyWithoutId.nationality).trim().substring(0, 100),
+      
+      // Address Information
+      presentAddress: String(bodyWithoutId.presentAddress).trim().substring(0, 500),
+      permanentAddress: String(bodyWithoutId.permanentAddress).trim().substring(0, 500),
+      
+      // Parent Information
+      fatherName: String(bodyWithoutId.fatherName).trim().substring(0, 100),
+      fatherContact: String(bodyWithoutId.fatherContact).trim().substring(0, 50),
+      fatherEmail: bodyWithoutId.fatherEmail 
+        ? String(bodyWithoutId.fatherEmail).trim().substring(0, 200)
+        : undefined,
+      motherName: String(bodyWithoutId.motherName).trim().substring(0, 100),
+      motherContact: String(bodyWithoutId.motherContact).trim().substring(0, 50),
+      motherEmail: bodyWithoutId.motherEmail 
+        ? String(bodyWithoutId.motherEmail).trim().substring(0, 200)
+        : undefined,
+      
+      // Medical Information
+      onMedication: Boolean(bodyWithoutId.onMedication),
+      medicationName: bodyWithoutId.onMedication && bodyWithoutId.medicationName
+        ? String(bodyWithoutId.medicationName).trim().substring(0, 200)
+        : undefined,
+      
+      // Payment
+      paymentReference: String(bodyWithoutId.paymentReference).trim().substring(0, 100),
+      
+      // Documents (these would need to be uploaded separately via /api/upload)
+      studentPhoto: bodyWithoutId.studentPhoto || undefined,
+      birthCertificateImage: bodyWithoutId.birthCertificateImage || undefined,
+      lastYearReportCardImage: bodyWithoutId.lastYearReportCardImage || undefined,
+      passportImage: bodyWithoutId.passportImage || undefined,
+      visitingCardImage: bodyWithoutId.visitingCardImage || undefined,
+      
+      // Status will be set to 'pending' by createAdmission
     }
     
-    // Type assertion needed because createAdmission expects full AdmissionDocument
-    // but this endpoint accepts simplified form data
     const admissionId = await createAdmission(sanitizedData as any)
-    return NextResponse.json({ id: admissionId, ...sanitizedData })
+    return NextResponse.json({ 
+      id: admissionId, 
+      message: 'Application submitted successfully',
+      applicationNumber: sanitizedData.applicationNumber
+    })
   } catch (error: any) {
     console.error('Error creating admission:', error)
     return NextResponse.json(
