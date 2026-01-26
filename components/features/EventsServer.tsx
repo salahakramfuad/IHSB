@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { getAllEvents } from '@/lib/firestore/events'
+import { getAllEvents } from '@/lib/database/events'
 import type { Event } from '@/data/events'
-import Card from './ui/Card'
-import Button from './ui/Button'
-import ImageWithLightbox from './ImageWithLightbox'
+import Card from '../ui/Card'
+import Button from '../ui/Button'
+import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 interface EventsServerProps {
   limit?: number

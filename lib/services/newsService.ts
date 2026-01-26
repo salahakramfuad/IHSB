@@ -1,7 +1,7 @@
-import { getLatestNews, getLatestSportsAndNews, getAllNews, getNewsByCategory } from '../firestore/news'
-import { NewsDocument } from '../firestore/news'
+import { getLatestNews, getLatestSportsAndNews, getAllNews, getNewsByCategory } from '../database/news'
+import { NewsDocument } from '../database/news'
 
-export type { NewsDocument, NewsCategory } from '../firestore/news'
+export type { NewsDocument, NewsCategory } from '../database/news'
 
 /**
  * Server-side service for news

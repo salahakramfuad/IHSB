@@ -1,7 +1,7 @@
-import { getAllSportsAchievements, getSportsAchievementBySlug } from '../firestore/sports'
-import { SportsAchievementDocument } from '../firestore/sports'
+import { getAllSportsAchievements, getSportsAchievementBySlug } from '../database/sports'
+import { SportsAchievementDocument } from '../database/sports'
 
-export type { SportsAchievementDocument, Sport, Placement } from '../firestore/sports'
+export type { SportsAchievementDocument, Sport, Placement } from '../database/sports'
 
 /**
  * Server-side service for sports achievements

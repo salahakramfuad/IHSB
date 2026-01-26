@@ -3,10 +3,13 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from './AuthProvider'
+import { useSessionTimeout } from './useSessionTimeout'
+import SessionTimeoutModal from './SessionTimeoutModal'
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const { showWarning, timeRemaining, handleStayLoggedIn, handleLogout } = useSessionTimeout()
 
   useEffect(() => {
     if (!loading && !user) {
@@ -18,7 +21,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -29,5 +32,16 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     return null
   }
 
-  return <>{children}</>
+  return (
+    <>
+      {children}
+      {showWarning && timeRemaining !== null && (
+        <SessionTimeoutModal
+          timeRemaining={timeRemaining}
+          onStayLoggedIn={handleStayLoggedIn}
+          onLogout={handleLogout}
+        />
+      )}
+    </>
+  )
 }

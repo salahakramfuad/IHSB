@@ -1,4 +1,4 @@
-import { getFeaturedEvents, getUpcomingEvents } from '../firestore/events'
+import { getFeaturedEvents, getUpcomingEvents } from '../database/events'
 import { Event } from '@/data/events'
 
 export type { Event } from '@/data/events'

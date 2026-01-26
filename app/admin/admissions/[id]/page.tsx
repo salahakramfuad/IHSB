@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Sidebar from '@/components/admin/Sidebar'
 import Button from '@/components/ui/Button'
-import { AdmissionDocument } from '@/lib/firestore/admissions'
+import { AdmissionDocument } from '@/lib/database/admissions'
 import Image from 'next/image'
 
 export default function AdmissionDetailPage() {
@@ -69,7 +69,7 @@ export default function AdmissionDetailPage() {
   }
 
   const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
+    const { auth } = await import('@/lib/integrations/firebase/config')
     const user = auth.currentUser
     if (!user) throw new Error('Not authenticated')
     return user.getIdToken()

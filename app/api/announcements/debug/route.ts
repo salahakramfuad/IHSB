@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { adminDb } from '@/lib/firebase/admin'
+import { adminDb } from '@/lib/integrations/firebase/admin'
 
 /**
  * Debug endpoint to check announcements in Firestore

@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getSportsAchievements, calculateSportsStats } from '@/lib/services/sportsService'
 import type { SportsAchievementDocument } from '@/lib/services/sportsService'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 
 function formatDate(iso: string) {
   return new Intl.DateTimeFormat('en-GB', {

@@ -4,7 +4,7 @@ import {
   User,
   onAuthStateChanged
 } from 'firebase/auth'
-import { auth } from '../firebase/config'
+import { auth } from '../integrations/firebase/config'
 
 export const signIn = async (email: string, password: string) => {
   try {

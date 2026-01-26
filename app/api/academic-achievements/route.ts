@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllAcademicAchievements, createAcademicAchievement } from '@/lib/firestore/academicAchievements'
+import { getAllAcademicAchievements, createAcademicAchievement } from '@/lib/database/academicAchievements'
 
 export async function GET(request: NextRequest) {
   try {

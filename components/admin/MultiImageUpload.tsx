@@ -63,7 +63,7 @@ export default function MultiImageUpload({
         formData.append('file', file)
 
         // Get auth token for upload
-        const { auth } = await import('@/lib/firebase/config')
+        const { auth } = await import('@/lib/integrations/firebase/config')
         const user = auth.currentUser
         if (!user) throw new Error('Not authenticated')
         const token = await user.getIdToken()

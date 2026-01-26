@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAdmissionById, updateAdmission } from '@/lib/firestore/admissions'
+import { getAdmissionById, updateAdmission } from '@/lib/database/admissions'
 
 export async function GET(
   request: NextRequest,

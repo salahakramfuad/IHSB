@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getFeaturedAnnouncementsService } from '@/lib/services/announcementsService'
 import type { AnnouncementDocument } from '@/lib/services/announcementsService'
-import ImageWithLightbox from './ImageWithLightbox'
+import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 interface AnnouncementsServerProps {
   limit?: number

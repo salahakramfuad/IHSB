@@ -1,7 +1,7 @@
-import { getAllNews } from '../firestore/news'
-import { getAllSportsAchievements } from '../firestore/sports'
-import { NewsDocument } from '../firestore/news'
-import { SportsAchievementDocument } from '../firestore/sports'
+import { getAllNews } from '../database/news'
+import { getAllSportsAchievements } from '../database/sports'
+import { NewsDocument } from '../database/news'
+import { SportsAchievementDocument } from '../database/sports'
 import { Timestamp } from 'firebase/firestore'
 
 export interface HighlightItem {

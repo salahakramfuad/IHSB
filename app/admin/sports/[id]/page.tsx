@@ -6,7 +6,7 @@ import Sidebar from '@/components/admin/Sidebar'
 import ImageUpload from '@/components/admin/ImageUpload'
 import DatePicker from '@/components/admin/DatePicker'
 import Button from '@/components/ui/Button'
-import { SportsAchievementDocument, Sport, Placement } from '@/lib/firestore/sports'
+import { SportsAchievementDocument, Sport, Placement } from '@/lib/database/sports'
 
 export default function EditSportsPage() {
   const router = useRouter()
@@ -85,7 +85,7 @@ export default function EditSportsPage() {
   }
 
   const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
+    const { auth } = await import('@/lib/integrations/firebase/config')
     const user = auth.currentUser
     if (!user) throw new Error('Not authenticated')
     return user.getIdToken()

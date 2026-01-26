@@ -11,7 +11,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { db } from '../integrations/firebase/config'
 import { Event } from '@/data/events'
 
 export interface EventDocument extends Omit<Event, 'date'> {

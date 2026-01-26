@@ -1,11 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getNewsById } from '@/lib/firestore/news'
+import { getNewsById } from '@/lib/database/news'
 import Section from '@/components/ui/Section'
 import { Calendar, ArrowLeft, Image as ImageIcon } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 
 export default async function NewsDetailPage({ params }: { params: Promise<{ id: string }> | { id: string } }) {
   const resolvedParams = await Promise.resolve(params)

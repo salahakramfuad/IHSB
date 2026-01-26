@@ -11,7 +11,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { db } from '../integrations/firebase/config'
 
 export type Sport = 'Football' | 'Basketball' | 'Badminton' | 'Chess' | 'Events'
 export type Placement = 'Champion' | 'Runner-up' | 'Participant' | 'Award'

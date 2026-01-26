@@ -2,7 +2,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import '../styles/global.css'
-import LayoutWrapper from '../components/LayoutWrapper'
+import LayoutWrapper from '../components/layout/LayoutWrapper'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ihsb.edu.bd'),

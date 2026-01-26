@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getSportsAchievementById, updateSportsAchievement, deleteSportsAchievement } from '@/lib/firestore/sports'
+import { getSportsAchievementById, updateSportsAchievement, deleteSportsAchievement } from '@/lib/database/sports'
 
 export async function GET(
   request: NextRequest,

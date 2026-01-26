@@ -4,7 +4,7 @@ import { getActiveAnnouncementsService } from '@/lib/services/announcementsServi
 import Section from '@/components/ui/Section'
 import Card from '@/components/ui/Card'
 import { Calendar, Clock, Bell, AlertCircle } from 'lucide-react'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 
 export default async function AnnouncementsPage() {
   const announcements = await getActiveAnnouncementsService()

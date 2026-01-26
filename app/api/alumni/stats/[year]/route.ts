@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAlumniYearStatsByYear, createOrUpdateAlumniYearStats, calculateYearStats, deleteAlumniYearStats, getAllAlumniYearStats } from '@/lib/firestore/alumni'
+import { getAlumniYearStatsByYear, createOrUpdateAlumniYearStats, calculateYearStats, deleteAlumniYearStats, getAllAlumniYearStats } from '@/lib/database/alumni'
 
 export async function GET(
   request: NextRequest,

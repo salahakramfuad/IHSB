@@ -1,7 +1,7 @@
-import { getActiveAnnouncements, getFeaturedAnnouncements } from '../firestore/announcements'
-import { AnnouncementDocument } from '../firestore/announcements'
+import { getActiveAnnouncements, getFeaturedAnnouncements } from '../database/announcements'
+import { AnnouncementDocument } from '../database/announcements'
 
-export type { AnnouncementDocument } from '../firestore/announcements'
+export type { AnnouncementDocument } from '../database/announcements'
 
 /**
  * Server-side service for announcements

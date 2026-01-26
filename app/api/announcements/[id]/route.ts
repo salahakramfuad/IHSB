@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAnnouncementById, updateAnnouncement, deleteAnnouncement } from '@/lib/firestore/announcements'
+import { getAnnouncementById, updateAnnouncement, deleteAnnouncement } from '@/lib/database/announcements'
 
 export async function GET(
   request: NextRequest,

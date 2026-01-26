@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { AcademicAchievementDocument } from '@/lib/firestore/academicAchievements'
+import { AcademicAchievementDocument } from '@/lib/database/academicAchievements'
 import { Plus, GraduationCap } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,10 +20,11 @@ export default function AcademicAchievementsPage() {
 
   const fetchAchievements = async () => {
     try {
-      const response = await fetch('/api/academic-achievements')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ achievements: AcademicAchievementDocument[] }>('/api/academic-achievements')
       setAchievements(data.achievements || [])
     } catch (error) {
+      console.error('Error fetching academic achievements:', error)
       setAchievements([])
     } finally {
       setLoading(false)
@@ -38,48 +39,44 @@ export default function AcademicAchievementsPage() {
   const handleSave = async (data: Partial<AcademicAchievementDocument>) => {
     if (!editingAchievement?.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/academic-achievements/${editingAchievement.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/academic-achievements/${editingAchievement.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      })
 
-    if (!response.ok) {
-      throw new Error('Failed to update academic achievement')
+      if (!response.ok) {
+        throw new Error('Failed to update academic achievement')
+      }
+
+      await fetchAchievements()
+      setIsModalOpen(false)
+      setEditingAchievement(null)
+    } catch (error) {
+      console.error('Error updating academic achievement:', error)
+      throw error
     }
-
-    await fetchAchievements()
-    setIsModalOpen(false)
-    setEditingAchievement(null)
   }
 
   const handleDelete = async (achievement: AcademicAchievementDocument) => {
     if (!achievement.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/academic-achievements/${achievement.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/academic-achievements/${achievement.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchAchievements()
+      } else {
+        throw new Error('Failed to delete academic achievement')
       }
-    })
-
-    if (response.ok) {
-      await fetchAchievements()
-    } else {
-      throw new Error('Failed to delete academic achievement')
+    } catch (error) {
+      console.error('Error deleting academic achievement:', error)
+      throw error
     }
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const formatDate = (value: any): string => {

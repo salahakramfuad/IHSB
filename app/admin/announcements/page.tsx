@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { AnnouncementDocument } from '@/lib/firestore/announcements'
+import { AnnouncementDocument } from '@/lib/database/announcements'
 import { Plus, Megaphone } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,10 +20,11 @@ export default function AnnouncementsPage() {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await fetch('/api/announcements')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ announcements: AnnouncementDocument[] }>('/api/announcements')
       setAnnouncements(data.announcements || [])
     } catch (error) {
+      console.error('Error fetching announcements:', error)
       setAnnouncements([])
     } finally {
       setLoading(false)
@@ -38,48 +39,44 @@ export default function AnnouncementsPage() {
   const handleSave = async (data: Partial<AnnouncementDocument>) => {
     if (!editingAnnouncement?.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/announcements/${editingAnnouncement.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/announcements/${editingAnnouncement.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      })
 
-    if (!response.ok) {
-      throw new Error('Failed to update announcement')
+      if (!response.ok) {
+        throw new Error('Failed to update announcement')
+      }
+
+      await fetchAnnouncements()
+      setIsModalOpen(false)
+      setEditingAnnouncement(null)
+    } catch (error) {
+      console.error('Error updating announcement:', error)
+      throw error
     }
-
-    await fetchAnnouncements()
-    setIsModalOpen(false)
-    setEditingAnnouncement(null)
   }
 
   const handleDelete = async (announcement: AnnouncementDocument) => {
     if (!announcement.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/announcements/${announcement.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/announcements/${announcement.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchAnnouncements()
+      } else {
+        throw new Error('Failed to delete announcement')
       }
-    })
-
-    if (response.ok) {
-      await fetchAnnouncements()
-    } else {
-      throw new Error('Failed to delete announcement')
+    } catch (error) {
+      console.error('Error deleting announcement:', error)
+      throw error
     }
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const getPriorityColor = (priority: string) => {

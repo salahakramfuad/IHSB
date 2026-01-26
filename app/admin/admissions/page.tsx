@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import Sidebar from '@/components/admin/Sidebar'
-import { AdmissionDocument } from '@/lib/firestore/admissions'
-import { Search, Filter, Eye } from 'lucide-react'
+import { AdmissionDocument } from '@/lib/database/admissions'
+import { Search, Filter, Eye, Plus } from 'lucide-react'
 import Button from '@/components/ui/Button'
 
 export default function AdmissionsPage() {
@@ -24,12 +23,12 @@ export default function AdmissionsPage() {
 
   const fetchAdmissions = async () => {
     try {
-      const response = await fetch('/api/admissions')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ admissions: AdmissionDocument[] }>('/api/admissions')
       setAdmissions(data.admissions || [])
       setFilteredAdmissions(data.admissions || [])
     } catch (error) {
-      // Silently handle error
+      console.error('Error fetching admissions:', error)
       setAdmissions([])
       setFilteredAdmissions([])
     } finally {
@@ -70,31 +69,29 @@ export default function AdmissionsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <Sidebar />
-        <main className="lg:pl-64 p-6 lg:p-8">
+      <div className="p-6 lg:p-8">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading admissions...</p>
           </div>
-        </main>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      
-      <main className="lg:ml-64 p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
+    <div className="p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admission Applications</h1>
             <p className="text-gray-600">Manage student admission applications</p>
           </div>
+        </div>
 
-          {/* Filters */}
-          <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+        {/* Filters */}
+        <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -122,8 +119,8 @@ export default function AdmissionsPage() {
             </div>
           </div>
 
-          {/* Admissions Table */}
-          {filteredAdmissions.length === 0 ? (
+        {/* Admissions Table */}
+        {filteredAdmissions.length === 0 ? (
             <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
               <p className="text-gray-600">No admissions found</p>
             </div>
@@ -197,11 +194,10 @@ export default function AdmissionsPage() {
             </div>
           )}
 
-          <div className="mt-4 text-sm text-gray-600">
-            Showing {filteredAdmissions.length} of {admissions.length} applications
-          </div>
+        <div className="mt-4 text-sm text-gray-600">
+          Showing {filteredAdmissions.length} of {admissions.length} applications
         </div>
-      </main>
+      </div>
     </div>
   )
 }

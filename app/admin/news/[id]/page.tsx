@@ -5,7 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import MultiImageUpload from '@/components/admin/MultiImageUpload'
 import DatePicker from '@/components/admin/DatePicker'
 import Button from '@/components/ui/Button'
-import { NewsDocument } from '@/lib/firestore/news'
+import { NewsDocument } from '@/lib/database/news'
 
 export default function EditNewsPage() {
   const router = useRouter()
@@ -103,7 +103,7 @@ export default function EditNewsPage() {
   }
 
   const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
+    const { auth } = await import('@/lib/integrations/firebase/config')
     const user = auth.currentUser
     if (!user) throw new Error('Not authenticated')
     return user.getIdToken()

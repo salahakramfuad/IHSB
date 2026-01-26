@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import cloudinary from '@/lib/cloudinary/config'
+import cloudinary from '@/lib/integrations/cloudinary/config'
 
 // Public upload endpoint for admission documents
 export async function POST(request: NextRequest) {

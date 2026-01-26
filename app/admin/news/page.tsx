@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { NewsDocument } from '@/lib/firestore/news'
+import { NewsDocument } from '@/lib/database/news'
 import { Plus, Newspaper } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,10 +20,11 @@ export default function NewsPage() {
 
   const fetchNews = async () => {
     try {
-      const response = await fetch('/api/news')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ news: NewsDocument[] }>('/api/news')
       setNews(data.news || [])
     } catch (error) {
+      console.error('Error fetching news:', error)
       setNews([])
     } finally {
       setLoading(false)
@@ -38,48 +39,44 @@ export default function NewsPage() {
   const handleSave = async (data: Partial<NewsDocument>) => {
     if (!editingNews?.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/news/${editingNews.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/news/${editingNews.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      })
 
-    if (!response.ok) {
-      throw new Error('Failed to update news')
+      if (!response.ok) {
+        throw new Error('Failed to update news')
+      }
+
+      await fetchNews()
+      setIsModalOpen(false)
+      setEditingNews(null)
+    } catch (error) {
+      console.error('Error updating news:', error)
+      throw error
     }
-
-    await fetchNews()
-    setIsModalOpen(false)
-    setEditingNews(null)
   }
 
   const handleDelete = async (item: NewsDocument) => {
     if (!item.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/news/${item.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/news/${item.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchNews()
+      } else {
+        throw new Error('Failed to delete news')
       }
-    })
-
-    if (response.ok) {
-      await fetchNews()
-    } else {
-      throw new Error('Failed to delete news')
+    } catch (error) {
+      console.error('Error deleting news:', error)
+      throw error
     }
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const getCategoryColor = (category: string) => {

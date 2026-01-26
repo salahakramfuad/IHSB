@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { AlumniStoryDocument } from '@/lib/firestore/alumni'
+import { AlumniStoryDocument } from '@/lib/database/alumni'
 import { Plus, BookOpen } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,10 +20,11 @@ export default function AlumniStoriesPage() {
 
   const fetchStories = async () => {
     try {
-      const response = await fetch('/api/alumni/stories')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ stories: AlumniStoryDocument[] }>('/api/alumni/stories')
       setStories(data.stories || [])
     } catch (error) {
+      console.error('Error fetching alumni stories:', error)
       setStories([])
     } finally {
       setLoading(false)
@@ -38,48 +39,44 @@ export default function AlumniStoriesPage() {
   const handleSave = async (data: Partial<AlumniStoryDocument>) => {
     if (!editingStory?.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/alumni/stories/${editingStory.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/stories/${editingStory.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      })
 
-    if (!response.ok) {
-      throw new Error('Failed to update alumni story')
+      if (!response.ok) {
+        throw new Error('Failed to update alumni story')
+      }
+
+      await fetchStories()
+      setIsModalOpen(false)
+      setEditingStory(null)
+    } catch (error) {
+      console.error('Error updating alumni story:', error)
+      throw error
     }
-
-    await fetchStories()
-    setIsModalOpen(false)
-    setEditingStory(null)
   }
 
   const handleDelete = async (story: AlumniStoryDocument) => {
     if (!story.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/alumni/stories/${story.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/stories/${story.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchStories()
+      } else {
+        throw new Error('Failed to delete alumni story')
       }
-    })
-
-    if (response.ok) {
-      await fetchStories()
-    } else {
-      throw new Error('Failed to delete alumni story')
+    } catch (error) {
+      console.error('Error deleting alumni story:', error)
+      throw error
     }
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const formatDate = (value: any): string => {

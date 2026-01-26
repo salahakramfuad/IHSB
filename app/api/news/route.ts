@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllNews, createNews } from '@/lib/firestore/news'
+import { getAllNews, createNews } from '@/lib/database/news'
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
 
     let news
     if (category) {
-      const { getNewsByCategory } = await import('@/lib/firestore/news')
+      const { getNewsByCategory } = await import('@/lib/database/news')
       news = await getNewsByCategory(category)
     } else if (limit) {
-      const { getLatestNews } = await import('@/lib/firestore/news')
+      const { getLatestNews } = await import('@/lib/database/news')
       news = await getLatestNews(parseInt(limit, 10))
     } else {
       // Getting all news requires admin authentication

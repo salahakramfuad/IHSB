@@ -5,16 +5,18 @@ import Link from 'next/link'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { faker } from '@faker-js/faker'
-import LightboxGallery from '../../components/LightboxGallery'
-import ImageWithLightbox from '../../components/ImageWithLightbox'
-import Button from '../../components/ui/Button'
-import Card from '../../components/ui/Card'
-import Section from '../../components/ui/Section'
+import LightboxGallery from '../../../components/shared/LightboxGallery'
+import ImageWithLightbox from '../../../components/shared/ImageWithLightbox'
+import Button from '../../../components/ui/Button'
+import Card from '../../../components/ui/Card'
+import Section from '../../../components/ui/Section'
 import { schoolInfo } from '@/data/schoolInfo'
 
 type Facility = { name: string; image: string }
 type Tab = 'IGCSE' | 'A Levels'
 
+// Set seed for consistent image generation between server and client
+faker.seed(67890)
 const BASE_IMAGES = Array.from({ length: 8 }).map(() =>
   faker.image.urlPicsumPhotos({
     width: 1200,

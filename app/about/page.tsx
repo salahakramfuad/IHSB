@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 import type { Metadata } from 'next'
 import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Nav from './Nav'
 import Footer from './Footer'
-import ThemeCSSVars from './ThemeCSSVars'
+import ThemeCSSVars from '../shared/ThemeCSSVars'
 
 /**
  * Layout wrapper that conditionally shows Nav/Footer

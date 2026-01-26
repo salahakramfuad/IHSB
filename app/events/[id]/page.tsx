@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getEventById } from '@/lib/firestore/events'
+import { getEventById } from '@/lib/database/events'
 import Button from '@/components/ui/Button'
 import Section from '@/components/ui/Section'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 import type { Event } from '@/data/events'
 
 export default async function EventDetailPage({

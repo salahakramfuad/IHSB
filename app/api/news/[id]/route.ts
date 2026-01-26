@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { updateNews, deleteNews, getNewsById } from '@/lib/firestore/news'
+import { updateNews, deleteNews, getNewsById } from '@/lib/database/news'
 
 export async function GET(
   request: NextRequest,

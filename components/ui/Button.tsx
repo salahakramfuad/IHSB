@@ -21,17 +21,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-green-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+      'inline-flex items-center justify-center rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
 
     const variants = {
       primary:
-        'bg-primary-green-600 text-white hover:bg-primary-green-700 active:bg-primary-green-800',
+        'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800 shadow-md hover:shadow-lg',
       secondary:
-        'bg-accent-blue-600 text-white hover:bg-accent-blue-700 active:bg-accent-blue-800',
+        'bg-secondary-500 text-white hover:bg-secondary-600 active:bg-secondary-700 shadow-md hover:shadow-lg',
       outline:
-        'border-2 border-primary-green-600 text-primary-green-700 bg-transparent hover:bg-primary-green-50 active:bg-primary-green-100',
+        'border-2 border-primary-600 text-primary-600 bg-transparent hover:bg-primary-50 active:bg-primary-100',
       ghost:
-        'text-gray-700 hover:bg-gray-100 active:bg-gray-200 hover:text-primary-green-700'
+        'text-slate-700 hover:bg-slate-100 active:bg-slate-200 hover:text-primary-600'
     }
 
     const sizes = {

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { AlumniYearStatsDocument } from '@/lib/firestore/alumni'
+import { AlumniYearStatsDocument } from '@/lib/database/alumni'
 import { RefreshCw, Plus } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,10 +20,11 @@ export default function AlumniStatsPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch('/api/alumni/stats')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ stats: AlumniYearStatsDocument[] }>('/api/alumni/stats')
       setStats(data.stats || [])
     } catch (error) {
+      console.error('Error fetching alumni stats:', error)
       setStats([])
     } finally {
       setLoading(false)
@@ -37,13 +38,9 @@ export default function AlumniStatsPage() {
 
     setRecalculating(true)
     try {
-      const token = await getAuthToken()
-      const response = await fetch('/api/alumni/stats', {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch('/api/alumni/stats', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ recalculate: true })
       })
 
@@ -62,13 +59,9 @@ export default function AlumniStatsPage() {
 
   const handleRecalculateYear = async (year: string) => {
     try {
-      const token = await getAuthToken()
-      const response = await fetch(`/api/alumni/stats/${year}`, {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/stats/${year}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ recalculate: true })
       })
 
@@ -90,43 +83,46 @@ export default function AlumniStatsPage() {
   const handleSave = async (data: Partial<AlumniYearStatsDocument>) => {
     if (!editingStat?.year) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/alumni/stats/${editingStat.year}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        count: data.count,
-        autoCalculated: false // Manual edit disables auto-calculation
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/stats/${editingStat.year}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          count: data.count,
+          autoCalculated: false // Manual edit disables auto-calculation
+        })
       })
-    })
 
-    if (!response.ok) {
-      throw new Error('Failed to update year statistics')
+      if (!response.ok) {
+        throw new Error('Failed to update year statistics')
+      }
+
+      await fetchStats()
+      setIsModalOpen(false)
+      setEditingStat(null)
+    } catch (error) {
+      console.error('Error updating year statistics:', error)
+      throw error
     }
-
-    await fetchStats()
-    setIsModalOpen(false)
-    setEditingStat(null)
   }
 
   const handleDelete = async (stat: AlumniYearStatsDocument) => {
     if (!stat.id || !stat.year) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/alumni/stats/${stat.year}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/stats/${stat.year}`, {
+        method: 'DELETE'
+      })
 
-    if (response.ok) {
-      await fetchStats()
-    } else {
-      throw new Error('Failed to delete year statistics')
+      if (response.ok) {
+        await fetchStats()
+      } else {
+        throw new Error('Failed to delete year statistics')
+      }
+    } catch (error) {
+      console.error('Error deleting year statistics:', error)
+      throw error
     }
   }
 
@@ -144,35 +140,29 @@ export default function AlumniStatsPage() {
       throw new Error('Year and count are required')
     }
 
-    const token = await getAuthToken()
-    const response = await fetch('/api/alumni/stats', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        year: String(data.year),
-        count: String(data.count),
-        autoCalculated: data.autoCalculated !== undefined ? data.autoCalculated : false
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch('/api/alumni/stats', {
+        method: 'POST',
+        body: JSON.stringify({
+          year: String(data.year),
+          count: String(data.count),
+          autoCalculated: data.autoCalculated !== undefined ? data.autoCalculated : false
+        })
       })
-    })
 
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.error || 'Failed to create year statistics')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to create year statistics')
+      }
+
+      await fetchStats()
+      setIsModalOpen(false)
+      setEditingStat(null)
+    } catch (error) {
+      console.error('Error creating year statistics:', error)
+      throw error
     }
-
-    await fetchStats()
-    setIsModalOpen(false)
-    setEditingStat(null)
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const formatDate = (value: any): string => {

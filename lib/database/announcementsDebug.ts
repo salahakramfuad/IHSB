@@ -4,7 +4,7 @@
  */
 
 import { collection, getDocs } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { db } from '../integrations/firebase/config'
 
 export async function debugAnnouncements() {
   try {

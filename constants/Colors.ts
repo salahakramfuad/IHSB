@@ -15,18 +15,18 @@ export type ThemeColors = {
   error: string
 }
 
-// Academic color palette with green as primary
+// Color theme - Vibrant school website theme
 export const themeColors: ThemeColors = {
-  primary: '#10b981', // emerald-500 (primary green)
-  secondary: '#2563eb', // blue-600 (accent blue)
-  accent: '#facc15', // yellow-400 (accent yellow)
+  primary: '#2563eb', // vibrant royal blue primary
+  secondary: '#06b6d4', // vibrant cyan secondary
+  accent: '#f59e0b', // vibrant amber accent
   background: '#ffffff', // white
-  surface: '#f9fafb', // gray-50
-  text: '#111827', // gray-900
-  textSecondary: '#4b5563', // gray-600
-  border: '#e5e7eb', // gray-200
-  info: '#3b82f6', // blue-500
-  success: '#10b981', // emerald-500
-  warning: '#facc15', // yellow-400
-  error: '#ef4444' // red-500
+  surface: '#f0f9ff', // light cyan-blue
+  text: '#1e293b', // dark slate text
+  textSecondary: '#475569', // medium slate
+  border: '#cbd5e1', // light slate border
+  info: '#06b6d4', // vibrant cyan
+  success: '#10b981', // vibrant emerald green
+  warning: '#f59e0b', // vibrant amber
+  error: '#ef4444' // vibrant red
 }

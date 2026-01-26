@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllAnnouncements, getActiveAnnouncements, getFeaturedAnnouncements, createAnnouncement } from '@/lib/firestore/announcements'
+import { getAllAnnouncements, getActiveAnnouncements, getFeaturedAnnouncements, createAnnouncement } from '@/lib/database/announcements'
 
 export async function GET(request: NextRequest) {
   try {

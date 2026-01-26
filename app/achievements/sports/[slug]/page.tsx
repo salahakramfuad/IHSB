@@ -2,8 +2,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getSportsAchievement } from '@/lib/services/sportsService'
-import LightboxGallery from '../../../../components/LightboxGallery'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import LightboxGallery from '../../../../components/shared/LightboxGallery'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 import type { SportsAchievementDocument } from '@/lib/services/sportsService'
 
 function formatDate(iso?: string) {

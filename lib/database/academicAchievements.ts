@@ -11,7 +11,7 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore'
-import { db } from '../firebase/config'
+import { db } from '../integrations/firebase/config'
 
 export type Session = 'O Level' | 'AS Level' | 'A Level'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { cn } from '../../lib/utils'
-import ImageWithLightbox from '../ImageWithLightbox'
+import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode

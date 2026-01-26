@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import cloudinary from '@/lib/cloudinary/config'
+import cloudinary from '@/lib/integrations/cloudinary/config'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 
 export async function POST(request: NextRequest) {

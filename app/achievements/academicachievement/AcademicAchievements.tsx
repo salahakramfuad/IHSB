@@ -1,7 +1,7 @@
 // components/AcademicAchievements.tsx
 'use client'
 import React from 'react'
-import { AcademicAchievementDocument } from '@/lib/firestore/academicAchievements'
+import { AcademicAchievementDocument } from '@/lib/database/academicAchievements'
 
 interface Student {
   id: string

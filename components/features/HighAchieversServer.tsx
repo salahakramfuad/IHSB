@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { getAllAcademicAchievements } from '@/lib/firestore/academicAchievements'
-import type { AcademicAchievementDocument } from '@/lib/firestore/academicAchievements'
-import ImageWithLightbox from './ImageWithLightbox'
+import { getAllAcademicAchievements } from '@/lib/database/academicAchievements'
+import type { AcademicAchievementDocument } from '@/lib/database/academicAchievements'
+import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 interface HighAchieversServerProps {
   limit?: number

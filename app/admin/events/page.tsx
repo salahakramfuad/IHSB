@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { EventDocument } from '@/lib/firestore/events'
+import { EventDocument } from '@/lib/database/events'
 import { Plus, Calendar } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,11 +20,11 @@ export default function EventsPage() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('/api/events')
-      const data = await response.json()
-      // Map events to include full document data
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ events: EventDocument[] }>('/api/events')
       setEvents(data.events || [])
     } catch (error) {
+      console.error('Error fetching events:', error)
       setEvents([])
     } finally {
       setLoading(false)
@@ -39,48 +39,44 @@ export default function EventsPage() {
   const handleSave = async (data: Partial<EventDocument>) => {
     if (!editingEvent?.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/events/${editingEvent.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/events/${editingEvent.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      })
 
-    if (!response.ok) {
-      throw new Error('Failed to update event')
+      if (!response.ok) {
+        throw new Error('Failed to update event')
+      }
+
+      await fetchEvents()
+      setIsModalOpen(false)
+      setEditingEvent(null)
+    } catch (error) {
+      console.error('Error updating event:', error)
+      throw error
     }
-
-    await fetchEvents()
-    setIsModalOpen(false)
-    setEditingEvent(null)
   }
 
   const handleDelete = async (event: EventDocument) => {
     if (!event.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/events/${event.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/events/${event.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchEvents()
+      } else {
+        throw new Error('Failed to delete event')
       }
-    })
-
-    if (response.ok) {
-      await fetchEvents()
-    } else {
-      throw new Error('Failed to delete event')
+    } catch (error) {
+      console.error('Error deleting event:', error)
+      throw error
     }
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const formatDate = (value: any): string => {

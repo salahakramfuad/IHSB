@@ -5,7 +5,7 @@ import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
-import { getAllEvents } from '@/lib/firestore/events'
+import { getAllEvents } from '@/lib/database/events'
 import type { Event } from '@/data/events'
 
 export const metadata: Metadata = {

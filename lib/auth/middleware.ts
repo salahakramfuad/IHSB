@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { adminAuth } from '../firebase/admin'
+import { adminAuth } from '../integrations/firebase/admin'
 
 export async function verifyAdminToken(request: NextRequest) {
   try {

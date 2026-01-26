@@ -1,21 +1,23 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from '@/lib/auth/auth'
 import { useAuth } from '@/components/admin/AuthProvider'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
-import { X } from 'lucide-react'
+import { X, AlertCircle } from 'lucide-react'
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { user, loading: authLoading } = useAuth()
+  const isTimeout = searchParams?.get('timeout') === 'true'
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -79,6 +81,15 @@ export default function LoginPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {isTimeout && (
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg flex items-start gap-2">
+                  <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Session Expired</p>
+                    <p className="text-sm mt-1">Your session expired due to inactivity. Please log in again.</p>
+                  </div>
+                </div>
+              )}
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                   {error}
@@ -133,5 +144,20 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

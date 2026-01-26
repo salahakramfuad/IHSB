@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { FeaturedAlumniDocument } from '@/lib/firestore/alumni'
+import { FeaturedAlumniDocument } from '@/lib/database/alumni'
 import { Plus, GraduationCap } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import DataTable, { Column } from '@/components/admin/DataTable'
@@ -20,10 +20,11 @@ export default function FeaturedAlumniPage() {
 
   const fetchAlumni = async () => {
     try {
-      const response = await fetch('/api/alumni/featured')
-      const data = await response.json()
+      const { fetchAuthenticatedData } = await import('@/lib/utils/api')
+      const data = await fetchAuthenticatedData<{ alumni: FeaturedAlumniDocument[] }>('/api/alumni/featured')
       setAlumni(data.alumni || [])
     } catch (error) {
+      console.error('Error fetching featured alumni:', error)
       setAlumni([])
     } finally {
       setLoading(false)
@@ -38,48 +39,44 @@ export default function FeaturedAlumniPage() {
   const handleSave = async (data: Partial<FeaturedAlumniDocument>) => {
     if (!editingAlumni?.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/alumni/featured/${editingAlumni.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data)
-    })
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/featured/${editingAlumni.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+      })
 
-    if (!response.ok) {
-      throw new Error('Failed to update featured alumni')
+      if (!response.ok) {
+        throw new Error('Failed to update featured alumni')
+      }
+
+      await fetchAlumni()
+      setIsModalOpen(false)
+      setEditingAlumni(null)
+    } catch (error) {
+      console.error('Error updating featured alumni:', error)
+      throw error
     }
-
-    await fetchAlumni()
-    setIsModalOpen(false)
-    setEditingAlumni(null)
   }
 
   const handleDelete = async (alumniItem: FeaturedAlumniDocument) => {
     if (!alumniItem.id) return
 
-    const token = await getAuthToken()
-    const response = await fetch(`/api/alumni/featured/${alumniItem.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const { authenticatedFetch } = await import('@/lib/utils/api')
+      const response = await authenticatedFetch(`/api/alumni/featured/${alumniItem.id}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        await fetchAlumni()
+      } else {
+        throw new Error('Failed to delete featured alumni')
       }
-    })
-
-    if (response.ok) {
-      await fetchAlumni()
-    } else {
-      throw new Error('Failed to delete featured alumni')
+    } catch (error) {
+      console.error('Error deleting featured alumni:', error)
+      throw error
     }
-  }
-
-  const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
-    const user = auth.currentUser
-    if (!user) throw new Error('Not authenticated')
-    return user.getIdToken()
   }
 
   const formatDate = (value: any): string => {

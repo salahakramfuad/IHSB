@@ -4,7 +4,7 @@ import Image from 'next/image'
 import PageHeader from '../../../components/ui/PageHeader'
 import Section from '../../../components/ui/Section'
 import Card from '../../../components/ui/Card'
-import { FeaturedAlumniDocument, AlumniStoryDocument, AlumniYearStatsDocument } from '@/lib/firestore/alumni'
+import { FeaturedAlumniDocument, AlumniStoryDocument, AlumniYearStatsDocument } from '@/lib/database/alumni'
 
 export default function AlumniPage() {
   const [selectedStory, setSelectedStory] = useState<AlumniStoryDocument | null>(null)

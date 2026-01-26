@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { AnnouncementDocument } from '@/lib/firestore/announcements'
+import { AnnouncementDocument } from '@/lib/database/announcements'
 
 interface AnnouncementsProps {
   limit?: number

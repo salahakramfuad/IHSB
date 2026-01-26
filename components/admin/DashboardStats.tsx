@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { Calendar, FileText, Megaphone, Users, Trophy } from 'lucide-react'
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '@/lib/firebase/config'
+import { useAuth } from './AuthProvider'
+import { fetchAuthenticatedData } from '@/lib/utils/api'
 
 interface Stats {
   events: number
@@ -14,6 +14,7 @@ interface Stats {
 }
 
 export default function DashboardStats() {
+  const { user, loading: authLoading } = useAuth()
   const [stats, setStats] = useState<Stats>({
     events: 0,
     admissions: 0,
@@ -24,27 +25,38 @@ export default function DashboardStats() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (authLoading || !user) {
+      return
+    }
+
     const fetchStats = async () => {
       try {
-        const [eventsSnap, admissionsSnap, announcementsSnap, sportsSnap] = await Promise.all([
-          getDocs(collection(db, 'events')),
-          getDocs(collection(db, 'admissions')),
-          getDocs(collection(db, 'announcements')),
-          getDocs(collection(db, 'sports'))
+        // Fetch all data from API routes with authentication
+        const [eventsData, admissionsData, announcementsData, sportsData] = await Promise.all([
+          fetchAuthenticatedData<{ events: any[] }>('/api/events').catch(() => ({ events: [] })),
+          fetchAuthenticatedData<{ admissions: any[] }>('/api/admissions').catch(() => ({ admissions: [] })),
+          fetchAuthenticatedData<{ announcements: any[] }>('/api/announcements').catch(() => ({ announcements: [] })),
+          fetchAuthenticatedData<{ achievements: any[] }>('/api/sports').catch(() => ({ achievements: [] }))
         ])
 
-        const pendingAdmissions = admissionsSnap.docs.filter(
-          doc => doc.data().status === 'pending'
+        const events = eventsData.events || []
+        const admissions = admissionsData.admissions || []
+        const announcements = announcementsData.announcements || []
+        const sports = sportsData.achievements || []
+
+        const pendingAdmissions = admissions.filter(
+          (admission: any) => admission.status === 'pending'
         ).length
 
         setStats({
-          events: eventsSnap.size,
-          admissions: admissionsSnap.size,
-          announcements: announcementsSnap.size,
+          events: events.length,
+          admissions: admissions.length,
+          announcements: announcements.length,
           pendingAdmissions,
-          sports: sportsSnap.size
+          sports: sports.length
         })
       } catch (error) {
+        console.error('Error fetching dashboard stats:', error)
         // Silently handle error - stats will show 0
       } finally {
         setLoading(false)
@@ -52,7 +64,7 @@ export default function DashboardStats() {
     }
 
     fetchStats()
-  }, [])
+  }, [user, authLoading])
 
   const statCards = [
     {

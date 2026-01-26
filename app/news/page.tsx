@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { getAllNewsService } from '@/lib/services/newsService'
 import Section from '@/components/ui/Section'
 import { Calendar, Image as ImageIcon } from 'lucide-react'
-import ImageWithLightbox from '@/components/ImageWithLightbox'
+import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
 
 export default async function NewsPage() {
   const news = await getAllNewsService()

@@ -4,7 +4,7 @@ import { getLatestHighlights } from '@/lib/services/highlightsService'
 import type { HighlightItem } from '@/lib/services/highlightsService'
 import { Calendar, Image as ImageIcon, Trophy } from 'lucide-react'
 import { Timestamp } from 'firebase/firestore'
-import ImageWithLightbox from './ImageWithLightbox'
+import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 interface NewsServerProps {
   limit?: number

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/admin/Sidebar'
 import ImageUpload from '@/components/admin/ImageUpload'
 import Button from '@/components/ui/Button'
-import { AlumniStoryDocument } from '@/lib/firestore/alumni'
+import { AlumniStoryDocument } from '@/lib/database/alumni'
 
 export default function NewAlumniStoryPage() {
   const router = useRouter()
@@ -54,7 +54,7 @@ export default function NewAlumniStoryPage() {
   }
 
   const getAuthToken = async () => {
-    const { auth } = await import('@/lib/firebase/config')
+    const { auth } = await import('@/lib/integrations/firebase/config')
     const user = auth.currentUser
     if (!user) throw new Error('Not authenticated')
     return user.getIdToken()

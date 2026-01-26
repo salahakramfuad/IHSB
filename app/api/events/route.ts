@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllEventsAdmin, createEvent } from '@/lib/firestore/events'
+import { getAllEventsAdmin, createEvent } from '@/lib/database/events'
 import { Event } from '@/data/events'
 
 export async function GET(request: NextRequest) {
