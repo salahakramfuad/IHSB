@@ -29,7 +29,7 @@ export default function AdminLayout({
   return (
     <AuthProvider>
       <ProtectedRoute>
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-primary-50/30 via-gray-50 to-primary-green-50/30">
           <Sidebar />
           <TopNavbar />
           <div className="lg:pl-64 pt-16">

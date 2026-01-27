@@ -85,7 +85,7 @@ const branchInfo = schoolInfo.branches.uttaraPreschoolPrimary
 
 export default function UttaraJuniorPage() {
   return (
-    <main className='min-h-screen bg-white'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/50 via-white to-primary-green-50/50'>
       {/* Enhanced Hero Section */}
       <section className='relative isolate w-full min-h-[85vh] flex items-center overflow-hidden'>
         {/* Background with Parallax */}

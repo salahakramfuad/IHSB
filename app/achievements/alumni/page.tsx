@@ -53,7 +53,7 @@ export default function AlumniPage() {
 
   if (loading) {
     return (
-      <main className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-green-50/20'>
+      <main className='min-h-screen bg-gradient-to-br from-primary-50/50 via-white to-primary-green-50/50'>
         <Section background='white'>
           <PageHeader
             title='Our Proud Alumni Network'
@@ -76,7 +76,7 @@ export default function AlumniPage() {
   }
 
   return (
-    <main className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-green-50/20'>
+    <main className='min-h-screen bg-gradient-to-br from-primary-50/50 via-white to-primary-green-50/50'>
       <Section background='white'>
         <PageHeader
           title='Our Proud Alumni Network'

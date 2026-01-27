@@ -7,7 +7,7 @@ import Button from '@/components/ui/Button'
 export default function NotFound() {
   const router = useRouter()
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-primary-green-50/20 flex items-center justify-center px-4">
+    <main className="min-h-screen bg-gradient-to-br from-primary-50/60 via-white to-primary-green-50/50 flex items-center justify-center px-4">
       <div className="max-w-2xl mx-auto text-center">
         <div className="mb-8">
           <h1 className="text-9xl font-extrabold text-primary-green-600 mb-4">

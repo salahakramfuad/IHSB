@@ -50,7 +50,7 @@ export default async function NewsPage() {
   }
 
   return (
-    <main className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-accent-purple-50/40'>
       <Section background='green' className='bg-gradient-to-br from-primary-green-600 to-primary-green-700'>
         <div className='max-w-4xl mx-auto text-center text-white'>
           <h1 className='text-4xl md:text-5xl font-bold mb-4'>

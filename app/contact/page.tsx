@@ -50,7 +50,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className='min-h-screen bg-gray-50'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-secondary-50/50'>
       <Section background='gray'>
         <PageHeader
           title='Contact Us'

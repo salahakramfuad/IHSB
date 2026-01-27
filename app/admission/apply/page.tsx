@@ -421,7 +421,7 @@ export default function AdmissionApplyPage() {
   const labelClassName = 'block text-sm font-semibold text-gray-700 mb-2'
 
   return (
-    <main className='min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-primary-green-50/60'>
       {/* Hero Section */}
       <Section background='green' className='bg-gradient-to-br from-primary-green-600 via-primary-green-700 to-accent-blue-700 relative overflow-hidden'>
         <div className='absolute inset-0 opacity-10'>

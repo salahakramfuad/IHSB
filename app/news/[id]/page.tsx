@@ -13,7 +13,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ id:
 
   if (!news) {
     return (
-      <main className='min-h-screen bg-gray-50 flex items-center justify-center'>
+      <main className='min-h-screen bg-gradient-to-b from-primary-50/50 via-white to-primary-green-50/50 flex items-center justify-center'>
         <div className='text-center'>
           <h1 className='text-2xl font-bold text-gray-900 mb-2'>News Not Found</h1>
           <p className='text-gray-600 mb-4'>The news item you're looking for doesn't exist.</p>
@@ -55,7 +55,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ id:
   }
 
   return (
-    <main className='min-h-screen bg-gradient-to-b from-gray-50 to-white'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-primary-green-50/50'>
       <Section background='gray' className='py-8'>
         <div className='max-w-4xl mx-auto px-4'>
           <Link 

@@ -31,9 +31,12 @@ export default function LayoutWrapper({
   return (
     <>
       <ThemeCSSVars />
-      <div className='gradient scroll-smooth' />
+      <div className='gradient scroll-smooth' aria-hidden />
       {showNavFooter ? (
-        <main suppressHydrationWarning>
+        <main
+          suppressHydrationWarning
+          className='min-h-screen bg-gradient-to-b from-primary-50/50 via-white to-primary-green-50/50'
+        >
           <Nav />
           {children}
           <Footer />

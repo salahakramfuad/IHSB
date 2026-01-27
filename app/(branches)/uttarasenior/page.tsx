@@ -125,7 +125,7 @@ export default function UttaraSeniorSection() {
   const photoSrcs = useMemo(() => gallery.map((g) => g.src), [gallery])
 
   return (
-    <div className='min-h-screen bg-white text-gray-900'>
+    <div className='min-h-screen bg-gradient-to-b from-primary-50/50 via-white to-primary-green-50/50 text-gray-900'>
       {/* Enhanced Hero Section */}
       <section className='relative isolate w-full min-h-[85vh] flex items-center overflow-hidden'>
         {/* Background with Parallax */}

@@ -17,7 +17,7 @@ export default async function EventDetailPage({
 
   if (!event) {
     return (
-      <main className='min-h-screen bg-gray-50'>
+      <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-secondary-50/50'>
         <Section background='gray'>
           <div className='max-w-4xl mx-auto text-center py-12'>
             <h1 className='text-2xl font-semibold mb-4'>Event not found</h1>
@@ -32,7 +32,7 @@ export default async function EventDetailPage({
   }
 
   return (
-    <main className='min-h-screen bg-gray-50'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-secondary-50/50'>
       <Section background='green' className='bg-primary-green-600'>
         <div className='max-w-4xl mx-auto text-white'>
           <Link href='/events' className='inline-block mb-4 text-white/80 hover:text-white'>

@@ -219,7 +219,7 @@ export default function FeesPage() {
   const notes = notesData[activeCampus as keyof typeof notesData]
 
   return (
-    <main className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-primary-green-50/30'>
+    <main className='min-h-screen bg-gradient-to-br from-primary-50/50 via-white to-primary-green-50/50'>
       <Section background='white'>
         <PageHeader
           title='Fees Structure'

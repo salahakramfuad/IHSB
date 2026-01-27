@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className='min-h-screen bg-white'>
+    <main className='min-h-screen bg-gradient-to-b from-primary-50/50 via-white to-primary-green-50/50'>
       {/* Hero Section */}
       <section className='relative bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-700 text-white py-24 md:py-32 overflow-hidden'>
         <div className='absolute inset-0 opacity-10'>
