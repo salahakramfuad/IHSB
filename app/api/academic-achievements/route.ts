@@ -2,17 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllAcademicAchievements, createAcademicAchievement } from '@/lib/database/academicAchievements'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    // Verify admin token for admin API access
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
+    // Public read: allow unauthenticated GET so the achievements page can display data
     const achievements = await getAllAcademicAchievements()
     return NextResponse.json({ achievements })
   } catch (error: any) {

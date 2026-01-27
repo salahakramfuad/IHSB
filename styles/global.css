@@ -578,3 +578,17 @@
     0 20px 40px rgba(250, 204, 21, 0.4),
     0 0 0 1px rgba(255, 255, 255, 0.1);
 }
+
+/* Notification strip: left-to-right scrolling ticker */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left-ticker {
+  animation: scroll-left 50s linear infinite;
+}

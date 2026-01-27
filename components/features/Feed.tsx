@@ -2,6 +2,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
+import { GraduationCap, BookOpen, MapPin, Sparkles } from 'lucide-react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 import Section from '../ui/Section'
@@ -21,10 +22,10 @@ const picsum = (seed: string, w: number, h: number): string =>
 // ---------- Static Data ----------
 // IHSB At a Glance stats
 const glanceStats: { k: string; v: string; color: string }[] = [
-  { k: 'Students', v: schoolStats.students, color: 'from-accent-blue-500 to-accent-blue-600' },
+  { k: 'Students', v: schoolStats.students, color: 'from-primary-500 to-primary-600' },
   { k: 'Clubs', v: schoolStats.clubs, color: 'from-primary-green-500 to-primary-green-600' },
   { k: 'Scholarships', v: schoolStats.scholarships, color: 'from-accent-purple-500 to-accent-purple-600' },
-  { k: 'Branches', v: schoolStats.branches, color: 'from-accent-yellow-400 to-accent-orange-500' }
+  { k: 'Branches', v: schoolStats.branches, color: 'from-accent-orange-500 to-accent-orange-600' }
 ]
 
 const programs: {
@@ -40,7 +41,7 @@ const programs: {
       'Reggio-inspired, play-based learning that builds curiosity, language, and social skills.',
     img: picsum('early-years', 1200, 800),
     href: '/academics/early-years',
-    color: 'from-accent-pink-400 to-accent-pink-600'
+    color: 'from-accent-pink-500 to-accent-pink-600'
   },
   {
     title: 'Primary Years (Grades 1–5)',
@@ -48,7 +49,7 @@ const programs: {
       'Transdisciplinary IB PYP with inquiry projects, maker time, and robust literacy & numeracy.',
     img: picsum('primary', 1200, 800),
     href: '/academics/primary',
-    color: 'from-accent-blue-400 to-accent-blue-600'
+    color: 'from-primary-500 to-primary-600'
   },
   {
     title: 'Middle Years (Grades 6–8)',
@@ -56,7 +57,7 @@ const programs: {
       'Concept-based curriculum, advisory, and digital fluency with design & STEAM labs.',
     img: picsum('middle', 1200, 800),
     href: '/academics/middle',
-    color: 'from-primary-green-400 to-primary-green-600'
+    color: 'from-primary-green-500 to-primary-green-600'
   },
   {
     title: 'High School (Grades 9–12)',
@@ -64,7 +65,7 @@ const programs: {
       'IB DP & A-Level pathways, research capstone, internships, and college counseling.',
     img: picsum('highschool', 1200, 800),
     href: '/academics/high-school',
-    color: 'from-accent-purple-400 to-accent-purple-600'
+    color: 'from-accent-purple-500 to-accent-purple-600'
   }
 ]
 
@@ -93,19 +94,19 @@ const testimonials: { quote: string; name: string; color: string }[] = [
     quote:
       'Our daughter found her voice at IHSB. The IB program and teachers nurtured her curiosity and resilience.',
     name: 'Parent, Class of 2025',
-    color: 'bg-gradient-to-br from-accent-blue-50 to-primary-green-50'
+    color: 'bg-gradient-to-br from-primary-50 to-secondary-50 border border-primary-200'
   },
   {
     quote:
       'The design lab and capstone mentorship helped me build a real prototype and a portfolio for university.',
     name: 'Student, Grade 12',
-    color: 'bg-gradient-to-br from-accent-purple-50 to-accent-pink-50'
+    color: 'bg-gradient-to-br from-accent-purple-50 to-accent-pink-50 border border-accent-purple-200'
   },
   {
     quote:
       'As an expat family, we value the welcoming community and strong college guidance.',
     name: 'Parent, Grade 9',
-    color: 'bg-gradient-to-br from-accent-yellow-50 to-accent-orange-50'
+    color: 'bg-gradient-to-br from-accent-yellow-50 to-accent-orange-50 border border-accent-yellow-200'
   }
 ]
 
@@ -131,9 +132,9 @@ export default function Feed() {
         <AnnouncementBanner />
       </div>
       
-      {/* Enhanced Hero Section */}
-      <section aria-label='Hero' className='relative isolate w-full min-h-[90vh] flex items-center overflow-hidden section-3d'>
-        {/* Background Image with Parallax */}
+      {/* Hero — School vibe */}
+      <section aria-label='Hero' className='relative isolate w-full min-h-[72vh] flex items-center overflow-hidden'>
+        {/* Background */}
         <div className='absolute inset-0 -z-10'>
           <ImageWithLightbox
             src={picsum('hero-campus', 2400, 1400)}
@@ -143,119 +144,102 @@ export default function Feed() {
             sizes='100vw'
             className='object-cover parallax-slow scale-110'
           />
-          {/* Multi-layer Gradient Overlay */}
-          <div className='absolute inset-0 bg-gradient-to-br from-primary-green-900/80 via-accent-blue-900/75 to-accent-purple-900/80' />
-          <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent' />
-          
-          {/* Animated Background Particles */}
-          {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className={`particle particle-float absolute`}
-              style={{
-                left: `${15 + i * 15}%`,
-                width: `${20 + Math.random() * 30}px`,
-                height: `${20 + Math.random() * 30}px`,
-                background: `radial-gradient(circle, rgba(250, 204, 21, ${0.3 + Math.random() * 0.3}), transparent)`,
-                animationDelay: `${i * 2}s`,
-                animationDuration: `${12 + Math.random() * 6}s`
-              }}
-            />
-          ))}
-          
-          {/* Floating Decorative Orbs */}
-          <div className='absolute top-20 left-10 w-64 h-64 bg-accent-yellow-400/15 rounded-full blur-3xl float-animation' />
-          <div className='absolute bottom-20 right-10 w-80 h-80 bg-accent-purple-400/15 rounded-full blur-3xl float-animation-delayed' />
-          <div className='absolute top-1/2 left-1/3 w-48 h-48 bg-accent-blue-400/10 rounded-full blur-3xl float-animation' style={{ animationDelay: '1s' }} />
-          
-          {/* Grid Pattern Overlay */}
-          <div className='absolute inset-0 opacity-10' style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
-          }} />
+          {/* School-color overlay: blue/green warmth */}
+          <div className='absolute inset-0 bg-gradient-to-br from-primary-800/85 via-primary-700/80 to-secondary-800/85' />
+          <div className='absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-primary-900/30' />
+          {/* Vibrant orbs */}
+          <div className='absolute top-16 left-12 w-72 h-72 bg-accent-yellow-400/25 rounded-full blur-3xl float-animation' />
+          <div className='absolute bottom-24 right-16 w-80 h-80 bg-secondary-400/20 rounded-full blur-3xl float-animation-delayed' />
+          <div className='absolute top-1/2 left-1/4 w-56 h-56 bg-primary-400/15 rounded-full blur-3xl float-animation' style={{ animationDelay: '1.5s' }} />
+          {/* Subtle grid — notebook feel */}
+          <div
+            className='absolute inset-0 opacity-[0.07]'
+            style={{
+              backgroundImage: 'linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)',
+              backgroundSize: '40px 40px'
+            }}
+          />
         </div>
 
-        {/* Content Container */}
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36 text-white relative z-10 w-full'>
+        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24 text-white relative z-10 w-full'>
           <div className='max-w-4xl'>
-            {/* Badge/Tag */}
+            {/* School identity badge */}
             <div className='hero-animate-up mb-6' style={{ animationDelay: '0.2s' }}>
-              <span className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-semibold text-white/90'>
-                <span className='w-2 h-2 bg-accent-yellow-400 rounded-full animate-pulse'></span>
-                Fostering Excellence and Compassion Since 1996
-              </span>
+              <div className='inline-flex flex-wrap items-center gap-3'>
+                <span className='inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/15 backdrop-blur-md border border-accent-yellow-300/40 text-sm font-semibold text-white'>
+                  <GraduationCap className='w-5 h-5 text-accent-yellow-300' aria-hidden />
+                  Est. 1996 · Cambridge Curriculum
+                </span>
+                <span className='inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-accent-yellow-400/25 border border-accent-yellow-400/50 text-accent-yellow-100 text-sm font-medium'>
+                  <Sparkles className='w-4 h-4' />
+                  Where Future Leaders Grow
+                </span>
+              </div>
             </div>
 
-            {/* Main Heading */}
-            <h1 className='text-5xl sm:text-6xl lg:text-8xl font-extrabold tracking-tight mb-6 leading-[1.1] hero-animate-up' style={{ animationDelay: '0.4s' }}>
+            {/* Headline */}
+            <h1 className='text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold tracking-tight leading-[1.1] hero-animate-up' style={{ animationDelay: '0.35s' }}>
               <span className='block'>International</span>
-              <span className='block bg-gradient-to-r from-white via-accent-yellow-200 to-white bg-clip-text text-transparent hero-gradient-text'>
+              <span className='block bg-gradient-to-r from-white via-accent-yellow-100 to-white bg-clip-text text-transparent hero-gradient-text'>
                 Hope School
               </span>
               <span className='block'>Bangladesh</span>
-              <span className='block text-3xl sm:text-4xl lg:text-5xl mt-4 font-semibold text-accent-yellow-400'>
-                Inspiring Future Leaders
+              <span className='block mt-3 text-2xl sm:text-3xl md:text-4xl font-semibold text-accent-yellow-300'>
+                Learn · Lead · Succeed
               </span>
             </h1>
 
-            {/* Description */}
-            <p className='mt-6 max-w-2xl text-lg sm:text-xl lg:text-2xl text-white/90 leading-relaxed hero-animate-up' style={{ animationDelay: '0.6s' }}>
-              A leading English medium school offering the full Cambridge curriculum from toddler to A-Level. We blend rigorous academics with character education, global citizenship, and real-world experiences.
+            {/* Short tagline */}
+            <p className='mt-6 max-w-2xl text-lg sm:text-xl text-white/90 leading-relaxed hero-animate-up' style={{ animationDelay: '0.5s' }}>
+              A leading English-medium school. Full Cambridge pathway from early years to A-Level, with character, citizenship, and real-world readiness.
             </p>
 
-            {/* CTA Buttons */}
-            <div className='mt-10 flex flex-wrap gap-4 hero-animate-up' style={{ animationDelay: '0.8s' }}>
+            {/* CTAs */}
+            <div className='mt-10 flex flex-wrap gap-4 hero-animate-up' style={{ animationDelay: '0.65s' }}>
               <Link href='/admission/apply' className='hero-btn-primary'>
-                <Button 
-                  size='lg' 
-                  variant='primary' 
-                  className='bg-accent-yellow-400 text-gray-900 hover:bg-accent-yellow-500 shadow-2xl text-lg px-8 py-4 rounded-xl font-bold relative overflow-hidden group'
+                <Button
+                  size='lg'
+                  variant='primary'
+                  className='bg-accent-yellow-400 text-gray-900 hover:bg-accent-yellow-300 shadow-xl text-base sm:text-lg px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold inline-flex items-center gap-2'
                 >
-                  <span className='relative z-10 flex items-center gap-2'>
-                    Apply Now
-                    <span className='text-xl group-hover:rotate-12 transition-transform duration-300 inline-block'>✨</span>
-                  </span>
+                  <BookOpen className='w-5 h-5' aria-hidden />
+                  Apply for Admission
                 </Button>
               </Link>
-              <Link href='/contact' className='btn-3d'>
-                <Button 
-                  size='lg' 
-                  variant='outline' 
-                  className='border-2 border-white/90 text-white hover:bg-white/20 backdrop-blur-md text-lg px-8 py-4 rounded-xl font-semibold glass-3d group'
+              <Link href='/contact'>
+                <Button
+                  size='lg'
+                  variant='outline'
+                  className='border-2 border-white/90 text-white hover:bg-white/15 backdrop-blur-sm text-base sm:text-lg px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-semibold inline-flex items-center gap-2'
                 >
-                  <span className='flex items-center gap-2'>
-                    <svg className='w-5 h-5 group-hover:translate-x-1 transition-transform' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' />
-                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
-                    </svg>
-                    Book a Campus Tour
-                  </span>
+                  <MapPin className='w-5 h-5' aria-hidden />
+                  Book a Campus Tour
                 </Button>
               </Link>
             </div>
 
-            {/* Quick Stats */}
-            <dl className='mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 hero-animate-scale' style={{ animationDelay: '1s' }}>
+            {/* School pride stats */}
+            <dl className='mt-14 sm:mt-16 grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-4 hero-animate-scale' style={{ animationDelay: '0.85s' }}>
               {glanceStats.map((h, idx) => (
                 <div
                   key={h.k}
-                  className={`hero-stat-card rounded-2xl p-6 ${idx % 2 === 0 ? 'float-animation' : 'float-animation-delayed'}`}
-                  style={{ animationDelay: `${1.2 + idx * 0.2}s` }}
+                  className={`hero-stat-card rounded-2xl p-4 sm:p-5 ${idx % 2 === 0 ? 'float-animation' : 'float-animation-delayed'}`}
+                  style={{ animationDelay: `${1 + idx * 0.15}s` }}
                 >
-                  <dt className='text-xs sm:text-sm text-white/80 font-medium uppercase tracking-wider mb-2'>{h.k}</dt>
-                  <dd className={`text-3xl sm:text-4xl font-extrabold bg-gradient-to-r ${h.color} bg-clip-text text-transparent`}>
+                  <dt className='text-xs sm:text-sm text-white/80 font-medium uppercase tracking-wider mb-1'>{h.k}</dt>
+                  <dd className={`text-2xl sm:text-3xl font-extrabold bg-gradient-to-r ${h.color} bg-clip-text text-transparent`}>
                     {h.v}
                   </dd>
                 </div>
               ))}
             </dl>
 
-            {/* Scroll Indicator */}
-            <div className='mt-16 hero-animate-up' style={{ animationDelay: '1.4s' }}>
-              <div className='flex flex-col items-center gap-2 text-white/60'>
-                <span className='text-sm font-medium'>Scroll to explore</span>
-                <div className='w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2'>
-                  <div className='w-1.5 h-1.5 bg-white/60 rounded-full animate-bounce' style={{ animationDuration: '1.5s' }}></div>
+            {/* Scroll cue */}
+            <div className='mt-12 sm:mt-14 hero-animate-up' style={{ animationDelay: '1.1s' }}>
+              <div className='flex flex-col items-center gap-2 text-white/50'>
+                <span className='text-xs sm:text-sm font-medium'>Explore our school</span>
+                <div className='w-6 h-10 border-2 border-white/25 rounded-full flex justify-center pt-2'>
+                  <div className='w-1.5 h-1.5 bg-white/50 rounded-full animate-bounce' style={{ animationDuration: '2s' }} />
                 </div>
               </div>
             </div>
@@ -267,7 +251,7 @@ export default function Feed() {
       <Section background='white' aria-labelledby='glance-h' className='section-3d'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
-            <h2 id='glance-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 via-accent-blue-600 to-accent-purple-600 bg-clip-text text-transparent mb-4 hero-text-3d'>
+            <h2 id='glance-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 via-primary-green-600 to-accent-purple-600 bg-clip-text text-transparent mb-4 hero-text-3d'>
               IHSB At a Glance
             </h2>
             <p className='text-lg text-gray-600 max-w-2xl mx-auto depth-1'>
@@ -296,8 +280,8 @@ export default function Feed() {
       {/* Our Spirit Section with 3D effects */}
       <Section background='gray' aria-labelledby='spirit-h' className='section-3d relative overflow-hidden'>
         {/* Background decorative elements */}
-        <div className='absolute top-0 left-0 w-64 h-64 bg-primary-green-200/20 rounded-full blur-3xl float-animation' />
-        <div className='absolute bottom-0 right-0 w-80 h-80 bg-accent-blue-200/20 rounded-full blur-3xl float-animation-delayed' />
+        <div className='absolute top-0 left-0 w-64 h-64 bg-primary-green-200/40 rounded-full blur-3xl float-animation' />
+        <div className='absolute bottom-0 right-0 w-80 h-80 bg-primary-200/30 rounded-full blur-3xl float-animation-delayed' />
         <div className='max-w-4xl mx-auto text-center relative z-10'>
           <h2 id='spirit-h' className='text-4xl md:text-5xl font-bold text-gray-900 mb-6 hero-text-3d'>
             Our Spirit
@@ -325,7 +309,7 @@ export default function Feed() {
       <Section background='white' aria-labelledby='achievers-h'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
-            <h2 id='achievers-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent-purple-600 via-accent-pink-600 to-accent-orange-500 bg-clip-text text-transparent mb-4'>
+            <h2 id='achievers-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent-purple-600 via-accent-pink-500 to-accent-orange-500 bg-clip-text text-transparent mb-4'>
               Our High Achievers
             </h2>
             <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
@@ -361,7 +345,7 @@ export default function Feed() {
       <Section background='white' aria-labelledby='programs-h'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
-            <h2 id='programs-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 via-accent-blue-600 to-accent-purple-600 bg-clip-text text-transparent mb-4'>
+            <h2 id='programs-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 via-primary-600 to-accent-purple-600 bg-clip-text text-transparent mb-4'>
               Academic Pathways
             </h2>
             <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
@@ -399,7 +383,7 @@ export default function Feed() {
       <Section background='white' aria-labelledby='events-h'>
         <div className='max-w-7xl mx-auto'>
           <div className='flex items-end justify-between gap-4 mb-8'>
-            <h2 id='events-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent-blue-600 to-accent-purple-600 bg-clip-text text-transparent'>
+            <h2 id='events-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-accent-purple-600 bg-clip-text text-transparent'>
               Latest Events
             </h2>
             <Link
@@ -417,7 +401,7 @@ export default function Feed() {
       <Section background='white' aria-labelledby='news-h'>
         <div className='max-w-7xl mx-auto'>
           <div className='flex items-end justify-between gap-4 mb-8'>
-            <h2 id='news-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent-blue-600 to-accent-purple-600 bg-clip-text text-transparent'>
+            <h2 id='news-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-accent-purple-600 bg-clip-text text-transparent'>
               Latest News
             </h2>
             <Link
@@ -436,7 +420,7 @@ export default function Feed() {
       <Section background='gray' aria-labelledby='publications-h'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
-            <h2 id='publications-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 to-accent-blue-600 bg-clip-text text-transparent mb-4'>
+            <h2 id='publications-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 to-primary-600 bg-clip-text text-transparent mb-4'>
               Our Publications
             </h2>
             <p className='text-lg text-gray-600 max-w-2xl mx-auto'>
@@ -444,8 +428,8 @@ export default function Feed() {
             </p>
           </div>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
-            <Card className='card-3d bg-gradient-to-br from-accent-blue-50 to-white border-2 border-accent-blue-200 hover:shadow-2xl transition-all duration-300 float-animation'>
-              <div className='h-2 bg-gradient-to-r from-accent-blue-500 to-accent-blue-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+            <Card className='card-3d bg-gradient-to-br from-primary-50 to-white border-2 border-primary-200 hover:shadow-2xl transition-all duration-300 float-animation'>
+              <div className='h-2 bg-gradient-to-r from-primary-500 to-primary-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
               <div className='text-center'>
                 <div className='text-6xl mb-4 transform hover:scale-110 hover:rotate-12 transition-all duration-300 inline-block'>📖</div>
                 <h3 className='text-2xl font-bold text-gray-900 mb-2 transform hover:translateZ(10px) transition-transform duration-300'>The Hopian</h3>
@@ -470,8 +454,8 @@ export default function Feed() {
                 </Link>
               </div>
             </Card>
-            <Card className='card-3d bg-gradient-to-br from-accent-teal-50 to-white border-2 border-accent-teal-200 hover:shadow-2xl transition-all duration-300 float-animation'>
-              <div className='h-2 bg-gradient-to-r from-accent-teal-500 to-accent-teal-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
+            <Card className='card-3d bg-gradient-to-br from-secondary-50 to-white border-2 border-secondary-200 hover:shadow-2xl transition-all duration-300 float-animation'>
+              <div className='h-2 bg-gradient-to-r from-secondary-500 to-secondary-600 rounded-t-xl -mx-6 -mt-6 mb-6'></div>
               <div className='text-center'>
                 <div className='text-6xl mb-4 transform hover:scale-110 hover:rotate-12 transition-all duration-300 inline-block'>🌍</div>
                 <h3 className='text-2xl font-bold text-gray-900 mb-2 transform hover:translateZ(10px) transition-transform duration-300'>HopeEarth Magazine</h3>
@@ -491,7 +475,7 @@ export default function Feed() {
       <Section background='gray' aria-labelledby='testimonials-h'>
         <div className='max-w-7xl mx-auto'>
           <h2 id='testimonials-h' className='text-4xl md:text-5xl font-bold text-center mb-4'>
-            <span className='bg-gradient-to-r from-accent-purple-600 via-accent-pink-600 to-accent-orange-500 bg-clip-text text-transparent'>
+            <span className='bg-gradient-to-r from-accent-purple-600 via-accent-pink-500 to-accent-orange-500 bg-clip-text text-transparent'>
               What our community says
             </span>
           </h2>
@@ -501,7 +485,7 @@ export default function Feed() {
             {testimonials.map((t, idx) => (
               <figure
                 key={idx}
-                className={`${t.color} rounded-2xl p-8 shadow-lg border-2 border-white/50 card-3d ${idx % 2 === 0 ? 'float-animation' : 'float-animation-delayed'}`}
+                className={`${t.color} rounded-2xl p-8 shadow-lg card-3d ${idx % 2 === 0 ? 'float-animation' : 'float-animation-delayed'}`}
                 style={{ animationDelay: `${idx * 0.5}s` }}
               >
                 <div className='text-4xl mb-4 transform hover:scale-110 transition-transform duration-300 inline-block'>❝</div>
@@ -521,7 +505,7 @@ export default function Feed() {
       <Section background='white' aria-labelledby='partners-h'>
         <div className='max-w-7xl mx-auto'>
           <h2 id='partners-h' className='text-2xl font-bold text-center mb-2'>
-            <span className='bg-gradient-to-r from-primary-green-600 to-accent-blue-600 bg-clip-text text-transparent'>
+            <span className='bg-gradient-to-r from-primary-green-600 to-primary-600 bg-clip-text text-transparent'>
               Accreditation & Partners
             </span>
           </h2>
@@ -531,7 +515,7 @@ export default function Feed() {
               <div
                 key={p.name}
                 className={`tilt-3d flex items-center justify-center rounded-xl border-2 p-6 hover:shadow-xl transition-all transform hover:scale-105 ${
-                  idx === 0 ? 'border-accent-blue-200 bg-accent-blue-50 float-animation' :
+                  idx === 0 ? 'border-primary-200 bg-primary-50 float-animation' :
                   idx === 1 ? 'border-primary-green-200 bg-primary-green-50 float-animation-delayed' :
                   idx === 2 ? 'border-accent-purple-200 bg-accent-purple-50 float-animation' :
                   'border-accent-yellow-200 bg-accent-yellow-50 float-animation-delayed'
@@ -554,7 +538,7 @@ export default function Feed() {
       {/* Newsletter - Colorful */}
       <Section background='green' aria-labelledby='newsletter-h'>
         <div className='max-w-3xl mx-auto text-center'>
-          <div className='bg-gradient-to-br from-accent-blue-500 to-primary-green-500 rounded-3xl p-12 shadow-2xl'>
+          <div className='bg-gradient-to-br from-primary-600 via-primary-green-600 to-secondary-600 rounded-3xl p-12 shadow-xl'>
             <h2 id='newsletter-h' className='text-3xl sm:text-4xl font-bold text-white mb-4'>
               Stay in the loop
             </h2>
@@ -578,7 +562,7 @@ export default function Feed() {
                 placeholder='you@example.com'
                 className='flex-1 rounded-full px-6 py-4 border-2 border-white/30 bg-white/90 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-white/50 focus:bg-white'
               />
-              <Button type='submit' variant='primary' size='lg' className='bg-accent-yellow-400 text-gray-900 hover:bg-accent-yellow-500 shadow-lg'>
+              <Button type='submit' variant='primary' size='lg' className='bg-accent-yellow-400 text-gray-900 hover:bg-accent-yellow-300 shadow-lg'>
                 Subscribe
               </Button>
             </form>
