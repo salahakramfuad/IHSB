@@ -4,6 +4,7 @@ import React, { useState, FormEvent, ChangeEvent } from 'react'
 import Section from '@/components/ui/Section'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
+import DatePicker from '@/components/admin/DatePicker'
 import { 
   User, 
   Calendar, 
@@ -627,17 +628,13 @@ export default function AdmissionApplyPage() {
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div>
-                      <label htmlFor='dateOfBirth' className={labelClassName}>
-                        Date of Birth <span className='text-red-500'>*</span>
-                      </label>
-                      <input
-                        type='date'
-                        id='dateOfBirth'
-                        name='dateOfBirth'
+                      <DatePicker
                         value={formData.dateOfBirth}
-                        onChange={handleChange}
-                        className={inputClassName}
+                        onChange={(value) => setFormData(prev => ({ ...prev, dateOfBirth: value }))}
+                        label='Date of Birth'
                         required
+                        type='date'
+                        max={new Date().toISOString().split('T')[0]}
                       />
                     </div>
 

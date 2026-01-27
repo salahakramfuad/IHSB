@@ -99,23 +99,32 @@ export const getAdmissionById = async (id: string): Promise<AdmissionDocument | 
   } as AdmissionDocument
 }
 
+/** Remove undefined values; Firestore does not allow undefined. */
+function stripUndefined<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== undefined)
+  ) as Record<string, unknown>
+}
+
 // Create admission
 export const createAdmission = async (admissionData: Omit<AdmissionDocument, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
   const admissionRef = collection(db, 'admissions')
-  const docRef = await addDoc(admissionRef, {
+  const payload = stripUndefined({
     ...admissionData,
     status: 'pending',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now()
   })
+  const docRef = await addDoc(admissionRef, payload)
   return docRef.id
 }
 
 // Update admission
 export const updateAdmission = async (id: string, admissionData: Partial<AdmissionDocument>): Promise<void> => {
   const docRef = doc(db, 'admissions', id)
-  await updateDoc(docRef, {
+  const payload = stripUndefined({
     ...admissionData,
     updatedAt: Timestamp.now()
   })
+  await updateDoc(docRef, payload)
 }

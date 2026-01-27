@@ -239,7 +239,7 @@ export default function Feed() {
       </section>
 
       {/* IHSB At a Glance Section with 3D Cards */}
-      <Section background='white' aria-labelledby='glance-h' className='section-3d'>
+      <Section background='gray' aria-labelledby='glance-h' className='section-3d bg-gradient-to-br from-primary-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
             <h2 id='glance-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 via-primary-green-600 to-accent-purple-600 bg-clip-text text-transparent mb-4 hero-text-3d'>
@@ -269,7 +269,7 @@ export default function Feed() {
       </Section>
 
       {/* Our Spirit Section with 3D effects */}
-      <Section background='gray' aria-labelledby='spirit-h' className='section-3d relative overflow-hidden'>
+      <Section background='gray' aria-labelledby='spirit-h' className='section-3d relative overflow-hidden bg-gradient-to-br from-primary-green-50 to-gray-100'>
         {/* Background decorative elements */}
         <div className='absolute top-0 left-0 w-64 h-64 bg-primary-green-200/40 rounded-full blur-3xl float-animation' />
         <div className='absolute bottom-0 right-0 w-80 h-80 bg-primary-200/30 rounded-full blur-3xl float-animation-delayed' />
@@ -297,7 +297,7 @@ export default function Feed() {
       </Section>
 
       {/* Our High Achievers Section */}
-      <Section background='white' aria-labelledby='achievers-h'>
+      <Section background='gray' aria-labelledby='achievers-h' className='bg-gradient-to-br from-accent-purple-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
             <h2 id='achievers-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-accent-purple-600 via-accent-pink-500 to-accent-orange-500 bg-clip-text text-transparent mb-4'>
@@ -315,7 +315,7 @@ export default function Feed() {
       </Section>
 
       {/* Announcements - Server-side rendered from Firestore */}
-      <Section background='gray' aria-labelledby='announcements-h'>
+      <Section background='gray' aria-labelledby='announcements-h' className='bg-gradient-to-br from-primary-green-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <div className='flex items-center justify-between mb-8'>
             <h2 id='announcements-h' className='text-3xl md:text-4xl font-bold text-gray-900'>
@@ -333,7 +333,7 @@ export default function Feed() {
       </Section>
 
       {/* Academic Pathways - Colorful */}
-      <Section background='white' aria-labelledby='programs-h'>
+      <Section background='gray' aria-labelledby='programs-h' className='bg-gradient-to-br from-primary-50 via-primary-green-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
             <h2 id='programs-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 via-primary-600 to-accent-purple-600 bg-clip-text text-transparent mb-4'>
@@ -371,7 +371,7 @@ export default function Feed() {
       </Section>
 
       {/* Latest Events Section */}
-      <Section background='white' aria-labelledby='events-h'>
+      <Section background='gray' aria-labelledby='events-h' className='bg-gradient-to-br from-secondary-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <div className='flex items-end justify-between gap-4 mb-8'>
             <h2 id='events-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-accent-purple-600 bg-clip-text text-transparent'>
@@ -389,7 +389,7 @@ export default function Feed() {
       </Section>
 
       {/* News & Highlights */}
-      <Section background='white' aria-labelledby='news-h'>
+      <Section background='gray' aria-labelledby='news-h' className='bg-gradient-to-br from-primary-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <div className='flex items-end justify-between gap-4 mb-8'>
             <h2 id='news-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-600 to-accent-purple-600 bg-clip-text text-transparent'>
@@ -408,7 +408,7 @@ export default function Feed() {
       </Section>
 
       {/* Publications Section */}
-      <Section background='gray' aria-labelledby='publications-h'>
+      <Section background='gray' aria-labelledby='publications-h' className='bg-gradient-to-br from-primary-green-50 to-primary-50'>
         <div className='max-w-7xl mx-auto'>
           <div className='text-center mb-12'>
             <h2 id='publications-h' className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-green-600 to-primary-600 bg-clip-text text-transparent mb-4'>
@@ -463,7 +463,7 @@ export default function Feed() {
       </Section>
 
       {/* Testimonials - Colorful gradients */}
-      <Section background='gray' aria-labelledby='testimonials-h'>
+      <Section background='gray' aria-labelledby='testimonials-h' className='bg-gradient-to-br from-accent-yellow-50 via-accent-purple-50 to-gray-100'>
         <div className='max-w-7xl mx-auto'>
           <h2 id='testimonials-h' className='text-4xl md:text-5xl font-bold text-center mb-4'>
             <span className='bg-gradient-to-r from-accent-purple-600 via-accent-pink-500 to-accent-orange-500 bg-clip-text text-transparent'>
@@ -493,7 +493,7 @@ export default function Feed() {
       </Section>
 
       {/* Partners */}
-      <Section background='white' aria-labelledby='partners-h'>
+      <Section background='gray' aria-labelledby='partners-h' className='bg-gradient-to-br from-primary-50 to-primary-green-50'>
         <div className='max-w-7xl mx-auto'>
           <h2 id='partners-h' className='text-2xl font-bold text-center mb-2'>
             <span className='bg-gradient-to-r from-primary-green-600 to-primary-600 bg-clip-text text-transparent'>
