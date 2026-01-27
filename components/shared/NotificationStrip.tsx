@@ -21,16 +21,16 @@ export default function NotificationStrip({
 
   return (
     <div
-      className="w-full overflow-hidden border-b border-gray-200 bg-gray-50/95 text-gray-800"
+      className="w-full overflow-hidden bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-yellow-500 text-white shadow-md"
       aria-label="Recent notifications"
     >
       <div className="flex py-2.5">
         <div
-          className="flex shrink-0 items-center gap-1.5 px-4 text-sm font-medium text-gray-500"
+          className="flex shrink-0 items-center gap-1.5 px-4 text-sm font-semibold text-white/90"
           aria-hidden
         >
-          <Bell className="h-4 w-4" />
-          <span>Notifications</span>
+          <Bell className="h-4 w-4 text-accent-yellow-200" />
+          <span>Announcements</span>
         </div>
         <div className="min-w-0 flex-1 overflow-hidden">
           <div
@@ -41,11 +41,11 @@ export default function NotificationStrip({
               <Link
                 key={a.id ? `${a.id}-${i}` : i}
                 href="/announcements"
-                className="shrink-0 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm hover:border-gray-300 hover:bg-gray-50"
+                className="shrink-0 rounded-full border border-white/40 bg-white/10 px-4 py-2 text-sm text-white/90 shadow-sm hover:bg-white/20 hover:border-white transition-colors"
               >
-                <span className="font-medium text-gray-900">{a.title}</span>
-                <span className="mx-2 text-gray-400">·</span>
-                <span className="text-gray-600 line-clamp-1 max-w-[200px] sm:max-w-[280px] inline-block align-bottom">
+                <span className="font-semibold text-white">{a.title}</span>
+                <span className="mx-2 text-white/60">·</span>
+                <span className="text-white/80 line-clamp-1 max-w-[200px] sm:max-w-[280px] inline-block align-bottom">
                   {a.content}
                 </span>
               </Link>
