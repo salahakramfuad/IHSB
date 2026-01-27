@@ -7,9 +7,27 @@ export interface NotificationItem {
   id?: string
   title: string
   content: string
+  priority?: 'low' | 'medium' | 'high'
 }
 
-/** Horizontal left-to-right scrolling strip for the 5 most recent notifications. */
+const getPriorityClasses = (priority?: string) => {
+  switch (priority) {
+    case 'high':
+      // Strong red pill for urgent items
+      return 'bg-red-500 text-white border-red-300'
+    case 'medium':
+      // Amber pill for medium items
+      return 'bg-accent-yellow-400 text-gray-900 border-accent-yellow-300'
+    case 'low':
+      // Calm blue/cyan for low items
+      return 'bg-secondary-500 text-white border-secondary-300'
+    default:
+      // Neutral pill
+      return 'bg-white/10 text-white border-white/40'
+  }
+}
+
+/** Vibrant horizontal scrolling strip for the 5 most recent notifications, color-coded by priority. */
 export default function NotificationStrip({
   announcements
 }: {
@@ -41,11 +59,13 @@ export default function NotificationStrip({
               <Link
                 key={a.id ? `${a.id}-${i}` : i}
                 href="/announcements"
-                className="shrink-0 rounded-full border border-white/40 bg-white/10 px-4 py-2 text-sm text-white/90 shadow-sm hover:bg-white/20 hover:border-white transition-colors"
+                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium shadow-sm transition-colors ${getPriorityClasses(
+                  a.priority
+                )}`}
               >
-                <span className="font-semibold text-white">{a.title}</span>
-                <span className="mx-2 text-white/60">·</span>
-                <span className="text-white/80 line-clamp-1 max-w-[200px] sm:max-w-[280px] inline-block align-bottom">
+                <span className="font-semibold mr-1">{a.title}</span>
+                <span className="mx-1 text-white/80">·</span>
+                <span className="line-clamp-1 max-w-[220px] inline-block align-bottom">
                   {a.content}
                 </span>
               </Link>

@@ -1,9 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signOut } from '@/lib/auth/auth'
-import { useRouter } from 'next/navigation'
 import { 
   LayoutDashboard, 
   Calendar, 
@@ -17,9 +16,17 @@ import {
   BarChart3,
   LogOut,
   Menu,
-  X
+  X,
+  Shield,
+  UserCircle2
 } from 'lucide-react'
 import { useState } from 'react'
+import { useAuth } from './AuthProvider'
+
+const SUPERADMIN_EMAILS = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '')
+  .split(',')
+  .map((email) => email.trim().toLowerCase())
+  .filter(Boolean)
 
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -31,17 +38,54 @@ const menuItems = [
   { href: '/admin/academic-achievements', label: 'Academic Achievements', icon: GraduationCap },
   { href: '/admin/alumni/featured', label: 'Featured Alumni', icon: Users },
   { href: '/admin/alumni/stories', label: 'Alumni Stories', icon: BookOpen },
-  { href: '/admin/alumni/stats', label: 'Alumni Statistics', icon: BarChart3 },
+  { href: '/admin/alumni/stats', label: 'Alumni Statistics', icon: BarChart3 }
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const { user } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const isSuperAdmin =
+    !!user &&
+    !!user.email &&
+    SUPERADMIN_EMAILS.includes(user.email.toLowerCase())
 
   const handleLogout = async () => {
     await signOut()
     router.push('/')
+  }
+
+  const goTo = (href: string) => {
+    setMobileMenuOpen(false)
+    router.push(href)
+  }
+
+  const renderNavLink = (
+    href: string,
+    label: string,
+    Icon: React.ComponentType<{ size?: number }>
+  ) => {
+    const isActive =
+      pathname === href || (href !== '/admin' && pathname.startsWith(href))
+
+    return (
+      <button
+        key={href}
+        onClick={() => goTo(href)}
+        className={`
+          w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left
+          ${isActive
+            ? 'bg-primary-green-600 text-white shadow-lg shadow-primary-green-500/50'
+            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+          }
+        `}
+      >
+        <Icon size={20} />
+        <span className="font-medium">{label}</span>
+      </button>
+    )
   }
 
   return (
@@ -76,29 +120,23 @@ export default function Sidebar() {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-            {menuItems.map((item) => {
-              const Icon = item.icon
-              const isActive = pathname === item.href || 
-                (item.href !== '/admin' && pathname.startsWith(item.href))
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-                    ${isActive
-                      ? 'bg-primary-green-600 text-white shadow-lg shadow-primary-green-500/50'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }
-                  `}
-                >
-                  <Icon size={20} />
-                  <span className="font-medium">{item.label}</span>
-                </Link>
-              )
-            })}
+            {menuItems.map((item) => renderNavLink(item.href, item.label, item.icon))}
+
+            {/* Divider */}
+            <div className="mt-4 mb-2 border-t border-gray-700 pt-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Account
+            </div>
+
+            {renderNavLink('/admin/profile', 'My Profile', UserCircle2)}
+
+            {isSuperAdmin && (
+              <>
+                <div className="mt-4 mb-2 border-t border-gray-700 pt-3 text-xs font-semibold uppercase tracking-wide text-amber-400">
+                  Super Admin
+                </div>
+                {renderNavLink('/admin/admins', 'Manage Admins', Shield)}
+              </>
+            )}
           </nav>
 
           {/* Logout */}

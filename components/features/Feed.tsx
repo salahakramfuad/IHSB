@@ -136,12 +136,11 @@ export default function Feed() {
       <section aria-label='Hero' className='relative isolate w-full min-h-[72vh] flex items-center overflow-hidden'>
         {/* Background */}
         <div className='absolute inset-0 -z-10'>
-          <ImageWithLightbox
-            src={picsum('hero-campus', 2400, 1400)}
+          <Image
+            src={'/assets/images/ihsb.jpg'}
             alt='IHSB campus with students and modern facilities'
-            fill
-            priority
-            sizes='100vw'
+            width={2400}
+            height={1400}
             className='object-cover parallax-slow scale-110'
           />
           {/* School-color overlay: blue/green warmth */}
@@ -234,15 +233,7 @@ export default function Feed() {
               ))}
             </dl>
 
-            {/* Scroll cue */}
-            <div className='mt-12 sm:mt-14 hero-animate-up' style={{ animationDelay: '1.1s' }}>
-              <div className='flex flex-col items-center gap-2 text-white/50'>
-                <span className='text-xs sm:text-sm font-medium'>Explore our school</span>
-                <div className='w-6 h-10 border-2 border-white/25 rounded-full flex justify-center pt-2'>
-                  <div className='w-1.5 h-1.5 bg-white/50 rounded-full animate-bounce' style={{ animationDuration: '2s' }} />
-                </div>
-              </div>
-            </div>
+       
           </div>
         </div>
       </section>

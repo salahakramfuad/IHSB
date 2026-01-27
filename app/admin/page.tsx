@@ -9,6 +9,11 @@ import { Plus, Calendar, Megaphone, Trophy, FileText, ArrowRight, TrendingUp } f
 export default function AdminDashboard() {
   const { user } = useAuth()
 
+  const displayName =
+    (user?.displayName && user.displayName.trim()) ||
+    (user?.email && user.email.split('@')[0]) ||
+    'Admin'
+
   const quickActions = [
     {
       title: 'Create Event',
@@ -57,7 +62,7 @@ export default function AdminDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-3xl font-bold mb-2">
-                    Welcome back, {user?.email?.split('@')[0] || 'Admin'}! 👋
+                    Welcome back, {displayName}! 👋
                   </h1>
                   <p className="text-white/90 text-lg">
                     Here's what's happening with your school today

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { signIn } from '@/lib/auth/auth'
+import { signIn, signOut } from '@/lib/auth/auth'
 import { useAuth } from '@/components/admin/AuthProvider'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
@@ -20,9 +20,17 @@ function LoginForm() {
   const isTimeout = searchParams?.get('timeout') === 'true'
 
   useEffect(() => {
-    if (!authLoading && user) {
-      router.push('/admin')
-    }
+    if (authLoading || !user) return
+    let cancelled = false
+    user.getIdToken().then((token) => {
+      if (cancelled) return
+      return fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+    }).then((res) => {
+      if (cancelled || !res) return
+      if (res.ok) router.push('/admin')
+      else signOut().catch(() => {})
+    }).catch(() => {})
+    return () => { cancelled = true }
   }, [user, authLoading, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,13 +44,28 @@ function LoginForm() {
       if (signInError) {
         setError(signInError)
         setLoading(false)
-      } else if (user) {
-        // Successful login - redirect to dashboard
-        router.push('/admin')
-        router.refresh() // Refresh to ensure auth state is updated
+        return
       }
+      if (!user) {
+        setLoading(false)
+        return
+      }
+      // Verify this user is allowed (superadmin or in admins collection)
+      const token = await user.getIdToken()
+      const res = await fetch('/api/auth/me', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        await signOut()
+        setError(data?.error || 'You do not have access to the admin dashboard.')
+        setLoading(false)
+        return
+      }
+      router.push('/admin')
+      router.refresh()
     } catch (err: any) {
-      setError(err.message || 'An error occurred during login')
+      setError(err?.message || 'An error occurred during login')
       setLoading(false)
     }
   }
