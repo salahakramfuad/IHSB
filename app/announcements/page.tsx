@@ -1,238 +1,214 @@
 import React from 'react'
-import Image from 'next/image'
 import { getActiveAnnouncementsService } from '@/lib/services/announcementsService'
 import Section from '@/components/ui/Section'
 import Card from '@/components/ui/Card'
-import { Calendar, Clock, Bell, AlertCircle } from 'lucide-react'
+import { Calendar, Clock, Bell, AlertCircle, Megaphone } from 'lucide-react'
 import ImageWithLightbox from '@/components/shared/ImageWithLightbox'
+import type { AnnouncementDocument } from '@/lib/database/announcements'
 
-export default async function AnnouncementsPage() {
-  const announcements = await getActiveAnnouncementsService()
-
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return 'Date not available'
-    const date = timestamp instanceof Object && 'seconds' in timestamp
-      ? new Date(timestamp.seconds * 1000)
-      : typeof timestamp === 'string'
-      ? new Date(timestamp)
-      : timestamp instanceof Date
-      ? timestamp
-      : new Date()
-    
+function formatDate(timestamp: unknown): {
+  full: string
+  short: string
+  time: string
+  iso: string
+} {
+  if (!timestamp) {
     return {
-      full: date.toLocaleDateString('en-US', { 
-        weekday: 'long',
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      }),
-      short: date.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        year: 'numeric'
-      }),
-      time: date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+      full: 'Date not available',
+      short: '—',
+      time: '—',
+      iso: ''
     }
   }
+  let date: Date
+  if (typeof timestamp === 'object' && timestamp !== null && 'seconds' in timestamp) {
+    date = new Date((timestamp as { seconds: number }).seconds * 1000)
+  } else if (typeof timestamp === 'string') {
+    date = new Date(timestamp)
+  } else if (timestamp instanceof Date) {
+    date = timestamp
+  } else {
+    date = new Date()
+  }
+  return {
+    full: date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }),
+    short: date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    }),
+    time: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+    iso: date.toISOString()
+  }
+}
 
-  // Separate featured and regular announcements
-  const featuredAnnouncements = announcements.filter(a => a.featured || a.priority === 'high')
-  const regularAnnouncements = announcements.filter(a => !a.featured && a.priority !== 'high')
+function getPriorityStyles(priority: AnnouncementDocument['priority']) {
+  switch (priority) {
+    case 'high':
+      return {
+        badge: 'bg-primary-green-100 text-primary-green-800 border-primary-green-300',
+        cardBorder: 'border-l-4 border-l-primary-green-500',
+        icon: AlertCircle,
+        label: 'High priority'
+      }
+    case 'medium':
+      return {
+        badge: 'bg-accent-yellow-100 text-amber-800 border-accent-yellow-300',
+        cardBorder: 'border-l-4 border-l-accent-yellow-500',
+        icon: Megaphone,
+        label: 'Medium priority'
+      }
+    case 'low':
+    default:
+      return {
+        badge: 'bg-slate-100 text-slate-700 border-slate-200',
+        cardBorder: 'border-l-4 border-l-slate-400',
+        icon: Bell,
+        label: 'Low priority'
+      }
+  }
+}
+
+export default async function AnnouncementsPage() {
+  const raw = await getActiveAnnouncementsService()
+  // Latest first: sort by createdAt descending
+  const announcements = [...raw].sort((a, b) => {
+    const toMs = (t: unknown): number => {
+      if (!t) return 0
+      if (typeof t === 'object' && t !== null && 'seconds' in t) return (t as { seconds: number }).seconds * 1000
+      if (typeof t === 'string') return new Date(t).getTime()
+      return t instanceof Date ? t.getTime() : 0
+    }
+    return toMs(b.createdAt) - toMs(a.createdAt)
+  })
 
   return (
-    <main className='min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50'>
-      {/* Enhanced Hero Section */}
-      <Section background='green' className='bg-gradient-to-br from-primary-green-600 via-primary-green-700 to-accent-blue-700 relative overflow-hidden'>
-        <div className='absolute inset-0 opacity-10'>
-          <div className='absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl'></div>
-          <div className='absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl'></div>
-        </div>
-        <div className='max-w-4xl mx-auto text-center text-white relative z-10'>
-          <div className='inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl mb-6'>
-            <Bell className='w-8 h-8 text-white' />
-          </div>
-          <h1 className='text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6'>
-            Announcements
-          </h1>
-          <p className='text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed'>
-            Stay updated with the latest news, updates, and important information from International Hope School Bangladesh
-          </p>
-        </div>
-      </Section>
-
-      <Section background='gray' className='py-16'>
-        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
-          {announcements.length === 0 ? (
-            <Card className='text-center py-16 border-2 border-dashed border-gray-300 bg-white'>
-              <div className='inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-2xl mb-6'>
-                <Calendar className='w-10 h-10 text-gray-400' />
-              </div>
-              <h3 className='text-2xl font-bold text-gray-900 mb-3'>
-                No Announcements Available
-              </h3>
-              <p className='text-gray-600 text-lg mb-2'>
-                There are no announcements at this time.
+    <main className="min-h-screen bg-gray-50">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-gradient-to-r from-primary-green-600 via-primary-green-500 to-accent-blue-600 text-white">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.05\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40" />
+        <div className="container relative z-10 mx-auto px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
+              <Bell className="h-7 w-7 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              Announcements
+            </h1>
+            <p className="mt-4 text-lg text-white/90 sm:text-xl">
+              Stay updated with the latest news and important information from International Hope
+              School Bangladesh.
+            </p>
+            {announcements.length > 0 && (
+              <p className="mt-3 text-sm font-medium text-white/80">
+                {announcements.length} announcement{announcements.length !== 1 ? 's' : ''} available
               </p>
-              <p className='text-gray-500 text-sm'>
-                Please check back later for updates.
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Content */}
+      <Section background="gray" className="py-12 md:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          {announcements.length === 0 ? (
+            <Card className="border-2 border-dashed border-gray-200 bg-white py-16 text-center">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gray-100">
+                <Bell className="h-10 w-10 text-gray-400" />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900 sm:text-2xl">
+                No announcements right now
+              </h2>
+              <p className="mt-2 text-gray-600">
+                Check back later for news and updates from IHSB.
               </p>
             </Card>
           ) : (
-            <div className='space-y-12'>
-              {/* Featured Announcements Section */}
-              {featuredAnnouncements.length > 0 && (
-                <div>
-                  <div className='flex items-center gap-3 mb-8'>
-                    <div className='w-1 h-8 bg-gradient-to-b from-primary-green-500 to-accent-blue-500 rounded-full'></div>
-                    <h2 className='text-3xl md:text-4xl font-bold text-gray-900'>
-                      Featured Announcements
-                    </h2>
-                  </div>
-                  <div className='space-y-6'>
-                    {featuredAnnouncements.map((announcement) => {
-                      const dateInfo = formatDate(announcement.createdAt)
-                      return (
-                        <Card
-                          key={announcement.id}
-                          className='group border-2 border-primary-green-200 bg-gradient-to-br from-white to-primary-green-50/30 hover:shadow-2xl transition-all duration-300 hover:border-primary-green-400 overflow-hidden'
-                        >
-                          <div className='h-2 bg-gradient-to-r from-primary-green-500 via-accent-blue-500 to-primary-green-500 -mx-6 -mt-6 mb-6'></div>
-                          <div className='md:flex gap-6'>
-                            {announcement.image && (
-                              <div className='relative h-64 md:h-80 md:w-96 flex-shrink-0 rounded-xl overflow-hidden border-2 border-gray-200'>
-                                <ImageWithLightbox
-                                  src={announcement.image}
-                                  alt={announcement.title}
-                                  fill
-                                  className='object-cover group-hover:scale-105 transition-transform duration-500'
-                                  sizes='(max-width: 768px) 100vw, 384px'
-                                />
-                              </div>
-                            )}
-                            <div className='flex-1'>
-                              {/* Priority Badge */}
-                              <div className='flex items-center gap-3 mb-4 flex-wrap'>
-                                {announcement.priority === 'high' && (
-                                  <span className='inline-flex items-center gap-2 px-4 py-1.5 bg-red-100 text-red-700 border-2 border-red-300 rounded-full text-sm font-bold'>
-                                    <AlertCircle className='w-4 h-4' />
-                                    High Priority
-                                  </span>
-                                )}
-                                {announcement.featured && (
-                                  <span className='inline-flex items-center gap-2 px-4 py-1.5 bg-primary-green-100 text-primary-green-700 border-2 border-primary-green-300 rounded-full text-sm font-bold'>
-                                    <Bell className='w-4 h-4' />
-                                    Featured
-                                  </span>
-                                )}
-                              </div>
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
+                <div className="h-1 w-12 rounded-full bg-gradient-to-r from-primary-green-500 to-accent-blue-500" />
+                <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+                  All announcements
+                </h2>
+              </div>
 
-                              {/* Date */}
-                              <div className='flex items-center gap-4 mb-4 text-sm text-gray-600'>
-                                <div className='flex items-center gap-2'>
-                                  <Calendar className='w-4 h-4 text-primary-green-600' />
-                                  <time className='font-semibold' dateTime={announcement.createdAt?.seconds ? new Date(announcement.createdAt.seconds * 1000).toISOString() : ''}>
-                                    {typeof dateInfo === 'object' ? dateInfo.full : dateInfo}
-                                  </time>
-                                </div>
-                                <div className='flex items-center gap-2'>
-                                  <Clock className='w-4 h-4 text-gray-400' />
-                                  <span>{typeof dateInfo === 'object' ? dateInfo.time : ''}</span>
-                                </div>
-                              </div>
+              <ul className="space-y-6" role="list">
+                {announcements.map((announcement) => {
+                  const dateInfo = formatDate(announcement.createdAt)
+                  const priorityStyles = getPriorityStyles(announcement.priority || 'low')
+                  const PriorityIcon = priorityStyles.icon
 
-                              {/* Title */}
-                              <h2 className='text-3xl md:text-4xl font-bold text-gray-900 mb-4 group-hover:text-primary-green-600 transition-colors leading-tight'>
-                                {announcement.title}
-                              </h2>
+                  return (
+                    <li key={announcement.id}>
+                      <Card
+                        className={`group overflow-hidden bg-white transition-all duration-300 hover:shadow-lg ${priorityStyles.cardBorder}`}
+                      >
+                        <article className="flex flex-col sm:flex-row">
+                          {/* Content first (left / top): primary focus */}
+                          <div className="flex flex-1 flex-col p-6 sm:p-8 sm:min-w-0">
+                            <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                              <time
+                                className="flex items-center gap-1.5 font-medium text-primary-green-700"
+                                dateTime={dateInfo.iso}
+                              >
+                                <Calendar className="h-4 w-4 shrink-0" />
+                                <span>Added {dateInfo.full}</span>
+                              </time>
+                              <span className="flex items-center gap-1.5 text-gray-500">
+                                <Clock className="h-4 w-4 shrink-0 text-gray-400" />
+                                {dateInfo.time}
+                              </span>
+                            </div>
 
-                              {/* Content */}
-                              <div className='prose prose-lg max-w-none'>
-                                <p className='text-gray-700 leading-relaxed whitespace-pre-wrap'>
-                                  {announcement.content}
-                                </p>
-                              </div>
+                            <div className="mb-4 flex flex-wrap items-center gap-2">
+                              <span
+                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold ${priorityStyles.badge}`}
+                              >
+                                <PriorityIcon className="h-3.5 w-3.5" />
+                                {priorityStyles.label}
+                              </span>
+                              {announcement.featured && (
+                                <span className="inline-flex items-center gap-1.5 rounded-full border border-primary-green-200 bg-primary-green-50 px-3 py-1 text-xs font-semibold text-primary-green-700">
+                                  <Bell className="h-3.5 w-3.5" />
+                                  Featured
+                                </span>
+                              )}
+                            </div>
+
+                            <h3 className="mb-3 text-xl font-bold text-gray-900 transition-colors group-hover:text-primary-green-700 sm:text-2xl">
+                              {announcement.title}
+                            </h3>
+
+                            <div className="prose prose-gray max-w-none flex-1 text-gray-700">
+                              <p className="whitespace-pre-wrap leading-relaxed">
+                                {announcement.content}
+                              </p>
                             </div>
                           </div>
-                        </Card>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
 
-              {/* Regular Announcements Section */}
-              {regularAnnouncements.length > 0 && (
-                <div>
-                  {featuredAnnouncements.length > 0 && (
-                    <div className='flex items-center gap-3 mb-8'>
-                      <div className='w-1 h-8 bg-gradient-to-b from-accent-blue-500 to-accent-purple-500 rounded-full'></div>
-                      <h2 className='text-3xl md:text-4xl font-bold text-gray-900'>
-                        All Announcements
-                      </h2>
-                    </div>
-                  )}
-                  <div className='grid gap-6 md:grid-cols-2'>
-                    {regularAnnouncements.map((announcement) => {
-                      const dateInfo = formatDate(announcement.createdAt)
-                      return (
-                        <Card
-                          key={announcement.id}
-                          className='group border-2 border-gray-200 hover:border-primary-green-300 hover:shadow-xl transition-all duration-300 overflow-hidden'
-                        >
+                          {/* Image on the right: smaller, de-emphasized */}
                           {announcement.image && (
-                            <div className='relative h-48 w-full -mx-6 -mt-6 mb-6'>
+                            <div className="relative h-28 w-full shrink-0 overflow-hidden sm:h-auto sm:min-h-[10rem] sm:w-36 sm:border-l sm:border-gray-100 sm:bg-gray-50/50 md:w-40 lg:w-44">
                               <ImageWithLightbox
                                 src={announcement.image}
                                 alt={announcement.title}
                                 fill
-                                className='object-cover group-hover:scale-105 transition-transform duration-300'
-                                sizes='(max-width: 768px) 100vw, 50vw'
+                                className="object-cover opacity-90 transition duration-300 group-hover:opacity-100"
+                                sizes="(max-width: 640px) 100vw, 176px"
                               />
-                              <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent'></div>
                             </div>
                           )}
-                          
-                          {/* Priority Badge */}
-                          {announcement.priority === 'medium' && (
-                            <div className='mb-4'>
-                              <span className='inline-flex items-center gap-1.5 px-3 py-1 bg-yellow-50 text-yellow-700 border border-yellow-200 rounded-full text-xs font-semibold'>
-                                Medium Priority
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Date */}
-                          <div className='flex items-center gap-3 mb-3 text-xs text-gray-500'>
-                            <div className='flex items-center gap-1.5'>
-                              <Calendar className='w-3.5 h-3.5 text-primary-green-600' />
-                              <time className='font-medium' dateTime={announcement.createdAt?.seconds ? new Date(announcement.createdAt.seconds * 1000).toISOString() : ''}>
-                                {typeof dateInfo === 'object' ? dateInfo.short : dateInfo}
-                              </time>
-                            </div>
-                            <div className='flex items-center gap-1.5'>
-                              <Clock className='w-3.5 h-3.5' />
-                              <span>{typeof dateInfo === 'object' ? dateInfo.time : ''}</span>
-                            </div>
-                          </div>
-
-                          {/* Title */}
-                          <h2 className='text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-green-600 transition-colors line-clamp-2'>
-                            {announcement.title}
-                          </h2>
-
-                          {/* Content Preview */}
-                          <p className='text-gray-600 leading-relaxed line-clamp-3 text-sm'>
-                            {announcement.content}
-                          </p>
-                        </Card>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
+                        </article>
+                      </Card>
+                    </li>
+                  )
+                })}
+              </ul>
             </div>
           )}
         </div>

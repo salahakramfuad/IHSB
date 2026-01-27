@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
     const email = decoded.email.toLowerCase()
 
-    if (isSuperadmin(decoded.email)) {
+    if (isSuperadmin(email)) {
       return NextResponse.json({
         role: 'superadmin',
         email: decoded.email,
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
     const snapshot = await adminDb
       .collection('admins')
-      .where('email', '==', decoded.email)
+      .where('email', '==', email)
       .limit(1)
       .get()
 

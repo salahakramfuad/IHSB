@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllAcademicAchievements, createAcademicAchievement } from '@/lib/database/academicAchievements'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET() {
   try {
@@ -37,6 +38,17 @@ export async function POST(request: NextRequest) {
 
     const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
     const id = await createAcademicAchievement(achievementData, creatorEmail)
+    await addNotification({
+      type: 'academic_achievement',
+      action: 'created',
+      title: `Academic achievement created: ${achievementData.name || 'Untitled'}`,
+      description: achievementData.name || undefined,
+      itemId: id,
+      itemHref: `/admin/academic-achievements`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ id, ...achievementData })
   } catch (error: any) {
     console.error('Error creating academic achievement:', error)

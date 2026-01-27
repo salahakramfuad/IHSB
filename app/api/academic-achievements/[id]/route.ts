@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAcademicAchievementById, updateAcademicAchievement, deleteAcademicAchievement } from '@/lib/database/academicAchievements'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(
   request: NextRequest,
@@ -44,7 +45,17 @@ export async function PUT(
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
     await updateAcademicAchievement(id, body, updaterEmail)
-    
+    await addNotification({
+      type: 'academic_achievement',
+      action: 'updated',
+      title: `Academic achievement updated: ${body.name ?? 'Achievement'}`,
+      description: body.name ?? undefined,
+      itemId: id,
+      itemHref: '/admin/academic-achievements',
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error updating academic achievement:', error)
@@ -70,7 +81,16 @@ export async function DELETE(
 
     const { id } = await params
     await deleteAcademicAchievement(id)
-    
+    await addNotification({
+      type: 'academic_achievement',
+      action: 'deleted',
+      title: 'Academic achievement deleted',
+      itemId: id,
+      itemHref: '/admin/academic-achievements',
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error deleting academic achievement:', error)

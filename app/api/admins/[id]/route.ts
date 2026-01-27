@@ -14,12 +14,20 @@ function isSuperadmin(email?: string | null) {
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const decoded = await verifyAdminToken(request)
     if (!decoded || !isSuperadmin(decoded.email)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    const { id } = await params
+    if (id.startsWith('env-')) {
+      return NextResponse.json(
+        { error: 'Cannot modify superadmins defined in environment.' },
+        { status: 400 }
+      )
     }
 
     const body = await request.json()
@@ -41,7 +49,7 @@ export async function PATCH(
       update.active = active
     }
 
-    await adminDb.collection('admins').doc(params.id).update(update)
+    await adminDb.collection('admins').doc(id).update(update)
 
     return NextResponse.json({ success: true })
   } catch (error: any) {

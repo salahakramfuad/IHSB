@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import ImageUpload from '@/components/admin/ImageUpload'
 import DatePicker from '@/components/admin/DatePicker'
+import { ImproveWithAIButton } from '@/components/admin/ImproveWithAIButton'
 import Button from '@/components/ui/Button'
 import { AnnouncementDocument } from '@/lib/database/announcements'
 
@@ -139,9 +140,20 @@ export default function EditAnnouncementPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Content <span className="text-red-500">*</span>
-              </label>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Content <span className="text-red-500">*</span>
+                </label>
+                <ImproveWithAIButton
+                  getAuthToken={getAuthToken}
+                  currentText={formData.content}
+                  onImproved={(text) => setFormData({ ...formData, content: text })}
+                  className="shrink-0"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mb-1">
+                AI improves grammar and clarity only. Meaning stays the same. You can edit before saving.
+              </p>
               <textarea
                 required
                 rows={6}

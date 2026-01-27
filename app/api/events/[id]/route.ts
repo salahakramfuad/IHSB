@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getEventByIdAdmin, updateEvent, deleteEvent } from '@/lib/database/events'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(
   request: NextRequest,
@@ -44,7 +45,17 @@ export async function PUT(
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
     await updateEvent(id, body, updaterEmail)
-    
+    await addNotification({
+      type: 'event',
+      action: 'updated',
+      title: `Event updated: ${body.title || 'Event'}`,
+      description: body.title || undefined,
+      itemId: id,
+      itemHref: `/admin/events/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error updating event:', error)
@@ -70,7 +81,16 @@ export async function DELETE(
 
     const { id } = await params
     await deleteEvent(id)
-    
+    await addNotification({
+      type: 'event',
+      action: 'deleted',
+      title: 'Event deleted',
+      itemId: id,
+      itemHref: '/admin/events',
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error deleting event:', error)

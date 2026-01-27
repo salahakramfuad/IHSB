@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllNews, createNews } from '@/lib/database/news'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(request: NextRequest) {
   try {
@@ -58,6 +59,17 @@ export async function POST(request: NextRequest) {
 
     const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
     const id = await createNews(newsData, creatorEmail)
+    await addNotification({
+      type: 'news',
+      action: 'created',
+      title: `News created: ${newsData.title || 'Untitled'}`,
+      description: newsData.title || undefined,
+      itemId: id,
+      itemHref: `/admin/news/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ id, ...newsData })
   } catch (error: any) {
     console.error('Error creating news:', error)

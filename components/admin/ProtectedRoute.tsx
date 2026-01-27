@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from './AuthProvider'
 import { useSessionTimeout } from './useSessionTimeout'
 import SessionTimeoutModal from './SessionTimeoutModal'
-import { getAuthToken } from '@/lib/utils/api'
 import { signOut } from '@/lib/auth/auth'
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -26,7 +25,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
       return
     }
     let cancelled = false
-    getAuthToken()
+    user
+      .getIdToken()
       .then((token) => {
         if (cancelled) return
         return fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } })
@@ -44,7 +44,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     return () => {
       cancelled = true
     }
-  }, [user?.uid, router])
+  }, [user, router])
 
   if (loading) {
     return (

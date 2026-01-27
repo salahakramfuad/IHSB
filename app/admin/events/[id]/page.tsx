@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Sidebar from '@/components/admin/Sidebar'
 import ImageUpload from '@/components/admin/ImageUpload'
 import DatePicker from '@/components/admin/DatePicker'
+import { ImproveWithAIButton } from '@/components/admin/ImproveWithAIButton'
 import Button from '@/components/ui/Button'
 import { Event } from '@/data/events'
 
@@ -137,9 +138,20 @@ export default function EditEventPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description <span className="text-red-500">*</span>
-              </label>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Description <span className="text-red-500">*</span>
+                </label>
+                <ImproveWithAIButton
+                  getAuthToken={getAuthToken}
+                  currentText={formData.description}
+                  onImproved={(text) => setFormData({ ...formData, description: text })}
+                  className="shrink-0"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mb-1">
+                AI improves grammar and clarity only. Meaning stays the same. You can edit before saving.
+              </p>
               <textarea
                 required
                 rows={4}

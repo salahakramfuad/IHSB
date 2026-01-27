@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAnnouncementById, updateAnnouncement, deleteAnnouncement } from '@/lib/database/announcements'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(
   request: NextRequest,
@@ -44,7 +45,17 @@ export async function PUT(
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
     await updateAnnouncement(id, body, updaterEmail)
-    
+    await addNotification({
+      type: 'announcement',
+      action: 'updated',
+      title: `Announcement updated: ${body.title || 'Announcement'}`,
+      description: body.title || undefined,
+      itemId: id,
+      itemHref: `/admin/announcements/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error updating announcement:', error)
@@ -70,7 +81,16 @@ export async function DELETE(
 
     const { id } = await params
     await deleteAnnouncement(id)
-    
+    await addNotification({
+      type: 'announcement',
+      action: 'deleted',
+      title: 'Announcement deleted',
+      itemId: id,
+      itemHref: '/admin/announcements',
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error deleting announcement:', error)

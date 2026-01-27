@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllAnnouncements, getActiveAnnouncements, getFeaturedAnnouncements, createAnnouncement } from '@/lib/database/announcements'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(request: NextRequest) {
   try {
@@ -62,6 +63,17 @@ export async function POST(request: NextRequest) {
 
     const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
     const id = await createAnnouncement(announcementData, creatorEmail)
+    await addNotification({
+      type: 'announcement',
+      action: 'created',
+      title: `Announcement created: ${body.title || 'Untitled'}`,
+      description: body.title || undefined,
+      itemId: id,
+      itemHref: `/admin/announcements/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ id, ...announcementData })
   } catch (error: any) {
     console.error('Error creating announcement:', error)

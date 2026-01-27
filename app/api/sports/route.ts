@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllSportsAchievements, createSportsAchievement } from '@/lib/database/sports'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,6 +38,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
     const id = await createSportsAchievement(body, creatorEmail)
+    await addNotification({
+      type: 'sport',
+      action: 'created',
+      title: `Sports achievement created: ${body.title || body.name || 'Untitled'}`,
+      description: body.title || body.name || undefined,
+      itemId: id,
+      itemHref: `/admin/sports/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ id, ...body })
   } catch (error: any) {
     console.error('Error creating sports achievement:', error)

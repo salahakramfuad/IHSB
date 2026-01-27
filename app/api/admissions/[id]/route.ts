@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAdmissionById, updateAdmission } from '@/lib/database/admissions'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(
   request: NextRequest,
@@ -43,7 +44,18 @@ export async function PUT(
     const { id } = await params
     const body = await request.json()
     await updateAdmission(id, body)
-    
+    const statusNote = body.status ? ` (${String(body.status)})` : ''
+    await addNotification({
+      type: 'admission',
+      action: 'updated',
+      title: `Admission updated${statusNote}`,
+      description: body.status ? `Status: ${body.status}` : undefined,
+      itemId: id,
+      itemHref: `/admin/admissions/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error updating admission:', error)

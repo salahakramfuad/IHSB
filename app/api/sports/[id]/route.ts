@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getSportsAchievementById, updateSportsAchievement, deleteSportsAchievement } from '@/lib/database/sports'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(
   request: NextRequest,
@@ -44,7 +45,17 @@ export async function PUT(
     const body = await request.json()
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
     await updateSportsAchievement(id, body, updaterEmail)
-    
+    await addNotification({
+      type: 'sport',
+      action: 'updated',
+      title: `Sports achievement updated: ${body.title ?? body.name ?? 'Achievement'}`,
+      description: body.title ?? body.name ?? undefined,
+      itemId: id,
+      itemHref: `/admin/sports/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error updating achievement:', error)
@@ -70,7 +81,16 @@ export async function DELETE(
 
     const { id } = await params
     await deleteSportsAchievement(id)
-    
+    await addNotification({
+      type: 'sport',
+      action: 'deleted',
+      title: 'Sports achievement deleted',
+      itemId: id,
+      itemHref: '/admin/sports',
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error deleting achievement:', error)

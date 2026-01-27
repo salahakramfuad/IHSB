@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { getAllEventsAdmin, createEvent } from '@/lib/database/events'
+import { addNotification } from '@/lib/database/notifications'
 import { Event } from '@/data/events'
 
 export async function GET(request: NextRequest) {
@@ -52,6 +53,17 @@ export async function POST(request: NextRequest) {
 
     const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
     const id = await createEvent(eventData, creatorEmail)
+    await addNotification({
+      type: 'event',
+      action: 'created',
+      title: `Event created: ${eventData.title || 'Untitled'}`,
+      description: eventData.title || undefined,
+      itemId: id,
+      itemHref: `/admin/events/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ id, ...eventData })
   } catch (error: any) {
     console.error('Error creating event:', error)

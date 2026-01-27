@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminToken } from '@/lib/auth/middleware'
 import { updateNews, deleteNews, getNewsById } from '@/lib/database/news'
+import { addNotification } from '@/lib/database/notifications'
 
 export async function GET(
   request: NextRequest,
@@ -52,7 +53,17 @@ export async function PUT(
 
     const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
     await updateNews(id, updateData, updaterEmail)
-    
+    await addNotification({
+      type: 'news',
+      action: 'updated',
+      title: `News updated: ${body.title ?? 'News'}`,
+      description: body.title ?? undefined,
+      itemId: id,
+      itemHref: `/admin/news/${id}`,
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     const updatedNews = await getNewsById(id)
     return NextResponse.json({ news: updatedNews })
   } catch (error: any) {
@@ -79,6 +90,16 @@ export async function DELETE(
 
     const { id } = await params
     await deleteNews(id)
+    await addNotification({
+      type: 'news',
+      action: 'deleted',
+      title: 'News deleted',
+      itemId: id,
+      itemHref: '/admin/news',
+      createdBy: decodedToken.uid || '',
+      createdByEmail: decodedToken.email || null,
+      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+    })
     return NextResponse.json({ success: true })
   } catch (error: any) {
     console.error('Error deleting news:', error)
