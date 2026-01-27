@@ -592,3 +592,55 @@
 .animate-scroll-left-ticker {
   animation: scroll-left 50s linear infinite;
 }
+
+/* Mobile performance optimizations */
+@media (max-width: 640px) {
+  /* Disable heavy entrance animations on mobile */
+  .hero-animate-up,
+  .hero-animate-left,
+  .hero-animate-right,
+  .hero-animate-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  /* Soften 3D / float effects on small screens */
+  .float-animation,
+  .float-animation-delayed,
+  .rotate-3d {
+    animation: none !important;
+  }
+
+  .card-3d:hover,
+  .stat-card-3d:hover,
+  .btn-3d:hover,
+  .glass-3d:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Disable parallax shift on hero background for mobile */
+  .parallax-slow {
+    transform: none !important;
+  }
+
+  /* Make ticker scroll more gently on mobile */
+  .animate-scroll-left-ticker {
+    animation-duration: 80s;
+  }
+}
+
+/* Notification strip: left-to-right scrolling ticker */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left-ticker {
+  animation: scroll-left 50s linear infinite;
+}
