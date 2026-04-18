@@ -41,6 +41,9 @@
     "yup": "^1.6.1",
     "zod": "^4.3.5"
   },
+  "overrides": {
+    "protobufjs": ">=7.5.5"
+  },
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "@types/node": "^24.10.0",
