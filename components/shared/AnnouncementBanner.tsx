@@ -1,3 +1,4 @@
+import { truncatePlain } from '@/lib/announcementPreview'
 import { getActiveAnnouncementsService } from '@/lib/services/announcementsService'
 import NotificationStrip from './NotificationStrip'
 
@@ -16,8 +17,8 @@ export default async function AnnouncementBanner() {
 
   const plain = recent.map((a) => ({
     id: a.id,
-    title: a.title,
-    content: a.content,
+    title: truncatePlain(a.title ?? '', 52),
+    content: truncatePlain(a.content ?? '', 72),
     priority: a.priority
   }))
 

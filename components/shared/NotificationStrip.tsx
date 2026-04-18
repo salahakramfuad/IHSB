@@ -39,30 +39,29 @@ export default function NotificationStrip({
       className="w-full overflow-hidden bg-gradient-to-r from-primary-green-600 via-primary-green-500 to-accent-blue-600 text-white shadow-md"
       aria-label="Recent notifications"
     >
-      <div className="flex py-2.5">
+      <div className="flex items-stretch py-1.5">
         <div
-          className="flex shrink-0 items-center gap-1.5 px-4 text-sm font-semibold text-white/95"
+          className="flex shrink-0 items-center gap-1.5 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-white/95"
           aria-hidden
         >
-          <Bell className="h-4 w-4 text-white" />
+          <Bell className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
           <span>Announcements</span>
         </div>
         <div className="min-w-0 flex-1 overflow-hidden">
           <div
-            className="flex gap-8 animate-scroll-left-ticker"
+            className="flex gap-4 sm:gap-6 animate-scroll-left-ticker"
             style={{ width: 'max-content' }}
           >
             {[...items, ...items].map((a, i) => (
               <Link
                 key={a.id ? `${a.id}-${i}` : i}
                 href="/announcements"
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${getPriorityClasses(
+                className={`flex max-w-[min(88vw,220px)] shrink-0 flex-col gap-0.5 rounded-lg px-2.5 py-1.5 text-left text-xs font-medium leading-snug transition-colors sm:max-w-[260px] sm:px-3 sm:text-[13px] ${getPriorityClasses(
                   a.priority
                 )}`}
               >
-                <span className="font-semibold mr-1">{a.title}</span>
-                <span className="mx-1 opacity-80" aria-hidden>·</span>
-                <span className="line-clamp-1 max-w-[220px] inline-block align-bottom opacity-90">
+                <span className="line-clamp-1 min-w-0 break-words font-semibold">{a.title}</span>
+                <span className="line-clamp-1 min-w-0 break-words text-[11px] font-normal opacity-90 sm:text-xs">
                   {a.content}
                 </span>
               </Link>

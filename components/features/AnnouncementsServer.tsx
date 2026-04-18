@@ -1,7 +1,5 @@
-import Image from 'next/image'
 import Link from 'next/link'
-import { getFeaturedAnnouncementsService } from '@/lib/services/announcementsService'
-import type { AnnouncementDocument } from '@/lib/services/announcementsService'
+import { truncatePlain } from '@/lib/announcementPreview'
 import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 interface AnnouncementsServerProps {
@@ -54,10 +52,10 @@ export default async function AnnouncementsServer({ limit = 3 }: AnnouncementsSe
         <Link
           key={announcement.id}
           href="/announcements"
-          className="group bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:border-primary-green-300 active:scale-[0.98] flex flex-col focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:ring-offset-2"
+          className="group flex min-h-0 flex-col rounded-lg border border-gray-200 bg-white p-4 transition-all duration-300 hover:border-primary-green-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:ring-offset-2 active:scale-[0.98]"
         >
           {announcement.image && (
-            <div className="relative h-32 w-full mb-4 rounded-lg overflow-hidden">
+            <div className="relative mb-3 h-24 w-full overflow-hidden rounded-lg">
               <ImageWithLightbox
                 src={announcement.image}
                 alt={announcement.title}
@@ -79,8 +77,12 @@ export default async function AnnouncementsServer({ limit = 3 }: AnnouncementsSe
               </span>
             )}
           </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary-green-600 transition-colors">{announcement.title}</h3>
-          <p className="text-sm text-gray-700 mb-4 line-clamp-3 flex-1">{announcement.content}</p>
+          <h3 className="mb-1.5 line-clamp-2 text-base font-bold text-gray-900 transition-colors group-hover:text-primary-green-600">
+            {announcement.title}
+          </h3>
+          <p className="mb-3 line-clamp-2 flex-1 text-xs text-gray-700">
+            {truncatePlain(announcement.content ?? '', 160)}
+          </p>
           <span className="inline-block text-sm font-semibold text-primary-green-600 group-hover:text-primary-green-700 transition-colors mt-auto">
             Read more →
           </span>
