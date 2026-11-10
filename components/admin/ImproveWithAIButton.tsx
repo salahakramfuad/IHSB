@@ -77,8 +77,8 @@ export function ImproveWithAIButton({
         disabled={disabled || loading}
         title={TOOLTIP_TEXT}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700',
-          'hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:ring-offset-1',
+          'inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-paper px-2.5 py-1.5 text-sm font-medium text-ink-muted',
+          'hover:bg-sunken hover:border-line-strong focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-1',
           'disabled:opacity-50 disabled:cursor-not-allowed'
         )}
         aria-label={TOOLTIP_TEXT}
@@ -86,7 +86,7 @@ export function ImproveWithAIButton({
         {loading ? (
           <>
             <span
-              className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-gray-300 border-t-primary-green-600"
+              className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-line-strong border-t-primary-green-600"
               aria-hidden
             />
             <span>Improving…</span>

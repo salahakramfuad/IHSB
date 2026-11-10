@@ -145,33 +145,33 @@ export default function DataTable<T extends Record<string, any>>({
 
   if (loading) {
     return (
-      <div className="bg-white rounded-lg border border-gray-200 p-12">
+      <div className="bg-paper rounded-lg border border-line p-12">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading data...</p>
+          <p className="mt-4 text-ink-muted">Loading data...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div className="bg-paper rounded-lg border border-line overflow-hidden">
       {/* Search Bar */}
       {searchable && searchKeys.length > 0 && (
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b border-line">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-ink-subtle" size={20} />
             <input
               type="text"
               placeholder={searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-10 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-ink-subtle hover:text-ink-muted"
               >
                 <X size={18} />
               </button>
@@ -183,13 +183,13 @@ export default function DataTable<T extends Record<string, any>>({
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-sunken border-b border-line">
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
-                    column.sortable !== false ? 'cursor-pointer hover:bg-gray-100' : ''
+                  className={`px-6 py-3 text-left text-xs font-medium text-ink-subtle uppercase tracking-wider ${
+                    column.sortable !== false ? 'cursor-pointer hover:bg-sunken' : ''
                   } ${column.className || ''}`}
                   onClick={() => column.sortable !== false && handleSort(column.key)}
                 >
@@ -197,27 +197,27 @@ export default function DataTable<T extends Record<string, any>>({
                     <span>{column.label}</span>
                     {column.sortable !== false && sortColumn === column.key && (
                       sortDirection === 'asc' ? (
-                        <ChevronUp size={16} className="text-gray-400" />
+                        <ChevronUp size={16} className="text-ink-subtle" />
                       ) : (
-                        <ChevronDown size={16} className="text-gray-400" />
+                        <ChevronDown size={16} className="text-ink-subtle" />
                       )
                     )}
                   </div>
                 </th>
               ))}
               {(onEdit || onDelete) && (
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-ink-subtle uppercase tracking-wider">
                   Actions
                 </th>
               )}
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-paper divide-y divide-line">
             {sortedData.length === 0 ? (
               <tr>
                 <td
                   colSpan={columns.length + (onEdit || onDelete ? 1 : 0)}
-                  className="px-6 py-12 text-center text-gray-500"
+                  className="px-6 py-12 text-center text-ink-subtle"
                 >
                   {emptyMessage}
                 </td>
@@ -226,13 +226,13 @@ export default function DataTable<T extends Record<string, any>>({
               sortedData.map((item) => {
                 const itemId = getItemId(item)
                 return (
-                  <tr key={itemId} className="hover:bg-gray-50 transition-colors">
+                  <tr key={itemId} className="hover:bg-sunken transition-colors">
                     {columns.map((column) => (
                       <td key={column.key} className={`px-6 py-4 whitespace-nowrap text-sm ${column.className || ''}`}>
                         {column.render ? (
                           column.render(item)
                         ) : (
-                          <span className="text-gray-900">
+                          <span className="text-ink">
                             {item[column.key] !== null && item[column.key] !== undefined
                               ? String(item[column.key])
                               : 'N/A'}
@@ -285,7 +285,7 @@ export default function DataTable<T extends Record<string, any>>({
 
       {/* Results Count */}
       {searchTerm && (
-        <div className="px-6 py-3 border-t border-gray-200 bg-gray-50 text-sm text-gray-600">
+        <div className="px-6 py-3 border-t border-line bg-sunken text-sm text-ink-muted">
           Showing {sortedData.length} of {data.length} results
         </div>
       )}

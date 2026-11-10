@@ -116,7 +116,7 @@ export default function EditNewsPage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading news...</p>
+            <p className="mt-4 text-ink-muted">Loading news...</p>
           </div>
         </div>
       </div>
@@ -127,11 +127,11 @@ export default function EditNewsPage() {
     <div className="p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Edit News</h1>
-            <p className="text-gray-600">Update news item details</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Edit News</h1>
+            <p className="text-ink-muted">Update news item details</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -139,7 +139,7 @@ export default function EditNewsPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -147,13 +147,13 @@ export default function EditNewsPage() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-ink-muted">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <ImproveWithAIButton
@@ -163,7 +163,7 @@ export default function EditNewsPage() {
                   className="shrink-0"
                 />
               </div>
-              <p className="text-xs text-gray-500 mb-1">
+              <p className="text-xs text-ink-subtle mb-1">
                 AI improves grammar and clarity only. Meaning stays the same. You can edit before saving.
               </p>
               <textarea
@@ -171,19 +171,19 @@ export default function EditNewsPage() {
                 rows={6}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Category <span className="text-red-500">*</span>
               </label>
               <select
                 required
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value as 'sports' | 'news' | 'general' })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               >
                 <option value="general">General</option>
                 <option value="sports">Sports</option>
@@ -192,7 +192,7 @@ export default function EditNewsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Date <span className="text-red-500">*</span>
               </label>
               <DatePicker
@@ -210,7 +210,7 @@ export default function EditNewsPage() {
                 required
                 maxImages={10}
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-ink-subtle">
                 First image will be used as the main/featured image
               </p>
             </div>

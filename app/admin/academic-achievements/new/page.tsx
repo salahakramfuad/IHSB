@@ -57,17 +57,17 @@ export default function NewAcademicAchievementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sunken">
       <Sidebar />
       
       <main className="lg:pl-64 p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Academic Achievement</h1>
-            <p className="text-gray-600">Add a new student academic achievement</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Add New Academic Achievement</h1>
+            <p className="text-ink-muted">Add a new student academic achievement</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -75,7 +75,7 @@ export default function NewAcademicAchievementPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Student Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -83,12 +83,12 @@ export default function NewAcademicAchievementPage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Result <span className="text-red-500">*</span>
               </label>
               <input
@@ -97,13 +97,13 @@ export default function NewAcademicAchievementPage() {
                 placeholder="e.g., 6A* 2A"
                 value={formData.result}
                 onChange={(e) => setFormData({ ...formData, result: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Year <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -112,19 +112,19 @@ export default function NewAcademicAchievementPage() {
                   placeholder="e.g., 2024"
                   value={formData.year}
                   onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Session <span className="text-red-500">*</span>
                 </label>
                 <select
                   required
                   value={formData.session}
                   onChange={(e) => setFormData({ ...formData, session: e.target.value as AcademicAchievementDocument['session'] })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 >
                   <option value="O Level">O Level</option>
                   <option value="AS Level">AS Level</option>

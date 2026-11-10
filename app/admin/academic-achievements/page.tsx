@@ -132,21 +132,21 @@ export default function AcademicAchievementsPage() {
       key: 'name',
       label: 'Name',
       render: (item) => (
-        <div className="font-medium text-gray-900">{item.name}</div>
+        <div className="font-medium text-ink">{item.name}</div>
       )
     },
     {
       key: 'result',
       label: 'Result',
       render: (item) => (
-        <span className="text-sm text-gray-900 font-semibold">{item.result}</span>
+        <span className="text-sm text-ink font-semibold">{item.result}</span>
       )
     },
     {
       key: 'year',
       label: 'Year',
       render: (item) => (
-        <span className="text-sm text-gray-600">{item.year}</span>
+        <span className="text-sm text-ink-muted">{item.year}</span>
       )
     },
     {
@@ -162,7 +162,7 @@ export default function AcademicAchievementsPage() {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -171,7 +171,7 @@ export default function AcademicAchievementsPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+        <span className="text-sm text-ink-subtle">{formatDate(item.createdAt)}</span>
       )
     }
   ]
@@ -181,8 +181,8 @@ export default function AcademicAchievementsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Academic Achievements</h1>
-            <p className="text-gray-600">Manage student academic achievements</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Academic Achievements</h1>
+            <p className="text-ink-muted">Manage student academic achievements</p>
           </div>
           <Link href="/admin/academic-achievements/new">
             <Button variant="primary" className="flex items-center gap-2">

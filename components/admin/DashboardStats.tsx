@@ -111,9 +111,9 @@ export default function DashboardStats() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="bg-white rounded-xl border border-gray-200 p-5 animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-3" />
-            <div className="h-7 bg-gray-200 rounded w-1/2" />
+          <div key={i} className="bg-paper rounded-xl border border-line p-5 animate-pulse">
+            <div className="h-4 bg-line rounded w-3/4 mb-3" />
+            <div className="h-7 bg-line rounded w-1/2" />
           </div>
         ))}
       </div>
@@ -127,20 +127,20 @@ export default function DashboardStats() {
         return (
           <div
             key={stat.title}
-            className={`${stat.bgColor} rounded-xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md transition-shadow`}
+            className={`${stat.bgColor} rounded-xl border border-line/80 p-5 shadow-sm hover:shadow-md transition-shadow`}
           >
             <div className="flex items-center justify-between mb-3">
               <div className={`p-2.5 rounded-lg bg-gradient-to-r ${stat.color} text-white shadow-sm`}>
                 <Icon size={20} />
               </div>
             </div>
-            <h3 className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
+            <h3 className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-1.5">
               {stat.title}
             </h3>
             <p className={`text-3xl font-bold bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
               {stat.value}
             </p>
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-ink-subtle">
               {stat.description}
             </p>
           </div>

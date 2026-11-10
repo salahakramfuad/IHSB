@@ -127,28 +127,28 @@ export default function FeaturedAlumniPage() {
       key: 'name',
       label: 'Name',
       render: (item) => (
-        <div className="font-medium text-gray-900">{item.name}</div>
+        <div className="font-medium text-ink">{item.name}</div>
       )
     },
     {
       key: 'description',
       label: 'Description',
       render: (item) => (
-        <span className="text-sm text-gray-600">{item.description}</span>
+        <span className="text-sm text-ink-muted">{item.description}</span>
       )
     },
     {
       key: 'company',
       label: 'Company',
       render: (item) => (
-        <span className="text-sm text-gray-600">{item.company || 'N/A'}</span>
+        <span className="text-sm text-ink-muted">{item.company || 'N/A'}</span>
       )
     },
     {
       key: 'graduationYear',
       label: 'Graduation Year',
       render: (item) => (
-        <span className="text-sm text-gray-600">{item.graduationYear}</span>
+        <span className="text-sm text-ink-muted">{item.graduationYear}</span>
       )
     },
     {
@@ -160,7 +160,7 @@ export default function FeaturedAlumniPage() {
             Yes
           </span>
         ) : (
-          <span className="text-xs text-gray-400">No</span>
+          <span className="text-xs text-ink-subtle">No</span>
         )
       )
     },
@@ -168,7 +168,7 @@ export default function FeaturedAlumniPage() {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -177,7 +177,7 @@ export default function FeaturedAlumniPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+        <span className="text-sm text-ink-subtle">{formatDate(item.createdAt)}</span>
       )
     }
   ]
@@ -187,8 +187,8 @@ export default function FeaturedAlumniPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Featured Alumni</h1>
-            <p className="text-gray-600">Manage featured alumni profiles</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Featured Alumni</h1>
+            <p className="text-ink-muted">Manage featured alumni profiles</p>
           </div>
           <Link href="/admin/alumni/featured/new">
             <Button variant="primary" className="flex items-center gap-2">

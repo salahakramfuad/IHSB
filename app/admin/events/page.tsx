@@ -140,9 +140,9 @@ export default function EventsPage() {
       label: 'Title',
       render: (item) => (
         <div className="max-w-xs">
-          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          <div className="font-medium text-ink truncate">{item.title}</div>
           {item.description && (
-            <div className="text-xs text-gray-500 truncate mt-1">{item.description}</div>
+            <div className="text-xs text-ink-subtle truncate mt-1">{item.description}</div>
           )}
         </div>
       )
@@ -152,15 +152,15 @@ export default function EventsPage() {
       label: 'Date',
       render: (item) => (
         <div>
-          <div className="text-sm text-gray-900">{formatDate(item.date)}</div>
-          {item.time && <div className="text-xs text-gray-500">{item.time}</div>}
+          <div className="text-sm text-ink">{formatDate(item.date)}</div>
+          {item.time && <div className="text-xs text-ink-subtle">{item.time}</div>}
         </div>
       )
     },
     {
       key: 'location',
       label: 'Location',
-      render: (item) => <span className="text-sm text-gray-600">{item.location || 'N/A'}</span>
+      render: (item) => <span className="text-sm text-ink-muted">{item.location || 'N/A'}</span>
     },
     {
       key: 'category',
@@ -180,7 +180,7 @@ export default function EventsPage() {
             Yes
           </span>
         ) : (
-          <span className="text-xs text-gray-400">No</span>
+          <span className="text-xs text-ink-subtle">No</span>
         )
       )
     },
@@ -188,7 +188,7 @@ export default function EventsPage() {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -197,7 +197,7 @@ export default function EventsPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+        <span className="text-sm text-ink-subtle">{formatDate(item.createdAt)}</span>
       )
     }
   ]
@@ -207,8 +207,8 @@ export default function EventsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Events</h1>
-            <p className="text-gray-600">Manage school events and activities</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Events</h1>
+            <p className="text-ink-muted">Manage school events and activities</p>
           </div>
           <Link href="/admin/events/new">
             <Button variant="primary" className="flex items-center gap-2">

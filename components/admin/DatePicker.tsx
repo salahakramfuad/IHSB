@@ -233,7 +233,7 @@ export default function DatePicker({
 
   return (
     <div className="space-y-2" ref={containerRef}>
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-sm font-medium text-ink-muted">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -242,16 +242,16 @@ export default function DatePicker({
         <div
           onClick={() => setIsOpen(!isOpen)}
           className={`
-            w-full px-4 py-2.5 border border-gray-300 rounded-lg
+            w-full px-4 py-2.5 border border-line-strong rounded-lg
             focus-within:ring-2 focus-within:ring-primary-green-500 focus-within:border-transparent
-            cursor-pointer bg-white text-left
+            cursor-pointer bg-paper text-left
             flex items-center justify-between
             hover:border-primary-green-400 transition-all duration-200
             shadow-sm hover:shadow-md
             ${isOpen ? 'ring-2 ring-primary-green-500 border-primary-green-500' : ''}
           `}
         >
-          <span className={value ? 'text-gray-900 font-medium' : 'text-gray-500'}>
+          <span className={value ? 'text-ink font-medium' : 'text-ink-subtle'}>
             {value ? formatDisplayDate(value) : `Select ${label.toLowerCase()}`}
           </span>
           <div className="flex items-center gap-2">
@@ -262,30 +262,30 @@ export default function DatePicker({
                   e.stopPropagation()
                   onChange('')
                 }}
-                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-1 hover:bg-sunken rounded-full transition-colors"
                 aria-label="Clear date"
               >
-                <X size={16} className="text-gray-400" />
+                <X size={16} className="text-ink-subtle" />
               </button>
             )}
-            <Calendar className="text-gray-400" size={20} />
+            <Calendar className="text-ink-subtle" size={20} />
           </div>
         </div>
 
         {isOpen && (
-          <div className="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden animate-[fadeIn_0.2s_ease-out,slideDown_0.2s_ease-out]">
+          <div className="absolute top-full left-0 mt-2 bg-paper border border-line rounded-xl shadow-2xl z-50 overflow-hidden animate-[fadeIn_0.2s_ease-out,slideDown_0.2s_ease-out]">
             {/* Calendar Header */}
-            <div className="bg-gradient-to-r from-primary-green-50 to-accent-blue-50 border-b border-gray-200 px-4 py-3">
+            <div className="bg-gradient-to-r from-primary-green-50 to-accent-blue-50 border-b border-line px-4 py-3">
               <div className="flex items-center justify-between mb-2">
                 <button
                   type="button"
                   onClick={goToPreviousMonth}
                   className="p-1.5 hover:bg-white/60 rounded-lg transition-colors"
                 >
-                  <ChevronLeft size={20} className="text-gray-700" />
+                  <ChevronLeft size={20} className="text-ink-muted" />
                 </button>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-ink">
                     {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
                   </h3>
                 </div>
@@ -294,7 +294,7 @@ export default function DatePicker({
                   onClick={goToNextMonth}
                   className="p-1.5 hover:bg-white/60 rounded-lg transition-colors"
                 >
-                  <ChevronRight size={20} className="text-gray-700" />
+                  <ChevronRight size={20} className="text-ink-muted" />
                 </button>
               </div>
               <button
@@ -313,7 +313,7 @@ export default function DatePicker({
                 {dayNames.map((day) => (
                   <div
                     key={day}
-                    className="text-xs font-semibold text-gray-500 text-center py-2"
+                    className="text-xs font-semibold text-ink-subtle text-center py-2"
                   >
                     {day}
                   </div>
@@ -342,12 +342,12 @@ export default function DatePicker({
                         aspect-square rounded-lg text-sm font-medium transition-all duration-150
                         flex items-center justify-center
                         ${disabled
-                          ? 'text-gray-300 cursor-not-allowed'
+                          ? 'text-line-strong cursor-not-allowed'
                           : isSelectedDay
                           ? 'bg-primary-green-600 text-white shadow-md scale-105'
                           : isTodayDay
                           ? 'bg-primary-green-50 text-primary-green-700 font-semibold ring-2 ring-primary-green-200'
-                          : 'text-gray-700 hover:bg-gray-100 hover:scale-105'
+                          : 'text-ink-muted hover:bg-sunken hover:scale-105'
                         }
                       `}
                     >
@@ -360,9 +360,9 @@ export default function DatePicker({
 
             {/* Time Picker for datetime-local */}
             {type === 'datetime-local' && (
-              <div className="border-t border-gray-200 px-4 py-3 bg-gray-50">
+              <div className="border-t border-line px-4 py-3 bg-sunken">
                 <div className="flex items-center gap-3">
-                  <label className="text-sm font-medium text-gray-700">Time:</label>
+                  <label className="text-sm font-medium text-ink-muted">Time:</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="number"
@@ -373,9 +373,9 @@ export default function DatePicker({
                         const hours = e.target.value.padStart(2, '0')
                         handleTimeChange(hours, getTimeValue().minutes)
                       }}
-                      className="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                      className="w-16 px-2 py-1.5 border border-line-strong rounded-lg text-center focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     />
-                    <span className="text-gray-500">:</span>
+                    <span className="text-ink-subtle">:</span>
                     <input
                       type="number"
                       min="0"
@@ -385,7 +385,7 @@ export default function DatePicker({
                         const minutes = e.target.value.padStart(2, '0')
                         handleTimeChange(getTimeValue().hours, minutes)
                       }}
-                      className="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-center focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                      className="w-16 px-2 py-1.5 border border-line-strong rounded-lg text-center focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -393,14 +393,14 @@ export default function DatePicker({
             )}
 
             {/* Footer Actions */}
-            <div className="border-t border-gray-200 px-4 py-3 bg-gray-50 flex justify-end gap-2">
+            <div className="border-t border-line px-4 py-3 bg-sunken flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => {
                   onChange('')
                   setIsOpen(false)
                 }}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                className="px-4 py-2 text-sm text-ink-muted hover:text-ink font-medium transition-colors"
               >
                 Clear
               </button>

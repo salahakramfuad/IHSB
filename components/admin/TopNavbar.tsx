@@ -39,7 +39,7 @@ export default function TopNavbar() {
   }, [showNotifications, user])
 
   return (
-    <nav className="bg-white border-b border-gray-200 shadow-sm fixed top-0 right-0 left-0 lg:left-64 z-40">
+    <nav className="bg-paper border-b border-line shadow-sm fixed top-0 right-0 left-0 lg:left-64 z-40">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-end h-16">
           {/* Right side */}
@@ -52,7 +52,7 @@ export default function TopNavbar() {
                   setShowUserMenu(false)
                   setShowNotifications((v) => !v)
                 }}
-                className="relative p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="relative p-2 text-ink-subtle hover:text-ink-muted hover:bg-sunken rounded-lg transition-colors"
                 aria-label="Notifications"
                 aria-expanded={showNotifications}
               >
@@ -68,16 +68,16 @@ export default function TopNavbar() {
                     aria-hidden
                     onClick={() => setShowNotifications(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-80 max-h-96 bg-white rounded-lg shadow-lg border border-gray-200 z-20 overflow-hidden flex flex-col">
-                    <div className="px-4 py-3 border-b border-gray-200 flex items-center gap-2">
+                  <div className="absolute right-0 mt-2 w-80 max-h-96 bg-paper rounded-lg shadow-lg border border-line z-20 overflow-hidden flex flex-col">
+                    <div className="px-4 py-3 border-b border-line flex items-center gap-2">
                       <Megaphone size={18} className="text-primary-green-600" />
-                      <span className="font-semibold text-gray-900">Notifications</span>
+                      <span className="font-semibold text-ink">Notifications</span>
                     </div>
                     <div className="overflow-y-auto max-h-64">
                       {notificationsLoading ? (
-                        <div className="px-4 py-6 text-center text-sm text-gray-500">Loading…</div>
+                        <div className="px-4 py-6 text-center text-sm text-ink-subtle">Loading…</div>
                       ) : notifications.length === 0 ? (
-                        <div className="px-4 py-6 text-center text-sm text-gray-500">No new notifications</div>
+                        <div className="px-4 py-6 text-center text-sm text-ink-subtle">No new notifications</div>
                       ) : (
                         <ul className="py-1">
                           {notifications.map((n) => (
@@ -85,13 +85,13 @@ export default function TopNavbar() {
                               <Link
                                 href={n.itemHref || '#'}
                                 onClick={() => setShowNotifications(false)}
-                                className="flex gap-3 px-4 py-2.5 hover:bg-gray-50 text-left"
+                                className="flex gap-3 px-4 py-2.5 hover:bg-sunken text-left"
                               >
-                                <Megaphone size={16} className="text-gray-400 shrink-0 mt-0.5" />
+                                <Megaphone size={16} className="text-ink-subtle shrink-0 mt-0.5" />
                                 <div className="min-w-0 flex-1">
-                                  <p className="text-sm font-medium text-gray-900 truncate">{n.title}</p>
+                                  <p className="text-sm font-medium text-ink truncate">{n.title}</p>
                                   {(n.description || n.createdByName || n.createdByEmail) && (
-                                    <p className="text-xs text-gray-500 truncate mt-0.5">
+                                    <p className="text-xs text-ink-subtle truncate mt-0.5">
                                       {n.description
                                         ? n.description
                                         : (n.createdByName || n.createdByEmail)
@@ -100,7 +100,7 @@ export default function TopNavbar() {
                                     </p>
                                   )}
                                 </div>
-                                <ExternalLink size={14} className="text-gray-400 shrink-0" />
+                                <ExternalLink size={14} className="text-ink-subtle shrink-0" />
                               </Link>
                             </li>
                           ))}
@@ -111,7 +111,7 @@ export default function TopNavbar() {
                       <Link
                         href="/admin"
                         onClick={() => setShowNotifications(false)}
-                        className="px-4 py-2.5 text-sm font-medium text-primary-green-600 hover:bg-gray-50 border-t border-gray-100"
+                        className="px-4 py-2.5 text-sm font-medium text-primary-green-600 hover:bg-sunken border-t border-line"
                       >
                         View dashboard
                       </Link>
@@ -122,7 +122,7 @@ export default function TopNavbar() {
             </div>
 
             {/* Settings */}
-            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+            <button className="p-2 text-ink-subtle hover:text-ink-muted hover:bg-sunken rounded-lg transition-colors">
               <Settings size={20} />
             </button>
 
@@ -130,18 +130,18 @@ export default function TopNavbar() {
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-sunken transition-colors"
               >
                 <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary-green-500 to-accent-blue-500 flex items-center justify-center">
                   <User size={18} className="text-white" />
                 </div>
                 <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-ink">
                     {user?.email?.split('@')[0] || 'Admin'}
                   </p>
-                  <p className="text-xs text-gray-500">Administrator</p>
+                  <p className="text-xs text-ink-subtle">Administrator</p>
                 </div>
-                <ChevronDown size={16} className="text-gray-400 hidden md:block" />
+                <ChevronDown size={16} className="text-ink-subtle hidden md:block" />
               </button>
 
               {showUserMenu && (
@@ -150,20 +150,20 @@ export default function TopNavbar() {
                     className="fixed inset-0 z-10"
                     onClick={() => setShowUserMenu(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
-                    <div className="px-4 py-2 border-b border-gray-200">
-                      <p className="text-sm font-medium text-gray-900">{user?.email}</p>
-                      <p className="text-xs text-gray-500 mt-1">Administrator</p>
+                  <div className="absolute right-0 mt-2 w-48 bg-paper rounded-lg shadow-lg border border-line py-1 z-20">
+                    <div className="px-4 py-2 border-b border-line">
+                      <p className="text-sm font-medium text-ink">{user?.email}</p>
+                      <p className="text-xs text-ink-subtle mt-1">Administrator</p>
                     </div>
                     <a
                       href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-sm text-ink-muted hover:bg-sunken"
                     >
                       Profile Settings
                     </a>
                     <a
                       href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-sm text-ink-muted hover:bg-sunken"
                     >
                       Preferences
                     </a>

@@ -88,7 +88,7 @@ export default function AnnouncementsPage() {
       case 'low':
         return 'bg-blue-100 text-blue-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-sunken text-ink'
     }
   }
 
@@ -148,9 +148,9 @@ export default function AnnouncementsPage() {
       label: 'Title',
       render: (item) => (
         <div className="max-w-xs">
-          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          <div className="font-medium text-ink truncate">{item.title}</div>
           {item.content && (
-            <div className="text-xs text-gray-500 truncate mt-1 line-clamp-2">{item.content}</div>
+            <div className="text-xs text-ink-subtle truncate mt-1 line-clamp-2">{item.content}</div>
           )}
         </div>
       )
@@ -173,7 +173,7 @@ export default function AnnouncementsPage() {
             Active
           </span>
         ) : (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-sunken text-ink">
             Inactive
           </span>
         )
@@ -188,7 +188,7 @@ export default function AnnouncementsPage() {
             Yes
           </span>
         ) : (
-          <span className="text-xs text-gray-400">No</span>
+          <span className="text-xs text-ink-subtle">No</span>
         )
       )
     },
@@ -196,7 +196,7 @@ export default function AnnouncementsPage() {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -205,7 +205,7 @@ export default function AnnouncementsPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+        <span className="text-sm text-ink-subtle">{formatDate(item.createdAt)}</span>
       )
     }
   ]
@@ -215,8 +215,8 @@ export default function AnnouncementsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Announcements</h1>
-            <p className="text-gray-600">Manage school announcements</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Announcements</h1>
+            <p className="text-ink-muted">Manage school announcements</p>
           </div>
           <Link href="/admin/announcements/new">
             <Button variant="primary" className="flex items-center gap-2">

@@ -86,7 +86,7 @@ export default function NewsPage() {
       case 'news':
         return 'bg-green-100 text-green-700'
       default:
-        return 'bg-gray-100 text-gray-700'
+        return 'bg-sunken text-ink-muted'
     }
   }
 
@@ -144,9 +144,9 @@ export default function NewsPage() {
       label: 'Title',
       render: (item) => (
         <div className="max-w-xs">
-          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          <div className="font-medium text-ink truncate">{item.title}</div>
           {item.description && (
-            <div className="text-xs text-gray-500 truncate mt-1 line-clamp-2">{item.description}</div>
+            <div className="text-xs text-ink-subtle truncate mt-1 line-clamp-2">{item.description}</div>
           )}
         </div>
       )
@@ -164,14 +164,14 @@ export default function NewsPage() {
       key: 'date',
       label: 'Date',
       render: (item) => (
-        <span className="text-sm text-gray-600">{formatDate(item.date)}</span>
+        <span className="text-sm text-ink-muted">{formatDate(item.date)}</span>
       )
     },
     {
       key: 'photos',
       label: 'Photos',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.photos && Array.isArray(item.photos) ? item.photos.length : 0} photo(s)
         </span>
       )
@@ -180,7 +180,7 @@ export default function NewsPage() {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -189,7 +189,7 @@ export default function NewsPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+        <span className="text-sm text-ink-subtle">{formatDate(item.createdAt)}</span>
       )
     }
   ]
@@ -199,8 +199,8 @@ export default function NewsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">News</h1>
-            <p className="text-gray-600">Manage news and highlights</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">News</h1>
+            <p className="text-ink-muted">Manage news and highlights</p>
           </div>
           <Link href="/admin/news/new">
             <Button variant="primary" className="flex items-center gap-2">

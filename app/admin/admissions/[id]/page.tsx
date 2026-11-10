@@ -81,12 +81,12 @@ export default function AdmissionDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-sunken">
         <Sidebar />
         <main className="lg:pl-64 p-6 lg:p-8">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading admission details...</p>
+            <p className="mt-4 text-ink-muted">Loading admission details...</p>
           </div>
         </main>
       </div>
@@ -95,11 +95,11 @@ export default function AdmissionDetailPage() {
 
   if (!admission) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-sunken">
         <Sidebar />
         <main className="lg:pl-64 p-6 lg:p-8">
           <div className="text-center py-12">
-            <p className="text-gray-600">Admission not found</p>
+            <p className="text-ink-muted">Admission not found</p>
           </div>
         </main>
       </div>
@@ -107,7 +107,7 @@ export default function AdmissionDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sunken">
       <Sidebar />
       
       <main className="lg:ml-64 p-6 lg:p-8">
@@ -116,25 +116,25 @@ export default function AdmissionDetailPage() {
             <Button variant="outline" onClick={() => router.back()} className="mb-4">
               ← Back to Admissions
             </Button>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-ink mb-2">
               Admission Application Details
             </h1>
-            <p className="text-gray-600">Application #{admission.applicationNumber}</p>
+            <p className="text-ink-muted">Application #{admission.applicationNumber}</p>
           </div>
 
           <div className="space-y-6">
             {/* Status Update Section */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Update Status</h2>
+            <div className="bg-paper rounded-lg border border-line p-6">
+              <h2 className="text-xl font-semibold text-ink mb-4">Update Status</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-muted mb-2">
                     Status
                   </label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                   >
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
@@ -142,14 +142,14 @@ export default function AdmissionDetailPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-ink-muted mb-2">
                     Notes
                   </label>
                   <textarea
                     rows={3}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     placeholder="Add any notes about this application..."
                   />
                 </div>
@@ -164,97 +164,97 @@ export default function AdmissionDetailPage() {
             </div>
 
             {/* Student Information */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Student Information</h2>
+            <div className="bg-paper rounded-lg border border-line p-6">
+              <h2 className="text-xl font-semibold text-ink mb-4">Student Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Student Name</label>
-                  <p className="text-gray-900">{admission.studentName}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Student Name</label>
+                  <p className="text-ink">{admission.studentName}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Surname</label>
-                  <p className="text-gray-900">{admission.surname}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Surname</label>
+                  <p className="text-ink">{admission.surname}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Date of Birth</label>
-                  <p className="text-gray-900">{admission.dateOfBirth}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Date of Birth</label>
+                  <p className="text-ink">{admission.dateOfBirth}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Gender</label>
-                  <p className="text-gray-900">{admission.gender}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Gender</label>
+                  <p className="text-ink">{admission.gender}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Nationality</label>
-                  <p className="text-gray-900">{admission.nationality}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Nationality</label>
+                  <p className="text-ink">{admission.nationality}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Class Applied For</label>
-                  <p className="text-gray-900">{admission.classAppliedFor}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Class Applied For</label>
+                  <p className="text-ink">{admission.classAppliedFor}</p>
                 </div>
               </div>
             </div>
 
             {/* Parent Information */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Parent Information</h2>
+            <div className="bg-paper rounded-lg border border-line p-6">
+              <h2 className="text-xl font-semibold text-ink mb-4">Parent Information</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Father's Name</label>
-                  <p className="text-gray-900">{admission.fatherName}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Father's Name</label>
+                  <p className="text-ink">{admission.fatherName}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Father's Contact</label>
-                  <p className="text-gray-900">{admission.fatherContact}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Father's Contact</label>
+                  <p className="text-ink">{admission.fatherContact}</p>
                 </div>
                 {admission.fatherEmail && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Father's Email</label>
-                    <p className="text-gray-900">{admission.fatherEmail}</p>
+                    <label className="text-sm font-medium text-ink-subtle">Father's Email</label>
+                    <p className="text-ink">{admission.fatherEmail}</p>
                   </div>
                 )}
                 {admission.motherName && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Mother's Name</label>
-                    <p className="text-gray-900">{admission.motherName}</p>
+                    <label className="text-sm font-medium text-ink-subtle">Mother's Name</label>
+                    <p className="text-ink">{admission.motherName}</p>
                   </div>
                 )}
                 {admission.motherContact && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Mother's Contact</label>
-                    <p className="text-gray-900">{admission.motherContact}</p>
+                    <label className="text-sm font-medium text-ink-subtle">Mother's Contact</label>
+                    <p className="text-ink">{admission.motherContact}</p>
                   </div>
                 )}
                 {admission.motherEmail && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Mother's Email</label>
-                    <p className="text-gray-900">{admission.motherEmail}</p>
+                    <label className="text-sm font-medium text-ink-subtle">Mother's Email</label>
+                    <p className="text-ink">{admission.motherEmail}</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Address Information */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Address Information</h2>
+            <div className="bg-paper rounded-lg border border-line p-6">
+              <h2 className="text-xl font-semibold text-ink mb-4">Address Information</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Present Address</label>
-                  <p className="text-gray-900">{admission.presentAddress}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Present Address</label>
+                  <p className="text-ink">{admission.presentAddress}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Permanent Address</label>
-                  <p className="text-gray-900">{admission.permanentAddress}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Permanent Address</label>
+                  <p className="text-ink">{admission.permanentAddress}</p>
                 </div>
               </div>
             </div>
 
             {/* Documents */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Documents</h2>
+            <div className="bg-paper rounded-lg border border-line p-6">
+              <h2 className="text-xl font-semibold text-ink mb-4">Documents</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 {admission.studentPhoto && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500 mb-2 block">Student Photo</label>
+                    <label className="text-sm font-medium text-ink-subtle mb-2 block">Student Photo</label>
                     <div className="relative h-32 w-full border rounded-lg overflow-hidden">
                       <Image src={admission.studentPhoto} alt="Student Photo" fill className="object-cover" />
                     </div>
@@ -262,7 +262,7 @@ export default function AdmissionDetailPage() {
                 )}
                 {admission.birthCertificateImage && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500 mb-2 block">Birth Certificate</label>
+                    <label className="text-sm font-medium text-ink-subtle mb-2 block">Birth Certificate</label>
                     <div className="relative h-32 w-full border rounded-lg overflow-hidden">
                       <Image src={admission.birthCertificateImage} alt="Birth Certificate" fill className="object-cover" />
                     </div>
@@ -270,7 +270,7 @@ export default function AdmissionDetailPage() {
                 )}
                 {admission.lastYearReportCardImage && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500 mb-2 block">Report Card</label>
+                    <label className="text-sm font-medium text-ink-subtle mb-2 block">Report Card</label>
                     <div className="relative h-32 w-full border rounded-lg overflow-hidden">
                       <Image src={admission.lastYearReportCardImage} alt="Report Card" fill className="object-cover" />
                     </div>
@@ -280,22 +280,22 @@ export default function AdmissionDetailPage() {
             </div>
 
             {/* Additional Information */}
-            <div className="bg-white rounded-lg border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Additional Information</h2>
+            <div className="bg-paper rounded-lg border border-line p-6">
+              <h2 className="text-xl font-semibold text-ink mb-4">Additional Information</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-500">On Medication</label>
-                  <p className="text-gray-900">{admission.onMedication ? 'Yes' : 'No'}</p>
+                  <label className="text-sm font-medium text-ink-subtle">On Medication</label>
+                  <p className="text-ink">{admission.onMedication ? 'Yes' : 'No'}</p>
                 </div>
                 {admission.onMedication && admission.medicationName && (
                   <div>
-                    <label className="text-sm font-medium text-gray-500">Medication Name</label>
-                    <p className="text-gray-900">{admission.medicationName}</p>
+                    <label className="text-sm font-medium text-ink-subtle">Medication Name</label>
+                    <p className="text-ink">{admission.medicationName}</p>
                   </div>
                 )}
                 <div>
-                  <label className="text-sm font-medium text-gray-500">Payment Reference</label>
-                  <p className="text-gray-900">{admission.paymentReference}</p>
+                  <label className="text-sm font-medium text-ink-subtle">Payment Reference</label>
+                  <p className="text-ink">{admission.paymentReference}</p>
                 </div>
               </div>
             </div>

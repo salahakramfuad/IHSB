@@ -99,14 +99,14 @@ export default function ImageUpload({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-sm font-medium text-ink-muted">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       {preview ? (
         <div className="relative inline-block">
-          <div className="relative w-48 h-48 border-2 border-gray-300 rounded-lg overflow-hidden">
+          <div className="relative w-48 h-48 border-2 border-line-strong rounded-lg overflow-hidden">
             <Image
               src={preview}
               alt="Preview"
@@ -130,7 +130,7 @@ export default function ImageUpload({
             transition-colors
             ${error
               ? 'border-red-300 bg-red-50'
-              : 'border-gray-300 hover:border-primary-green-500 hover:bg-primary-green-50'
+              : 'border-line-strong hover:border-primary-green-500 hover:bg-primary-green-50'
             }
             ${uploading ? 'opacity-50 cursor-not-allowed' : ''}
           `}
@@ -147,15 +147,15 @@ export default function ImageUpload({
           {uploading ? (
             <div className="flex flex-col items-center">
               <Loader2 className="animate-spin text-primary-green-600 mb-2" size={32} />
-              <p className="text-sm text-gray-600">Uploading...</p>
+              <p className="text-sm text-ink-muted">Uploading...</p>
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <Upload className="text-gray-400 mb-2" size={32} />
-              <p className="text-sm text-gray-600">
+              <Upload className="text-ink-subtle mb-2" size={32} />
+              <p className="text-sm text-ink-muted">
                 Click to upload or drag and drop
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-ink-subtle mt-1">
                 PNG, JPG, WebP up to {maxSizeMB}MB
               </p>
             </div>

@@ -61,17 +61,17 @@ export default function NewAlumniStoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sunken">
       <Sidebar />
       
       <main className="lg:pl-64 p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Alumni Story</h1>
-            <p className="text-gray-600">Add a new alumni story or testimonial</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Add New Alumni Story</h1>
+            <p className="text-ink-muted">Add a new alumni story or testimonial</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -79,7 +79,7 @@ export default function NewAlumniStoryPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -87,12 +87,12 @@ export default function NewAlumniStoryPage() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Excerpt <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -101,12 +101,12 @@ export default function NewAlumniStoryPage() {
                 value={formData.excerpt}
                 onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
                 placeholder="Short summary of the story..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Content <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -115,13 +115,13 @@ export default function NewAlumniStoryPage() {
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 placeholder="Full story content..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Author <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -129,12 +129,12 @@ export default function NewAlumniStoryPage() {
                   required
                   value={formData.author}
                   onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Author Role <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -143,7 +143,7 @@ export default function NewAlumniStoryPage() {
                   placeholder="e.g., Software Engineer"
                   value={formData.authorRole}
                   onChange={(e) => setFormData({ ...formData, authorRole: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -158,7 +158,7 @@ export default function NewAlumniStoryPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -167,7 +167,7 @@ export default function NewAlumniStoryPage() {
                 placeholder="e.g., March 2024"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
@@ -177,9 +177,9 @@ export default function NewAlumniStoryPage() {
                   type="checkbox"
                   checked={formData.published}
                   onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Published</span>
+                <span className="text-sm font-medium text-ink-muted">Published</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -187,9 +187,9 @@ export default function NewAlumniStoryPage() {
                   type="checkbox"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Featured</span>
+                <span className="text-sm font-medium text-ink-muted">Featured</span>
               </label>
             </div>
 

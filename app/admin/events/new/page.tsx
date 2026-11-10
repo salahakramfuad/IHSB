@@ -64,17 +64,17 @@ export default function NewEventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sunken">
       <Sidebar />
       
       <main className="lg:pl-64 p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Event</h1>
-            <p className="text-gray-600">Add a new event to the school calendar</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Create New Event</h1>
+            <p className="text-ink-muted">Add a new event to the school calendar</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -82,7 +82,7 @@ export default function NewEventPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -90,13 +90,13 @@ export default function NewEventPage() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-ink-muted">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <ImproveWithAIButton
@@ -106,7 +106,7 @@ export default function NewEventPage() {
                   className="shrink-0"
                 />
               </div>
-              <p className="text-xs text-gray-500 mb-1">
+              <p className="text-xs text-ink-subtle mb-1">
                 AI improves grammar and clarity only. Meaning stays the same. You can edit before saving.
               </p>
               <textarea
@@ -114,7 +114,7 @@ export default function NewEventPage() {
                 rows={4}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
@@ -130,7 +130,7 @@ export default function NewEventPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Time
                 </label>
                 <input
@@ -138,32 +138,32 @@ export default function NewEventPage() {
                   placeholder="e.g., 10:00 AM - 2:00 PM"
                   value={formData.time}
                   onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Location
               </label>
               <input
                 type="text"
                 value={formData.location}
                 onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Category <span className="text-red-500">*</span>
               </label>
               <select
                 required
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value as Event['category'] })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               >
                 <option value="academic">Academic</option>
                 <option value="sports">Sports</option>
@@ -187,9 +187,9 @@ export default function NewEventPage() {
                   type="checkbox"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Featured Event</span>
+                <span className="text-sm font-medium text-ink-muted">Featured Event</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -197,22 +197,22 @@ export default function NewEventPage() {
                   type="checkbox"
                   checked={formData.registrationRequired}
                   onChange={(e) => setFormData({ ...formData, registrationRequired: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Registration Required</span>
+                <span className="text-sm font-medium text-ink-muted">Registration Required</span>
               </label>
             </div>
 
             {formData.registrationRequired && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Registration URL
                 </label>
                 <input
                   type="url"
                   value={formData.registrationUrl}
                   onChange={(e) => setFormData({ ...formData, registrationUrl: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             )}

@@ -86,7 +86,7 @@ export default function AdminDashboard() {
             {/* Statistics Cards */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-900">Overview Statistics</h2>
+                <h2 className="text-xl font-semibold text-ink">Overview Statistics</h2>
               </div>
               <DashboardStats />
             </div>
@@ -94,10 +94,10 @@ export default function AdminDashboard() {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Quick Actions - Takes 2 columns */}
-              <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+              <div className="lg:col-span-2 bg-paper rounded-xl border border-line p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900">Quick Actions</h2>
-                  <span className="text-sm text-gray-500">Get started quickly</span>
+                  <h2 className="text-xl font-semibold text-ink">Quick Actions</h2>
+                  <span className="text-sm text-ink-subtle">Get started quickly</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {quickActions.map((action, index) => {
@@ -106,17 +106,17 @@ export default function AdminDashboard() {
                       <Link
                         key={index}
                         href={action.href}
-                        className="group relative overflow-hidden rounded-xl border-2 border-gray-200 hover:border-transparent hover:shadow-lg transition-all duration-300 bg-white"
+                        className="group relative overflow-hidden rounded-xl border-2 border-line hover:border-transparent hover:shadow-lg transition-all duration-300 bg-paper"
                       >
                         <div className={`absolute inset-0 bg-gradient-to-br ${action.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
                         <div className="relative p-6">
                           <div className={`${action.iconBg} group-hover:bg-white/20 w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-colors`}>
-                            <Icon className={`text-gray-700 group-hover:text-white transition-colors`} size={24} />
+                            <Icon className={`text-ink-muted group-hover:text-white transition-colors`} size={24} />
                           </div>
-                          <h3 className="text-lg font-semibold text-gray-900 group-hover:text-white transition-colors mb-1">
+                          <h3 className="text-lg font-semibold text-ink group-hover:text-white transition-colors mb-1">
                             {action.title}
                           </h3>
-                          <p className="text-sm text-gray-600 group-hover:text-white/90 transition-colors">
+                          <p className="text-sm text-ink-muted group-hover:text-white/90 transition-colors">
                             {action.description}
                           </p>
                           <div className="mt-4 flex items-center text-primary-green-600 group-hover:text-white transition-colors">
@@ -139,8 +139,8 @@ export default function AdminDashboard() {
             {/* Additional Info Section */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-gradient-to-br from-accent-blue-50 to-primary-green-50 rounded-xl border border-accent-blue-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Need Help?</h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <h3 className="text-lg font-semibold text-ink mb-2">Need Help?</h3>
+                <p className="text-sm text-ink-muted mb-4">
                   Check out our documentation or contact support for assistance with managing your school portal.
                 </p>
                 <Link
@@ -153,8 +153,8 @@ export default function AdminDashboard() {
               </div>
 
               <div className="bg-gradient-to-br from-accent-purple-50 to-accent-pink-50 rounded-xl border border-accent-purple-200 p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Tips & Tricks</h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <h3 className="text-lg font-semibold text-ink mb-2">Tips & Tricks</h3>
+                <p className="text-sm text-ink-muted mb-4">
                   Pro tip: Use the search bar in the top navigation to quickly find any content or section.
                 </p>
                 <button className="inline-flex items-center text-sm font-medium text-accent-purple-600 hover:text-accent-purple-700">

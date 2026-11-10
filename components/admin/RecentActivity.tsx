@@ -70,15 +70,15 @@ export default function RecentActivity() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+      <div className="bg-paper rounded-xl border border-line p-6">
+        <h3 className="text-lg font-semibold text-ink mb-4">Recent Activity</h3>
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center gap-3 animate-pulse">
-              <div className="h-10 w-10 bg-gray-200 rounded-lg"></div>
+              <div className="h-10 w-10 bg-line rounded-lg"></div>
               <div className="flex-1">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+                <div className="h-4 bg-line rounded w-3/4 mb-2"></div>
+                <div className="h-3 bg-line rounded w-1/2"></div>
               </div>
             </div>
           ))}
@@ -88,9 +88,9 @@ export default function RecentActivity() {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+    <div className="bg-paper rounded-xl border border-line p-6 shadow-sm">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+        <h3 className="text-lg font-semibold text-ink">Recent Activity</h3>
         <Link
           href="/admin"
           className="text-sm text-primary-green-600 hover:text-primary-green-700 font-medium"
@@ -101,7 +101,7 @@ export default function RecentActivity() {
       
       <div className="space-y-4">
         {activities.length === 0 ? (
-          <p className="text-sm text-gray-500 text-center py-4">No recent activity</p>
+          <p className="text-sm text-ink-subtle text-center py-4">No recent activity</p>
         ) : (
           activities.map((activity) => {
             const config = typeConfig[activity.type]
@@ -111,19 +111,19 @@ export default function RecentActivity() {
               <Link
                 key={activity.id}
                 href={activity.href}
-                className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                className="flex items-start gap-3 p-3 rounded-lg hover:bg-sunken transition-colors group"
               >
                 <div className={`${config.bg} p-2 rounded-lg`}>
                   <Icon className={config.color} size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 group-hover:text-primary-green-600 transition-colors">
+                  <p className="text-sm font-medium text-ink group-hover:text-primary-green-600 transition-colors">
                     {activity.title}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-gray-500">{activity.action}</span>
-                    <span className="text-gray-300">•</span>
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <span className="text-xs text-ink-subtle">{activity.action}</span>
+                    <span className="text-line-strong">•</span>
+                    <div className="flex items-center gap-1 text-xs text-ink-subtle">
                       <Clock size={12} />
                       <span>{activity.time}</span>
                     </div>

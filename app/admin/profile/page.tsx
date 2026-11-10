@@ -36,25 +36,25 @@ export default function AdminProfilePage() {
     <main className="p-6 lg:p-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+          <h1 className="text-3xl md:text-4xl font-bold text-ink flex items-center gap-3">
             <UserCircle2 className="text-primary-green-600" />
             My Profile
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-ink-muted">
             Update your profile information and password.
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div className="bg-paper rounded-2xl border border-line shadow-sm p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-14 h-14 rounded-full bg-primary-green-100 flex items-center justify-center">
               <UserCircle2 className="text-primary-green-700" size={32} />
             </div>
             <div>
-              <div className="flex items-center gap-2 text-gray-900 font-semibold">
+              <div className="flex items-center gap-2 text-ink font-semibold">
                 {user?.email?.split('@')[0] || 'Admin'}
               </div>
-              <div className="flex items-center gap-2 text-gray-500 text-sm">
+              <div className="flex items-center gap-2 text-ink-subtle text-sm">
                 <Mail size={16} />
                 <span>{user?.email}</span>
               </div>
@@ -63,36 +63,36 @@ export default function AdminProfilePage() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-ink-muted">
                 Display name
               </label>
               <input
                 type="text"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500"
+                className="w-full rounded-lg border border-line-strong px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-primary-green-500"
                 placeholder="Your name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-ink-muted">
                 New password
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2.5 text-gray-400">
+                <span className="absolute left-3 top-2.5 text-ink-subtle">
                   <Lock size={16} />
                 </span>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 pl-9 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500"
+                  className="w-full rounded-lg border border-line-strong pl-9 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-primary-green-500"
                   placeholder="Leave blank to keep current password"
                   minLength={6}
                 />
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-ink-subtle">
                 Password must be at least 6 characters.
               </p>
             </div>

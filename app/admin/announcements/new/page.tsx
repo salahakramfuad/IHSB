@@ -63,11 +63,11 @@ export default function NewAnnouncementPage() {
     <div className="p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Announcement</h1>
-            <p className="text-gray-600">Add a new announcement to the website</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Create New Announcement</h1>
+            <p className="text-ink-muted">Add a new announcement to the website</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -75,7 +75,7 @@ export default function NewAnnouncementPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -83,13 +83,13 @@ export default function NewAnnouncementPage() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
               <div className="flex items-center justify-between gap-2 mb-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-ink-muted">
                   Content <span className="text-red-500">*</span>
                 </label>
                 <ImproveWithAIButton
@@ -99,7 +99,7 @@ export default function NewAnnouncementPage() {
                   className="shrink-0"
                 />
               </div>
-              <p className="text-xs text-gray-500 mb-1">
+              <p className="text-xs text-ink-subtle mb-1">
                 AI improves grammar and clarity only. Meaning stays the same. You can edit before saving.
               </p>
               <textarea
@@ -107,19 +107,19 @@ export default function NewAnnouncementPage() {
                 rows={6}
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Priority <span className="text-red-500">*</span>
               </label>
               <select
                 required
                 value={formData.priority}
                 onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -141,9 +141,9 @@ export default function NewAnnouncementPage() {
                   type="checkbox"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Featured Announcement</span>
+                <span className="text-sm font-medium text-ink-muted">Featured Announcement</span>
               </label>
 
               <label className="flex items-center gap-2">
@@ -151,9 +151,9 @@ export default function NewAnnouncementPage() {
                   type="checkbox"
                   checked={formData.isActive}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Active</span>
+                <span className="text-sm font-medium text-ink-muted">Active</span>
               </label>
             </div>
 

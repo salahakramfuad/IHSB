@@ -115,10 +115,10 @@ export default function MultiImageUpload({
 
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-ink-muted mb-2">
         {label} {required && <span className="text-red-500">*</span>}
         {value.length > 0 && (
-          <span className="ml-2 text-gray-500 text-xs">({value.length}/{maxImages})</span>
+          <span className="ml-2 text-ink-subtle text-xs">({value.length}/{maxImages})</span>
         )}
       </label>
 
@@ -127,7 +127,7 @@ export default function MultiImageUpload({
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
           {value.map((url, index) => (
             <div key={index} className="relative group">
-              <div className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 border-2 border-gray-200">
+              <div className="relative aspect-square rounded-lg overflow-hidden bg-sunken border-2 border-line">
                 <Image
                   src={url}
                   alt={`Upload ${index + 1}`}
@@ -168,7 +168,7 @@ export default function MultiImageUpload({
           className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
             uploading
               ? 'border-primary-green-400 bg-primary-green-50'
-              : 'border-gray-300 hover:border-primary-green-400 hover:bg-gray-50'
+              : 'border-line-strong hover:border-primary-green-400 hover:bg-sunken'
           }`}
         >
           <input
@@ -184,17 +184,17 @@ export default function MultiImageUpload({
           {uploading ? (
             <div className="flex flex-col items-center">
               <Loader2 className="w-8 h-8 text-primary-green-600 animate-spin mb-2" />
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-ink-muted">
                 Uploading {uploadingIndex !== null ? `${uploadingIndex + 1}` : ''}...
               </p>
             </div>
           ) : (
             <div className="flex flex-col items-center">
-              <Upload className="w-8 h-8 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-600 mb-1">
+              <Upload className="w-8 h-8 text-ink-subtle mb-2" />
+              <p className="text-sm text-ink-muted mb-1">
                 Click to upload images
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-ink-subtle">
                 JPEG, PNG, WebP (max {maxSizeMB}MB each)
               </p>
             </div>

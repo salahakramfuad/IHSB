@@ -71,7 +71,7 @@ export default function Sidebar() {
           w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 text-left
           ${isActive
             ? 'bg-primary-green-600 text-white shadow-lg shadow-primary-green-500/50'
-            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+            : 'text-ink-muted hover:bg-white/10 hover:text-white'
           }
         `}
       >
@@ -96,7 +96,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-800 border-r border-gray-700 z-30 shadow-xl
+          on-dark fixed top-0 left-0 h-full w-64 bg-brand-950 border-r border-line z-30 shadow-xl
           transform transition-transform duration-300 ease-in-out
           ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:translate-x-0
@@ -104,11 +104,11 @@ export default function Sidebar() {
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-6 border-b border-gray-700">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary-green-400 to-accent-blue-400 bg-clip-text text-transparent">
+          <div className="p-6 border-b border-line">
+            <h1 className="text-2xl font-display font-semibold text-gold">
               IHSB Admin
             </h1>
-            <p className="text-sm text-gray-400 mt-1">Management Portal</p>
+            <p className="text-sm text-ink-subtle mt-1">Management Portal</p>
           </div>
 
           {/* Navigation */}
@@ -116,7 +116,7 @@ export default function Sidebar() {
             {menuItems.map((item) => renderNavLink(item.href, item.label, item.icon))}
 
             {/* Divider */}
-            <div className="mt-4 mb-2 border-t border-gray-700 pt-3 text-xs font-semibold uppercase tracking-wide text-gray-500">
+            <div className="mt-4 mb-2 border-t border-line pt-3 text-xs font-semibold uppercase tracking-wide text-ink-subtle">
               Account
             </div>
 
@@ -124,7 +124,7 @@ export default function Sidebar() {
 
             {isSuperAdmin && (
               <>
-                <div className="mt-4 mb-2 border-t border-gray-700 pt-3 text-xs font-semibold uppercase tracking-wide text-amber-400">
+                <div className="mt-4 mb-2 border-t border-line pt-3 text-xs font-semibold uppercase tracking-wide text-gold">
                   Super Admin
                 </div>
                 {renderNavLink('/admin/admins', 'Manage Admins', Shield)}
@@ -133,7 +133,7 @@ export default function Sidebar() {
           </nav>
 
           {/* Logout */}
-          <div className="p-4 border-t border-gray-700">
+          <div className="p-4 border-t border-line">
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-4 py-3 w-full rounded-lg text-red-400 hover:bg-red-900/30 hover:text-red-300 transition-all"

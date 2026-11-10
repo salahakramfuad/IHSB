@@ -109,26 +109,26 @@ export default function AdminManagementPage() {
       <div className="max-w-5xl mx-auto space-y-6">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-ink flex items-center gap-3">
               <ShieldCheck className="text-primary-green-600" />
               Manage Admins
             </h1>
-            <p className="mt-2 text-gray-600">
+            <p className="mt-2 text-ink-muted">
               View and manage administrator accounts. Only superadmins can add or modify admins.
             </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-6">
+        <div className="bg-paper rounded-2xl border border-line shadow-sm p-6 space-y-6">
           {/* Create admin form */}
-          <section className="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50/60">
+          <section className="border border-dashed border-line rounded-xl p-4 bg-sunken/60">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-9 h-9 rounded-full bg-primary-green-100 flex items-center justify-center">
                 <UserPlus className="text-primary-green-700" size={18} />
               </div>
               <div>
-                <h2 className="text-sm font-semibold text-gray-900">Add new admin</h2>
-                <p className="text-xs text-gray-500">
+                <h2 className="text-sm font-semibold text-ink">Add new admin</h2>
+                <p className="text-xs text-ink-subtle">
                   Create a new admin account with email, password, and optional display name.
                 </p>
               </div>
@@ -141,45 +141,45 @@ export default function AdminManagementPage() {
                 </div>
               )}
               <div className="space-y-1 md:col-span-2">
-                <label className="text-xs font-medium text-gray-700">Email *</label>
+                <label className="text-xs font-medium text-ink-muted">Email *</label>
                 <input
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   required
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500"
+                  className="w-full rounded-lg border border-line-strong px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-primary-green-500"
                   placeholder="admin@ihsb.edu.bd"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-medium text-gray-700">Password *</label>
+                <label className="text-xs font-medium text-ink-muted">Password *</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   minLength={8}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500"
+                  className="w-full rounded-lg border border-line-strong px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-primary-green-500"
                   placeholder="Min 8 characters"
                 />
-                <p className="text-xs text-gray-500">Must be at least 8 characters</p>
+                <p className="text-xs text-ink-subtle">Must be at least 8 characters</p>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-medium text-gray-700">Display name (optional)</label>
+                <label className="text-xs font-medium text-ink-muted">Display name (optional)</label>
                 <input
                   type="text"
                   value={newDisplayName}
                   onChange={(e) => setNewDisplayName(e.target.value)}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500"
+                  className="w-full rounded-lg border border-line-strong px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-primary-green-500"
                   placeholder="Name"
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-medium text-gray-700">Role</label>
+                <label className="text-xs font-medium text-ink-muted">Role</label>
                 <select
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value as 'admin' | 'superadmin')}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500 bg-white"
+                  className="w-full rounded-lg border border-line-strong px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-primary-green-500 bg-paper"
                 >
                   <option value="admin">Admin</option>
                   <option value="superadmin">Super Admin</option>
@@ -204,19 +204,19 @@ export default function AdminManagementPage() {
           </section>
 
           {/* All Admins list */}
-          <section className="border-t border-gray-200 pt-6">
+          <section className="border-t border-line pt-6">
             <div className="flex items-center justify-between gap-4 mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <h2 className="text-lg font-semibold text-ink flex items-center gap-2">
                 <Users className="text-primary-green-600" size={22} />
                 All Admins
               </h2>
               {!loading && admins.length > 0 && (
-                <span className="text-sm text-gray-500">{admins.length} admin{admins.length !== 1 ? 's' : ''}</span>
+                <span className="text-sm text-ink-subtle">{admins.length} admin{admins.length !== 1 ? 's' : ''}</span>
               )}
             </div>
 
             {loading && (
-              <p className="text-gray-600 text-sm py-4">Loading admin list…</p>
+              <p className="text-ink-muted text-sm py-4">Loading admin list…</p>
             )}
             {error && (
               <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-4">
@@ -225,35 +225,35 @@ export default function AdminManagementPage() {
             )}
 
             {!loading && !error && admins.length === 0 && (
-              <p className="text-gray-600 text-sm py-6">
+              <p className="text-ink-muted text-sm py-6">
                 No admins yet. Use the form above to add your first admin. Superadmins (from env) and anyone you add here will appear in this list.
               </p>
             )}
 
             {!loading && admins.length > 0 && (
-              <div className="overflow-x-auto rounded-xl border border-gray-200">
+              <div className="overflow-x-auto rounded-xl border border-line">
                 <table className="min-w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-50 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                      <th className="px-4 py-3 border-b border-gray-200">Admin</th>
-                      <th className="px-4 py-3 border-b border-gray-200">Role</th>
-                      <th className="px-4 py-3 border-b border-gray-200">Status</th>
-                      <th className="px-4 py-3 border-b border-gray-200">Added</th>
+                    <tr className="bg-sunken text-left text-xs font-semibold text-ink-subtle uppercase tracking-wide">
+                      <th className="px-4 py-3 border-b border-line">Admin</th>
+                      <th className="px-4 py-3 border-b border-line">Role</th>
+                      <th className="px-4 py-3 border-b border-line">Status</th>
+                      <th className="px-4 py-3 border-b border-line">Added</th>
                     </tr>
                   </thead>
                   <tbody>
                     {admins.map((admin) => (
-                      <tr key={admin.id} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50/60 text-sm">
+                      <tr key={admin.id} className="border-b border-line last:border-b-0 hover:bg-sunken/60 text-sm">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-full bg-primary-green-100 flex items-center justify-center shrink-0">
                               <UserCog className="text-primary-green-700" size={18} />
                             </div>
                             <div>
-                              <div className="font-medium text-gray-900">
+                              <div className="font-medium text-ink">
                                 {admin.displayName || admin.email}
                               </div>
-                              <div className="text-xs text-gray-500">{admin.email}</div>
+                              <div className="text-xs text-ink-subtle">{admin.email}</div>
                               {isOwnAccount(admin.email) && (
                                 <div className="text-xs text-primary-green-700 font-medium mt-0.5">
                                   This is you
@@ -279,14 +279,14 @@ export default function AdminManagementPage() {
                             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${
                               admin.active !== false
                                 ? 'bg-green-100 text-green-800'
-                                : 'bg-gray-100 text-gray-600'
+                                : 'bg-sunken text-ink-muted'
                             }`}
                           >
                             <span className="h-1.5 w-1.5 rounded-full bg-current" />
                             {admin.active !== false ? 'Active' : 'Inactive'}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-xs text-gray-500">
+                        <td className="px-4 py-3 text-xs text-ink-subtle">
                           {admin.createdAt ? new Date(admin.createdAt).toLocaleDateString() : '—'}
                         </td>
                       </tr>

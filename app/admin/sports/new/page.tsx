@@ -69,17 +69,17 @@ export default function NewSportsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sunken">
       <Sidebar />
       
       <main className="lg:pl-64 p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Add Sports Achievement</h1>
-            <p className="text-gray-600">Add a new sports achievement or event</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Add Sports Achievement</h1>
+            <p className="text-ink-muted">Add a new sports achievement or event</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -87,7 +87,7 @@ export default function NewSportsPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Title <span className="text-red-500">*</span>
               </label>
               <input
@@ -95,20 +95,20 @@ export default function NewSportsPage() {
                 required
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Sport <span className="text-red-500">*</span>
                 </label>
                 <select
                   required
                   value={formData.sport}
                   onChange={(e) => setFormData({ ...formData, sport: e.target.value as Sport })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 >
                   <option value="Football">Football</option>
                   <option value="Basketball">Basketball</option>
@@ -119,14 +119,14 @@ export default function NewSportsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Placement <span className="text-red-500">*</span>
                 </label>
                 <select
                   required
                   value={formData.placement}
                   onChange={(e) => setFormData({ ...formData, placement: e.target.value as Placement })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 >
                   <option value="Champion">Champion</option>
                   <option value="Runner-up">Runner-up</option>
@@ -137,7 +137,7 @@ export default function NewSportsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Description <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -145,19 +145,19 @@ export default function NewSportsPage() {
                 rows={3}
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Long Description
               </label>
               <textarea
                 rows={4}
                 value={formData.longDescription}
                 onChange={(e) => setFormData({ ...formData, longDescription: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
@@ -173,20 +173,20 @@ export default function NewSportsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Location
                 </label>
                 <input
                   type="text"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Slug (auto-generated from title if empty)
               </label>
               <input
@@ -194,7 +194,7 @@ export default function NewSportsPage() {
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                 placeholder="auto-generated"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 

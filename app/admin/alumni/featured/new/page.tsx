@@ -62,17 +62,17 @@ export default function NewFeaturedAlumniPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-sunken">
       <Sidebar />
       
       <main className="lg:pl-64 p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Featured Alumni</h1>
-            <p className="text-gray-600">Add a new featured alumni profile</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Add New Featured Alumni</h1>
+            <p className="text-ink-muted">Add a new featured alumni profile</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <form onSubmit={handleSubmit} className="bg-paper rounded-lg border border-line p-6 space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                 {error}
@@ -80,7 +80,7 @@ export default function NewFeaturedAlumniPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -88,12 +88,12 @@ export default function NewFeaturedAlumniPage() {
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-ink-muted mb-2">
                 Description (Job Title/Role) <span className="text-red-500">*</span>
               </label>
               <input
@@ -102,13 +102,13 @@ export default function NewFeaturedAlumniPage() {
                 placeholder="e.g., CEO at TechCorp"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
               />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Achievement <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -117,12 +117,12 @@ export default function NewFeaturedAlumniPage() {
                   placeholder="e.g., Graduated 2015"
                   value={formData.achievement}
                   onChange={(e) => setFormData({ ...formData, achievement: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Graduation Year <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -131,7 +131,7 @@ export default function NewFeaturedAlumniPage() {
                   placeholder="e.g., 2015"
                   value={formData.graduationYear}
                   onChange={(e) => setFormData({ ...formData, graduationYear: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -147,19 +147,19 @@ export default function NewFeaturedAlumniPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Email (Optional)
                 </label>
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   LinkedIn URL (Optional)
                 </label>
                 <input
@@ -167,33 +167,33 @@ export default function NewFeaturedAlumniPage() {
                   placeholder="https://linkedin.com/in/..."
                   value={formData.linkedin}
                   onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Company (Optional)
                 </label>
                 <input
                   type="text"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-ink-muted mb-2">
                   Location (Optional)
                 </label>
                 <input
                   type="text"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -204,9 +204,9 @@ export default function NewFeaturedAlumniPage() {
                   type="checkbox"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                  className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                 />
-                <span className="text-sm font-medium text-gray-700">Featured Alumni</span>
+                <span className="text-sm font-medium text-ink-muted">Featured Alumni</span>
               </label>
             </div>
 

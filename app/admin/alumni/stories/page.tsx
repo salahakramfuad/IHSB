@@ -123,9 +123,9 @@ export default function AlumniStoriesPage() {
       label: 'Title',
       render: (item) => (
         <div className="max-w-xs">
-          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          <div className="font-medium text-ink truncate">{item.title}</div>
           {item.excerpt && (
-            <div className="text-xs text-gray-500 truncate mt-1 line-clamp-2">{item.excerpt}</div>
+            <div className="text-xs text-ink-subtle truncate mt-1 line-clamp-2">{item.excerpt}</div>
           )}
         </div>
       )
@@ -135,9 +135,9 @@ export default function AlumniStoriesPage() {
       label: 'Author',
       render: (item) => (
         <div>
-          <div className="text-sm font-medium text-gray-900">{item.author}</div>
+          <div className="text-sm font-medium text-ink">{item.author}</div>
           {item.authorRole && (
-            <div className="text-xs text-gray-500">{item.authorRole}</div>
+            <div className="text-xs text-ink-subtle">{item.authorRole}</div>
           )}
         </div>
       )
@@ -146,7 +146,7 @@ export default function AlumniStoriesPage() {
       key: 'date',
       label: 'Date',
       render: (item) => (
-        <span className="text-sm text-gray-600">{formatDate(item.date)}</span>
+        <span className="text-sm text-ink-muted">{formatDate(item.date)}</span>
       )
     },
     {
@@ -158,7 +158,7 @@ export default function AlumniStoriesPage() {
             Yes
           </span>
         ) : (
-          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-sunken text-ink">
             No
           </span>
         )
@@ -173,7 +173,7 @@ export default function AlumniStoriesPage() {
             Yes
           </span>
         ) : (
-          <span className="text-xs text-gray-400">No</span>
+          <span className="text-xs text-ink-subtle">No</span>
         )
       )
     },
@@ -181,7 +181,7 @@ export default function AlumniStoriesPage() {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -190,7 +190,7 @@ export default function AlumniStoriesPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">{formatDate(item.createdAt)}</span>
+        <span className="text-sm text-ink-subtle">{formatDate(item.createdAt)}</span>
       )
     }
   ]
@@ -200,8 +200,8 @@ export default function AlumniStoriesPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Alumni Stories</h1>
-            <p className="text-gray-600">Manage alumni stories and testimonials</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Alumni Stories</h1>
+            <p className="text-ink-muted">Manage alumni stories and testimonials</p>
           </div>
           <Link href="/admin/alumni/stories/new">
             <Button variant="primary" className="flex items-center gap-2">

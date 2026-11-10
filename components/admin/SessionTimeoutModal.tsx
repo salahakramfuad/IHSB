@@ -20,7 +20,7 @@ export default function SessionTimeoutModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 p-6 animate-in fade-in zoom-in">
+      <div className="bg-paper rounded-lg shadow-2xl max-w-md w-full mx-4 p-6 animate-in fade-in zoom-in">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
             <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
@@ -28,16 +28,16 @@ export default function SessionTimeoutModal({
             </div>
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-ink mb-2">
               Session Timeout Warning
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-ink-muted mb-4">
               Your session will expire due to inactivity in{' '}
               <span className="font-semibold text-primary-600">
                 {minutes}:{seconds.toString().padStart(2, '0')}
               </span>
             </p>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="text-sm text-ink-subtle mb-6">
               Click "Stay Logged In" to continue your session, or you will be automatically logged out.
             </p>
             <div className="flex gap-3">

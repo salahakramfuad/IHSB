@@ -151,13 +151,13 @@ export default function EditModal<T extends Record<string, any>>({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-paper rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+        <div className="sticky top-0 bg-paper border-b border-line px-6 py-4 flex items-center justify-between z-10">
+          <h2 className="text-2xl font-bold text-ink">{title}</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-sunken rounded-lg transition-colors"
             aria-label="Close"
           >
             <X size={24} />
@@ -186,7 +186,7 @@ export default function EditModal<T extends Record<string, any>>({
                 >
                 {field.type === 'textarea' ? (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-muted mb-2">
                       {field.label}
                       {field.required && <span className="text-red-500 ml-1">*</span>}
                     </label>
@@ -196,12 +196,12 @@ export default function EditModal<T extends Record<string, any>>({
                       value={(formData[field.key] as string) || ''}
                       onChange={(e) => handleFieldChange(field.key, e.target.value)}
                       placeholder={field.placeholder}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     />
                   </div>
                 ) : field.type === 'select' ? (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-muted mb-2">
                       {field.label}
                       {field.required && <span className="text-red-500 ml-1">*</span>}
                     </label>
@@ -209,7 +209,7 @@ export default function EditModal<T extends Record<string, any>>({
                       required={field.required}
                       value={(formData[field.key] as string) || ''}
                       onChange={(e) => handleFieldChange(field.key, e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     >
                       <option value="">Select {field.label}</option>
                       {field.options?.map((option) => (
@@ -233,9 +233,9 @@ export default function EditModal<T extends Record<string, any>>({
                       type="checkbox"
                       checked={(formData[field.key] as boolean) || false}
                       onChange={(e) => handleFieldChange(field.key, e.target.checked)}
-                      className="rounded border-gray-300 text-primary-green-600 focus:ring-primary-green-500"
+                      className="rounded border-line-strong text-primary-green-600 focus:ring-gold-500"
                     />
-                    <span className="text-sm font-medium text-gray-700">
+                    <span className="text-sm font-medium text-ink-muted">
                       {field.label}
                       {field.required && <span className="text-red-500 ml-1">*</span>}
                     </span>
@@ -256,7 +256,7 @@ export default function EditModal<T extends Record<string, any>>({
                   />
                 ) : (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-ink-muted mb-2">
                       {field.label}
                       {field.required && <span className="text-red-500 ml-1">*</span>}
                     </label>
@@ -266,7 +266,7 @@ export default function EditModal<T extends Record<string, any>>({
                       value={(formData[field.key] as string) || ''}
                       onChange={(e) => handleFieldChange(field.key, e.target.value)}
                       placeholder={field.placeholder}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                     />
                   </div>
                 )}
@@ -276,7 +276,7 @@ export default function EditModal<T extends Record<string, any>>({
           </div>
 
           {/* Actions */}
-          <div className="flex gap-4 pt-4 border-t border-gray-200">
+          <div className="flex gap-4 pt-4 border-t border-line">
             <Button
               type="submit"
               variant="primary"

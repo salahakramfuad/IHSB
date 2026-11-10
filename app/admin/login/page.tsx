@@ -78,7 +78,7 @@ function LoginForm() {
       {/* Close Button */}
       <Link
         href="/"
-        className="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors z-10"
+        className="absolute top-4 right-4 p-2 text-ink-subtle hover:text-ink-muted hover:bg-sunken rounded-lg transition-colors z-10"
         aria-label="Close and return to homepage"
       >
         <X size={24} />
@@ -88,17 +88,17 @@ function LoginForm() {
         {authLoading ? (
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-green-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading...</p>
+            <p className="mt-4 text-ink-muted">Loading...</p>
           </div>
         ) : (
           <Card className="border-2 border-primary-green-200 relative">
             <div className="h-2 bg-gradient-to-r from-primary-green-500 to-accent-blue-500 rounded-t-xl -mx-6 -mt-6 mb-6"></div>
             
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-ink mb-2">
                 Admin Login
               </h1>
-              <p className="text-gray-600">
+              <p className="text-ink-muted">
                 Sign in to access the dashboard
               </p>
             </div>
@@ -120,7 +120,7 @@ function LoginForm() {
               )}
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="email" className="block text-sm font-medium text-ink-muted mb-2">
                   Email Address
                 </label>
                 <input
@@ -129,13 +129,13 @@ function LoginForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                   placeholder="admin@ihsb.edu.bd"
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-ink-muted mb-2">
                   Password
                 </label>
                 <input
@@ -144,7 +144,7 @@ function LoginForm() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-green-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-line-strong rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent"
                   placeholder="Enter your password"
                 />
               </div>
@@ -160,7 +160,7 @@ function LoginForm() {
               </Button>
             </form>
 
-            <div className="mt-6 text-center text-sm text-gray-600">
+            <div className="mt-6 text-center text-sm text-ink-muted">
               <p>International Hope School Bangladesh</p>
             </div>
           </Card>
@@ -176,7 +176,7 @@ export default function LoginPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-ink-muted">Loading...</p>
         </div>
       </div>
     }>

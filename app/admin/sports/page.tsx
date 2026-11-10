@@ -137,9 +137,9 @@ export default function SportsPage() {
       label: 'Title',
       render: (item) => (
         <div className="max-w-xs">
-          <div className="font-medium text-gray-900 truncate">{item.title}</div>
+          <div className="font-medium text-ink truncate">{item.title}</div>
           {item.description && (
-            <div className="text-xs text-gray-500 truncate mt-1 line-clamp-2">{item.description}</div>
+            <div className="text-xs text-ink-subtle truncate mt-1 line-clamp-2">{item.description}</div>
           )}
         </div>
       )
@@ -166,21 +166,21 @@ export default function SportsPage() {
       key: 'date',
       label: 'Date',
       render: (item) => (
-        <span className="text-sm text-gray-600">{formatDate(item.date)}</span>
+        <span className="text-sm text-ink-muted">{formatDate(item.date)}</span>
       )
     },
     {
       key: 'location',
       label: 'Location',
       render: (item) => (
-        <span className="text-sm text-gray-600">{item.location || 'N/A'}</span>
+        <span className="text-sm text-ink-muted">{item.location || 'N/A'}</span>
       )
     },
     {
       key: 'createdByEmail',
       label: 'Created By',
       render: (item) => (
-        <span className="text-sm text-gray-600">
+        <span className="text-sm text-ink-muted">
           {item.createdByEmail || item.createdBy || 'Unknown'}
         </span>
       )
@@ -189,7 +189,7 @@ export default function SportsPage() {
       key: 'createdAt',
       label: 'Created',
       render: (item) => (
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-ink-subtle">
           {item.createdAt && typeof item.createdAt === 'object' && 'seconds' in item.createdAt
             ? formatDate(new Date(item.createdAt.seconds * 1000))
             : formatDate(item.createdAt)}
@@ -203,8 +203,8 @@ export default function SportsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Sports & Achievements</h1>
-            <p className="text-gray-600">Manage sports achievements and events</p>
+            <h1 className="text-3xl font-bold text-ink mb-2">Sports & Achievements</h1>
+            <p className="text-ink-muted">Manage sports achievements and events</p>
           </div>
           <Link href="/admin/sports/new">
             <Button variant="primary" className="flex items-center gap-2">
