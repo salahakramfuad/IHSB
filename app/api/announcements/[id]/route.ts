@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAnnouncementById, updateAnnouncement, deleteAnnouncement } from '@/lib/database/announcements'
+import { getAnnouncementByIdService } from '@/lib/services/announcementsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { updateAnnouncementSchema } from '@/lib/validation/announcements'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!isValidDocId(id)) return notFound('Announcement not found')
 
     const admin = await getOptionalAdmin(request)
-    const announcement = await getAnnouncementById(id)
+    const announcement = await getAnnouncementByIdService(id)
     if (!announcement) return notFound('Announcement not found')
 
     return json({ announcement: admin ? announcement : toPublic(announcement) })

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAcademicAchievementById, updateAcademicAchievement, deleteAcademicAchievement } from '@/lib/database/academicAchievements'
+import { getAcademicAchievementByIdService } from '@/lib/services/academicAchievementsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { updateAcademicAchievementSchema } from '@/lib/validation/academicAchievements'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!isValidDocId(id)) return notFound('Academic achievement not found')
 
     const admin = await getOptionalAdmin(request)
-    const achievement = await getAcademicAchievementById(id)
+    const achievement = await getAcademicAchievementByIdService(id)
     if (!achievement) return notFound('Academic achievement not found')
 
     return json({ achievement: admin ? achievement : toPublic(achievement) })

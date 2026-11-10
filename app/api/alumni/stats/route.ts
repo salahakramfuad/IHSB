@@ -1,13 +1,14 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getAllAlumniYearStats, createOrUpdateAlumniYearStats, getAllFeaturedAlumni } from '@/lib/database/alumni'
+import { createOrUpdateAlumniYearStats, getAllFeaturedAlumni } from '@/lib/database/alumni'
+import { getAllAlumniYearStatsService } from '@/lib/services/alumniService'
 import { json, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { alumniStatsPostSchema } from '@/lib/validation/alumni'
 
 export async function GET(request: NextRequest) {
   try {
     const admin = await getOptionalAdmin(request)
-    const stats = await getAllAlumniYearStats()
+    const stats = await getAllAlumniYearStatsService()
     return json({ stats: admin ? stats : stats.map(toPublic) })
   } catch (error) {
     return serverError('GET /api/alumni/stats', error, 'Failed to fetch alumni year stats.')

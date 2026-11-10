@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getEventByIdAdmin, updateEvent, deleteEvent } from '@/lib/database/events'
+import { getEventByIdAdminService } from '@/lib/services/eventsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { updateEventSchema } from '@/lib/validation/events'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!isValidDocId(id)) return notFound('Event not found')
 
     const admin = await getOptionalAdmin(request)
-    const event = await getEventByIdAdmin(id)
+    const event = await getEventByIdAdminService(id)
     if (!event) return notFound('Event not found')
 
     return json({ event: admin ? event : toPublic(event) })

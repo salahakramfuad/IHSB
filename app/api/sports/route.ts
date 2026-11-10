@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getAllSportsAchievements, createSportsAchievement } from '@/lib/database/sports'
+import { createSportsAchievement } from '@/lib/database/sports'
+import { getSportsAchievements } from '@/lib/services/sportsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, serverError } from '@/lib/utils/http'
 import { createSportsSchema } from '@/lib/validation/sports'
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     const guard = await requireAdmin(request)
     if (!guard.ok) return guard.response
-    return json({ achievements: await getAllSportsAchievements() })
+    return json({ achievements: await getSportsAchievements() })
   } catch (error) {
     return serverError('GET /api/sports', error, 'Failed to fetch achievements.')
   }

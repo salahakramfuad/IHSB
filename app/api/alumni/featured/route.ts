@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getFeaturedAlumniByYear, getAllFeaturedAlumni, createFeaturedAlumni } from '@/lib/database/alumni'
+import { createFeaturedAlumni } from '@/lib/database/alumni'
+import { getAllFeaturedAlumniService, getFeaturedAlumniByYearService } from '@/lib/services/alumniService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
 import { createFeaturedAlumniSchema } from '@/lib/validation/alumni'
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     const year = searchParams.get('year')
     const admin = await getOptionalAdmin(request)
 
-    let alumni = year && /^\d{4}$/.test(year) ? await getFeaturedAlumniByYear(year) : await getAllFeaturedAlumni()
+    let alumni = year && /^\d{4}$/.test(year) ? await getFeaturedAlumniByYearService(year) : await getAllFeaturedAlumniService()
 
     if (searchParams.get('featured') === 'true') {
       alumni = alumni.filter((item) => item.featured === true)

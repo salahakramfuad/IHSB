@@ -6,6 +6,7 @@ import {
   calculateYearStats,
   deleteAlumniYearStats
 } from '@/lib/database/alumni'
+import { getAlumniYearStatsByYearService } from '@/lib/services/alumniService'
 import { json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { alumniStatsPutSchema, alumniYearParam } from '@/lib/validation/alumni'
 
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     const { year } = await params
     if (!isYear(year)) return notFound('Year statistics not found')
 
-    const stats = await getAlumniYearStatsByYear(year)
+    const stats = await getAlumniYearStatsByYearService(year)
     if (!stats) return notFound('Year statistics not found')
 
     const admin = await getOptionalAdmin(request)

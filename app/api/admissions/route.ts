@@ -2,7 +2,8 @@ import { randomUUID } from 'node:crypto'
 import { NextRequest } from 'next/server'
 import { requireAdmin } from '@/lib/auth/middleware'
 import { isOwnCloudinaryUrl } from '@/lib/integrations/cloudinary/config'
-import { getAllAdmissions, getAdmissionsByStatus, createAdmission } from '@/lib/database/admissions'
+import { createAdmission } from '@/lib/database/admissions'
+import { getAdmissionsByStatusService, getAllAdmissionsService } from '@/lib/services/admissionsService'
 import { isMockMode, mockWriteBlockedResponse } from '@/lib/mock'
 import { enforceRateLimit, getClientIp } from '@/lib/security/rateLimit'
 import { verifyRecaptcha } from '@/lib/security/recaptcha'
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest) {
     if (!guard.ok) return guard.response
 
     const status = admissionStatusParam.safeParse(new URL(request.url).searchParams.get('status'))
-    const admissions = status.success ? await getAdmissionsByStatus(status.data) : await getAllAdmissions()
+    const admissions = status.success ? await getAdmissionsByStatusService(status.data) : await getAllAdmissionsService()
 
     return json({ admissions })
   } catch (error) {

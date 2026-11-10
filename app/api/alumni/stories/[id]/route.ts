@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAlumniStoryById, updateAlumniStory, deleteAlumniStory } from '@/lib/database/alumni'
+import { getAlumniStoryByIdService } from '@/lib/services/alumniService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { updateAlumniStorySchema } from '@/lib/validation/alumni'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!isValidDocId(id)) return notFound('Alumni story not found')
 
     const admin = await getOptionalAdmin(request)
-    const story = await getAlumniStoryById(id)
+    const story = await getAlumniStoryByIdService(id)
     if (!story || (!admin && story.published !== true)) return notFound('Alumni story not found')
 
     return json({ story: admin ? story : toPublic(story) })

@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getSportsAchievementById, updateSportsAchievement, deleteSportsAchievement } from '@/lib/database/sports'
+import { getSportsAchievementByIdService } from '@/lib/services/sportsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { updateSportsSchema } from '@/lib/validation/sports'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!isValidDocId(id)) return notFound('Achievement not found')
 
     const admin = await getOptionalAdmin(request)
-    const achievement = await getSportsAchievementById(id)
+    const achievement = await getSportsAchievementByIdService(id)
     if (!achievement) return notFound('Achievement not found')
 
     return json({ achievement: admin ? achievement : toPublic(achievement) })

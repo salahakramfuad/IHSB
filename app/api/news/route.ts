@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getLatestNews, getNewsByCategory, getAllNews, createNews } from '@/lib/database/news'
+import { createNews } from '@/lib/database/news'
+import { getAllNewsService, getLatestNewsService, getNewsByCategoryService } from '@/lib/services/newsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
 import { createNewsSchema } from '@/lib/validation/news'
@@ -13,18 +14,18 @@ export async function GET(request: NextRequest) {
     const category = z.enum(['sports', 'news', 'general']).safeParse(searchParams.get('category'))
 
     if (category.success) {
-      const news = await getNewsByCategory(category.data)
+      const news = await getNewsByCategoryService(category.data)
       return json({ news: news.map(toPublic) })
     }
     if (limit) {
-      const news = await getLatestNews(parseLimit(limit, 10))
+      const news = await getLatestNewsService(parseLimit(limit, 10))
       return json({ news: news.map(toPublic) })
     }
 
     // The full list (with audit fields) is for the admin dashboard only
     const guard = await requireAdmin(request)
     if (!guard.ok) return guard.response
-    return json({ news: await getAllNews() })
+    return json({ news: await getAllNewsService() })
   } catch (error) {
     return serverError('GET /api/news', error, 'Failed to fetch news.')
   }

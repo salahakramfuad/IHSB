@@ -1,6 +1,11 @@
 import { NextRequest } from 'next/server'
 import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getActiveAnnouncements, getFeaturedAnnouncements, getAllAnnouncements, createAnnouncement } from '@/lib/database/announcements'
+import { createAnnouncement } from '@/lib/database/announcements'
+import {
+  getActiveAnnouncementsService,
+  getAllAnnouncementsService,
+  getFeaturedAnnouncementsService
+} from '@/lib/services/announcementsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
 import { createAnnouncementSchema } from '@/lib/validation/announcements'
@@ -10,18 +15,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
 
     if (searchParams.get('featured') === 'true') {
-      const announcements = await getFeaturedAnnouncements(parseLimit(searchParams.get('limit'), 3))
+      const announcements = await getFeaturedAnnouncementsService(parseLimit(searchParams.get('limit'), 3))
       return json({ announcements: announcements.map(toPublic) })
     }
     if (searchParams.get('active') === 'true') {
-      const announcements = await getActiveAnnouncements()
+      const announcements = await getActiveAnnouncementsService()
       return json({ announcements: announcements.map(toPublic) })
     }
 
     // Everything (including inactive/expired): admin dashboard only
     const guard = await requireAdmin(request)
     if (!guard.ok) return guard.response
-    return json({ announcements: await getAllAnnouncements() })
+    return json({ announcements: await getAllAnnouncementsService() })
   } catch (error) {
     return serverError('GET /api/announcements', error, 'Failed to fetch announcements.')
   }

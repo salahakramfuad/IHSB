@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAdmissionById, updateAdmission } from '@/lib/database/admissions'
+import { getAdmissionByIdService } from '@/lib/services/admissionsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError } from '@/lib/utils/http'
 import { updateAdmissionSchema } from '@/lib/validation/admissions'
@@ -16,7 +17,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     const { id } = await params
     if (!isValidDocId(id)) return notFound('Admission not found')
 
-    const admission = await getAdmissionById(id)
+    const admission = await getAdmissionByIdService(id)
     if (!admission) return notFound('Admission not found')
 
     return json({ admission })

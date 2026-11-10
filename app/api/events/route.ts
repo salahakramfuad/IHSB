@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getAllEventsAdmin, createEvent } from '@/lib/database/events'
+import { createEvent } from '@/lib/database/events'
+import { getAllEventsAdminService } from '@/lib/services/eventsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, serverError } from '@/lib/utils/http'
 import { createEventSchema } from '@/lib/validation/events'
@@ -10,7 +11,7 @@ export async function GET(request: NextRequest) {
     // Full documents including creator info: admin dashboard only
     const guard = await requireAdmin(request)
     if (!guard.ok) return guard.response
-    return json({ events: await getAllEventsAdmin() })
+    return json({ events: await getAllEventsAdminService() })
   } catch (error) {
     return serverError('GET /api/events', error, 'Failed to fetch events.')
   }

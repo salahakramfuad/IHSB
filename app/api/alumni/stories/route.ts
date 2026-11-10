@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getAllAlumniStories, createAlumniStory } from '@/lib/database/alumni'
+import { createAlumniStory } from '@/lib/database/alumni'
+import { getAllAlumniStoriesService } from '@/lib/services/alumniService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
 import { createAlumniStorySchema } from '@/lib/validation/alumni'
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit')
     const admin = await getOptionalAdmin(request)
 
-    let stories = await getAllAlumniStories()
+    let stories = await getAllAlumniStoriesService()
 
     // Drafts are only visible to admins
     if (!admin || searchParams.get('published') === 'true' || searchParams.get('featured') === 'true') {

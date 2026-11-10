@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getFeaturedAlumniById, updateFeaturedAlumni, deleteFeaturedAlumni } from '@/lib/database/alumni'
+import { getFeaturedAlumniByIdService } from '@/lib/services/alumniService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { updateFeaturedAlumniSchema } from '@/lib/validation/alumni'
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!isValidDocId(id)) return notFound('Featured alumni not found')
 
     const admin = await getOptionalAdmin(request)
-    const alumni = await getFeaturedAlumniById(id)
+    const alumni = await getFeaturedAlumniByIdService(id)
     if (!alumni) return notFound('Featured alumni not found')
 
     return json({ alumni: admin ? alumni : toPublic(alumni) })

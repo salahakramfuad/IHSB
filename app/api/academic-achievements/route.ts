@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
-import { getAllAcademicAchievements, createAcademicAchievement } from '@/lib/database/academicAchievements'
+import { createAcademicAchievement } from '@/lib/database/academicAchievements'
+import { getAllAcademicAchievementsService } from '@/lib/services/academicAchievementsService'
 import { notifyAdminAction } from '@/lib/database/notifications'
 import { json, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
 import { createAcademicAchievementSchema } from '@/lib/validation/academicAchievements'
@@ -9,7 +10,7 @@ export async function GET(request: NextRequest) {
   try {
     // Public read so the achievements page can display data
     const admin = await getOptionalAdmin(request)
-    const achievements = await getAllAcademicAchievements()
+    const achievements = await getAllAcademicAchievementsService()
     return json({ achievements: admin ? achievements : achievements.map(toPublic) })
   } catch (error) {
     return serverError('GET /api/academic-achievements', error, 'Failed to fetch academic achievements.')
