@@ -1,95 +1,52 @@
-import { NextRequest, NextResponse } from 'next/server'
-import cloudinary from '@/lib/integrations/cloudinary/config'
+import { NextRequest } from 'next/server'
+import { validateAndUpload } from '@/lib/integrations/cloudinary/upload'
+import { isMockMode, mockWriteBlockedResponse } from '@/lib/mock'
+import { MAX_UPLOAD_BYTES } from '@/lib/security/fileType'
+import { enforceRateLimit, getClientIp } from '@/lib/security/rateLimit'
+import { verifyRecaptcha } from '@/lib/security/recaptcha'
+import { errorResponse, json, serverError } from '@/lib/utils/http'
 
-// Public upload endpoint for admission documents
+/**
+ * POST /api/upload/public — the single public upload endpoint, used by the
+ * admission form for supporting documents.
+ *
+ * Protections: per-IP rate limit, reCAPTCHA v3 (server verified), 5MB limit,
+ * and real file-type detection via magic bytes (JPEG/PNG/WebP/PDF only).
+ */
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData()
-    const file = formData.get('file') as File
+    const limited = enforceRateLimit(request, 'upload-public', { limit: 20, windowMs: 10 * 60 * 1000 })
+    if (limited) return limited
 
-    if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      )
+    // Reject oversized bodies before buffering them (multipart overhead allowed for)
+    const contentLength = Number(request.headers.get('content-length') || 0)
+    if (contentLength > MAX_UPLOAD_BYTES + 64 * 1024) {
+      return errorResponse('File size exceeds 5MB limit', 413)
     }
 
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'application/pdf']
-    if (!validTypes.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, WebP, and PDF are allowed.' },
-        { status: 400 }
-      )
+    let formData: FormData
+    try {
+      formData = await request.formData()
+    } catch {
+      return errorResponse('Invalid upload request.', 400)
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024 // 5MB
-    if (file.size > maxSize) {
-      return NextResponse.json(
-        { error: 'File size exceeds 5MB limit' },
-        { status: 400 }
-      )
+    const captcha = await verifyRecaptcha(formData.get('recaptchaToken'), 'admission_upload', getClientIp(request))
+    if (!captcha.ok) {
+      console.warn('[api] POST /api/upload/public reCAPTCHA failed:', captcha.reason)
+      return errorResponse('Verification failed. Please refresh the page and try again.', 403)
     }
 
-    // Validate Cloudinary configuration before upload
-    const cloudinaryUrl = process.env.CLOUDINARY_URL
-    const cloudName = process.env.CLOUDINARY_CLOUD_NAME
-    const apiKey = process.env.CLOUDINARY_API_KEY
-    const apiSecret = process.env.CLOUDINARY_API_SECRET
+    if (isMockMode()) return mockWriteBlockedResponse()
 
-    const isConfigured = (cloudinaryUrl && cloudinaryUrl.includes('cloudinary://')) || 
-                        (cloudName && apiKey && apiSecret)
-
-    if (!isConfigured) {
-      return NextResponse.json(
-        { 
-          error: 'Cloudinary is not configured. Please ensure your .env.local contains:\n' +
-                 'CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name\n' +
-                 'Make sure to replace <your_api_key> and <your_api_secret> with actual values.\n' +
-                 'After updating, restart your Next.js dev server.'
-        },
-        { status: 500 }
-      )
-    }
-
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Upload to Cloudinary
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: file.type === 'application/pdf' ? 'raw' : 'image',
-          folder: 'ihsb/admissions',
-          transformation: file.type !== 'application/pdf' ? [
-            { quality: 'auto' },
-            { fetch_format: 'auto' }
-          ] : undefined
-        },
-        (error, result) => {
-          if (error) {
-            console.error('Cloudinary upload error:', error)
-            reject(error)
-          } else {
-            resolve(result)
-          }
-        }
-      )
-      uploadStream.end(buffer)
+    const result = await validateAndUpload(formData.get('file'), {
+      folder: 'ihsb/admissions',
+      allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
     })
+    if (!result.ok) return errorResponse(result.error, result.status)
 
-    return NextResponse.json({
-      success: true,
-      url: (uploadResult as any).secure_url,
-      publicId: (uploadResult as any).public_id
-    })
-  } catch (error: any) {
-    console.error('Upload error:', error)
-    return NextResponse.json(
-      { error: error.message || 'Upload failed' },
-      { status: 500 }
-    )
+    return json({ success: true, url: result.url, publicId: result.publicId })
+  } catch (error) {
+    return serverError('POST /api/upload/public', error, 'Upload failed. Please try again.')
   }
 }

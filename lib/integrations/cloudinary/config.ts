@@ -6,8 +6,8 @@ import { v2 as cloudinary } from 'cloudinary'
 // Example: cloudinary://123456789012345:abcdefghijklmnopqrstuvwxyz@dvxxa4sho
 
 const cloudinaryUrl = process.env.CLOUDINARY_URL
-const cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-const apiKey = process.env.CLOUDINARY_API_KEY || process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY
+const cloudName = process.env.CLOUDINARY_CLOUD_NAME
+const apiKey = process.env.CLOUDINARY_API_KEY
 const apiSecret = process.env.CLOUDINARY_API_SECRET
 
 // Parse and configure Cloudinary
@@ -49,9 +49,6 @@ if (cloudinaryUrl) {
     } else {
       console.error('❌ Invalid CLOUDINARY_URL format')
       console.error('   Expected: cloudinary://api_key:api_secret@cloud_name')
-      // Hide secret in error message
-      const safeUrl = cloudinaryUrl.replace(/:([^:@]+)@/, ':****@')
-      console.error('   Got:', safeUrl)
     }
   }
 }
@@ -70,7 +67,28 @@ if (!isConfigured && process.env.NODE_ENV === 'development') {
   console.warn('⚠️  Cloudinary not configured properly')
   console.warn('   Set in .env.local: CLOUDINARY_URL=cloudinary://api_key:api_secret@cloud_name')
   console.warn('   Make sure to replace <your_api_key> and <your_api_secret> with actual values!')
-  console.warn('   Then restart your dev server: npm run dev')
+  console.warn('   Then restart your dev server: pnpm dev')
+}
+
+/** True when Cloudinary credentials were found and applied. */
+export function isCloudinaryConfigured(): boolean {
+  return isConfigured
+}
+
+/** True when `value` is an https delivery URL of this project's own Cloudinary cloud. */
+export function isOwnCloudinaryUrl(value: string): boolean {
+  const ownCloud = cloudinary.config().cloud_name
+  if (!ownCloud) return false
+  try {
+    const url = new URL(value)
+    return (
+      url.protocol === 'https:' &&
+      url.hostname === 'res.cloudinary.com' &&
+      url.pathname.startsWith(`/${ownCloud}/`)
+    )
+  } catch {
+    return false
+  }
 }
 
 export default cloudinary

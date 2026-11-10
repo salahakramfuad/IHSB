@@ -5,6 +5,7 @@ import PageHeader from '../../components/ui/PageHeader'
 import Section from '../../components/ui/Section'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
+import { getRecaptchaToken } from '@/lib/security/recaptchaClient'
 
 // Note: Metadata is exported from layout.tsx for client components
 
@@ -35,7 +36,10 @@ export default function ContactPage() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          recaptchaToken: await getRecaptchaToken('contact_submit')
+        })
       })
 
       if (response.ok) {

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, FormEvent, ChangeEvent } from 'react'
+import { getRecaptchaToken } from '@/lib/security/recaptchaClient'
 import Section from '@/components/ui/Section'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
@@ -263,8 +264,10 @@ export default function AdmissionApplyPage() {
       // Upload file
       const uploadFormData = new FormData()
       uploadFormData.append('file', file)
+      const uploadToken = await getRecaptchaToken('admission_upload')
+      if (uploadToken) uploadFormData.append('recaptchaToken', uploadToken)
 
-      const uploadResponse = await fetch('/api/admissions/upload', {
+      const uploadResponse = await fetch('/api/upload/public', {
         method: 'POST',
         body: uploadFormData
       })
@@ -391,7 +394,10 @@ export default function AdmissionApplyPage() {
         visitingCardImage: formData.visitingCardImage || undefined
       }
 
-      const dataToSubmit = submissionData
+      const dataToSubmit = {
+        ...submissionData,
+        recaptchaToken: await getRecaptchaToken('admission_submit')
+      }
 
       const response = await fetch('/api/admissions', {
         method: 'POST',
