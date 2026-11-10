@@ -1,0 +1,125 @@
+/*
+ * IHSB design tokens.
+ * Colours are RGB channels so Tailwind can apply opacity: rgb(var(--brand-700) / 0.5).
+ *
+ * Palette
+ *   brand  - deep "bottle" green, the school's colour family
+ *   gold   - warm gold accent (prize, crest, emphasis)
+ *   canvas - ivory page, paper - card surface, sunken - recessed band
+ *   ink    - text
+ */
+:root {
+  /* ---- Brand green ---- */
+  --brand-50: 238 246 241;
+  --brand-100: 214 234 223;
+  --brand-200: 174 213 192;
+  --brand-300: 127 186 156;
+  --brand-400: 78 155 120;
+  --brand-500: 46 127 94;
+  --brand-600: 27 102 74;
+  --brand-700: 20 82 60;
+  --brand-800: 15 65 49;
+  --brand-900: 11 51 39;
+  --brand-950: 6 33 26;
+
+  /* ---- Gold ---- */
+  --gold-50: 252 247 232;
+  --gold-100: 248 236 198;
+  --gold-200: 240 217 141;
+  --gold-300: 230 194 90;
+  --gold-400: 217 170 54;
+  --gold-500: 192 143 35;
+  --gold-600: 160 116 27;
+  --gold-700: 125 89 23;
+  --gold-800: 94 67 21;
+  --gold-900: 69 50 18;
+  --gold-950: 41 29 9;
+
+  /* ---- Sky (muted tertiary; information only) ---- */
+  --sky-50: 238 245 250;
+  --sky-100: 217 233 243;
+  --sky-200: 181 211 230;
+  --sky-300: 136 182 211;
+  --sky-400: 92 151 188;
+  --sky-500: 63 124 163;
+  --sky-600: 47 100 135;
+  --sky-700: 39 80 108;
+  --sky-800: 31 63 85;
+  --sky-900: 24 48 65;
+  --sky-950: 14 30 42;
+
+  /* ---- Semantic: light theme ---- */
+  --canvas: 251 248 241;
+  --paper: 255 253 248;
+  --sunken: 244 238 223;
+  --ink: 24 33 29;
+  --ink-muted: 70 82 76;
+  --ink-subtle: 98 109 103;
+  --line: 228 220 202;
+  --line-strong: 199 189 166;
+  --brand-text: var(--brand-700);
+  --brand-solid: var(--brand-700);
+  --gold-text: var(--gold-700);
+  --sky-text: var(--sky-700);
+  --danger: 176 54 40;
+  --focus: var(--gold-600);
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-2xl: 36px;
+
+  /* ---- Elevation (warm, green-tinted) ---- */
+  --shadow-soft: 0 1px 2px rgb(11 51 39 / 0.06), 0 2px 8px rgb(11 51 39 / 0.05);
+  --shadow-raised: 0 2px 4px rgb(11 51 39 / 0.06), 0 12px 28px -8px rgb(11 51 39 / 0.16);
+  --shadow-floating: 0 4px 10px rgb(11 51 39 / 0.08), 0 28px 60px -18px rgb(11 51 39 / 0.3);
+
+  /* ---- Spacing ---- */
+  --space-section: clamp(4rem, 2.75rem + 5.5vw, 7.5rem);
+  --space-section-sm: clamp(2.5rem, 2rem + 2.5vw, 4rem);
+  --nav-height: 4.5rem;
+
+  /* ---- Z-index ---- */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 40;
+  --z-nav: 50;
+  --z-overlay: 60;
+  --z-modal: 70;
+  --z-toast: 80;
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 280ms;
+  --duration-slow: 400ms;
+
+  color-scheme: light;
+}
+
+/* ---- Semantic: dark theme ---- */
+.dark {
+  --canvas: 8 19 15;
+  --paper: 14 29 23;
+  --sunken: 11 24 19;
+  --ink: 241 236 223;
+  --ink-muted: 192 200 192;
+  --ink-subtle: 150 162 153;
+  --line: 34 54 45;
+  --line-strong: 56 82 70;
+  --brand-text: var(--brand-300);
+  --brand-solid: var(--brand-600);
+  --gold-text: var(--gold-300);
+  --sky-text: var(--sky-300);
+  --danger: 240 128 110;
+  --focus: var(--gold-300);
+
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.3);
+  --shadow-raised: 0 2px 4px rgb(0 0 0 / 0.4), 0 12px 28px -8px rgb(0 0 0 / 0.6);
+  --shadow-floating: 0 4px 10px rgb(0 0 0 / 0.45), 0 28px 60px -18px rgb(0 0 0 / 0.75);
+
+  color-scheme: dark;
+}

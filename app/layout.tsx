@@ -1,9 +1,23 @@
 // app/layout.tsx
 import React from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google'
 import '../styles/global.css'
-import LayoutWrapper from '../components/layout/LayoutWrapper'
-import { isMockMode } from '@/lib/mock'
+import ThemeScript from '@/components/theme/ThemeScript'
+
+// Display: Fraunces (soft, warm old-style serif). Body: Plus Jakarta Sans.
+const display = Fraunces({
+  subsets: ['latin', 'latin-ext'],
+  axes: ['SOFT', 'opsz'],
+  variable: '--font-display',
+  display: 'swap'
+})
+
+const sans = Plus_Jakarta_Sans({
+  subsets: ['latin', 'latin-ext'],
+  variable: '--font-sans',
+  display: 'swap'
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ihsb.edu.bd'),
@@ -62,24 +76,34 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fbf8f1' },
+    { media: '(prefers-color-scheme: dark)', color: '#08130f' }
+  ]
+}
+
 /**
- * Root layout - provides html/body structure
- * LayoutWrapper conditionally renders Nav/Footer based on route
- * Admin routes are excluded from public navigation
+ * Root layout: <html>/<body>, fonts and the colour theme.
+ * Public pages get the navbar and footer from app/(site)/layout.tsx;
+ * the admin dashboard has its own layout in app/admin/layout.tsx.
  */
 export default function RootLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  // "Demo data" badge: only while developing, and only when mock data is being served
-  const demoData = process.env.NODE_ENV !== 'production' && isMockMode()
-
   return (
-    <html lang='en'>
-      <body className='w-full'>
-        <LayoutWrapper demoData={demoData}>{children}</LayoutWrapper>
-      </body>
+    <html lang='en' className={`no-js ${display.variable} ${sans.variable}`} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+        <noscript>
+          <style>{'[data-reveal]{opacity:1!important;transform:none!important}'}</style>
+        </noscript>
+      </head>
+      <body className='min-h-screen w-full'>{children}</body>
     </html>
   )
 }
