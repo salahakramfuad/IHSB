@@ -1,60 +1,41 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { NextRequest } from 'next/server'
+import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAllSportsAchievements, createSportsAchievement } from '@/lib/database/sports'
-import { addNotification } from '@/lib/database/notifications'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { json, parseJsonBody, serverError } from '@/lib/utils/http'
+import { createSportsSchema } from '@/lib/validation/sports'
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin token for admin API access
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    const achievements = await getAllSportsAchievements()
-    return NextResponse.json({ achievements })
-  } catch (error: any) {
-    console.error('Error fetching sports achievements:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch sports achievements' },
-      { status: 500 }
-    )
+    const guard = await requireAdmin(request)
+    if (!guard.ok) return guard.response
+    return json({ achievements: await getAllSportsAchievements() })
+  } catch (error) {
+    return serverError('GET /api/sports', error, 'Failed to fetch achievements.')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
-    const body = await request.json()
-    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    const id = await createSportsAchievement(body, creatorEmail)
-    await addNotification({
+    const body = await parseJsonBody(request, createSportsSchema)
+    if (!body.ok) return body.response
+
+    const id = await createSportsAchievement(body.data, guard.admin.email)
+
+    await notifyAdminAction(guard.admin, {
       type: 'sport',
       action: 'created',
-      title: `Sports achievement created: ${body.title || body.name || 'Untitled'}`,
-      description: body.title || body.name || undefined,
+      title: `Sports achievement created: ${body.data.title}`,
+      description: body.data.title,
       itemId: id,
-      itemHref: `/admin/sports/${id}`,
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/sports/${id}`
     })
-    return NextResponse.json({ id, ...body })
-  } catch (error: any) {
-    console.error('Error creating sports achievement:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to create sports achievement' },
-      { status: 500 }
-    )
+
+    return json({ id, ...body.data })
+  } catch (error) {
+    return serverError('POST /api/sports', error, 'Failed to create achievement.')
   }
 }

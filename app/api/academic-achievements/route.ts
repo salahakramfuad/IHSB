@@ -1,60 +1,42 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAllAcademicAchievements, createAcademicAchievement } from '@/lib/database/academicAchievements'
-import { addNotification } from '@/lib/database/notifications'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { json, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
+import { createAcademicAchievementSchema } from '@/lib/validation/academicAchievements'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Public read: allow unauthenticated GET so the achievements page can display data
+    // Public read so the achievements page can display data
+    const admin = await getOptionalAdmin(request)
     const achievements = await getAllAcademicAchievements()
-    return NextResponse.json({ achievements })
-  } catch (error: any) {
-    console.error('Error fetching academic achievements:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch academic achievements' },
-      { status: 500 }
-    )
+    return json({ achievements: admin ? achievements : achievements.map(toPublic) })
+  } catch (error) {
+    return serverError('GET /api/academic-achievements', error, 'Failed to fetch academic achievements.')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
-    const body = await request.json()
-    const achievementData = {
-      name: body.name,
-      result: body.result,
-      year: body.year,
-      session: body.session,
-      image: body.image || undefined
-    }
+    const body = await parseJsonBody(request, createAcademicAchievementSchema)
+    if (!body.ok) return body.response
 
-    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    const id = await createAcademicAchievement(achievementData, creatorEmail)
-    await addNotification({
+    const id = await createAcademicAchievement(body.data, guard.admin.email)
+
+    await notifyAdminAction(guard.admin, {
       type: 'academic_achievement',
       action: 'created',
-      title: `Academic achievement created: ${achievementData.name || 'Untitled'}`,
-      description: achievementData.name || undefined,
+      title: `Academic achievement created: ${body.data.name}`,
+      description: body.data.name,
       itemId: id,
-      itemHref: `/admin/academic-achievements`,
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/academic-achievements`
     })
-    return NextResponse.json({ id, ...achievementData })
-  } catch (error: any) {
-    console.error('Error creating academic achievement:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to create academic achievement' },
-      { status: 500 }
-    )
+
+    return json({ id, ...body.data })
+  } catch (error) {
+    return serverError('POST /api/academic-achievements', error, 'Failed to create academic achievement.')
   }
 }

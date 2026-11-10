@@ -1,112 +1,71 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAlumniYearStatsByYear, createOrUpdateAlumniYearStats, calculateYearStats, deleteAlumniYearStats, getAllAlumniYearStats } from '@/lib/database/alumni'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
+import {
+  getAlumniYearStatsByYear,
+  createOrUpdateAlumniYearStats,
+  calculateYearStats,
+  deleteAlumniYearStats
+} from '@/lib/database/alumni'
+import { json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
+import { alumniStatsPutSchema, alumniYearParam } from '@/lib/validation/alumni'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ year: string }> }
-) {
+type RouteContext = { params: Promise<{ year: string }> }
+
+const isYear = (value: string) => alumniYearParam.safeParse(value).success
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
     const { year } = await params
+    if (!isYear(year)) return notFound('Year statistics not found')
+
     const stats = await getAlumniYearStatsByYear(year)
-    
-    if (!stats) {
-      return NextResponse.json(
-        { error: 'Year statistics not found' },
-        { status: 404 }
-      )
-    }
-    
-    return NextResponse.json({ stats })
-  } catch (error: any) {
-    console.error('Error fetching alumni year stats:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch alumni year stats' },
-      { status: 500 }
-    )
+    if (!stats) return notFound('Year statistics not found')
+
+    const admin = await getOptionalAdmin(request)
+    return json({ stats: admin ? stats : toPublic(stats) })
+  } catch (error) {
+    return serverError('GET /api/alumni/stats/[year]', error, 'Failed to fetch alumni year stats.')
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ year: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { year } = await params
-    const body = await request.json()
-    const { count, autoCalculated, recalculate } = body
+    if (!isYear(year)) return notFound('Year statistics not found')
 
-    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
+    const body = await parseJsonBody(request, alumniStatsPutSchema)
+    if (!body.ok) return body.response
 
-    if (recalculate === true) {
-      // Auto-calculate for this year
-      const calculatedCount = await calculateYearStats(year)
-      await createOrUpdateAlumniYearStats(year, calculatedCount, true, creatorEmail)
-      return NextResponse.json({ success: true, year, count: calculatedCount, autoCalculated: true })
+    if ('recalculate' in body.data) {
+      const count = await calculateYearStats(year)
+      await createOrUpdateAlumniYearStats(year, count, true, guard.admin.email)
+      return json({ success: true, year, count, autoCalculated: true })
     }
 
-    if (!count) {
-      return NextResponse.json(
-        { error: 'Count is required' },
-        { status: 400 }
-      )
-    }
-
-    await createOrUpdateAlumniYearStats(
-      year,
-      count,
-      autoCalculated !== undefined ? autoCalculated : false,
-      creatorEmail
-    )
-    
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error updating alumni year stats:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to update alumni year stats' },
-      { status: 500 }
-    )
+    await createOrUpdateAlumniYearStats(year, body.data.count, body.data.autoCalculated, guard.admin.email)
+    return json({ success: true })
+  } catch (error) {
+    return serverError('PUT /api/alumni/stats/[year]', error, 'Failed to update alumni year stats.')
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ year: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { year } = await params
+    if (!isYear(year)) return notFound('Year statistics not found')
+
     const stats = await getAlumniYearStatsByYear(year)
-    if (!stats || !stats.id) {
-      return NextResponse.json(
-        { error: 'Year statistics not found' },
-        { status: 404 }
-      )
-    }
+    if (!stats?.id) return notFound('Year statistics not found')
 
     await deleteAlumniYearStats(stats.id)
-    
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error deleting alumni year stats:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to delete alumni year stats' },
-      { status: 500 }
-    )
+    return json({ success: true })
+  } catch (error) {
+    return serverError('DELETE /api/alumni/stats/[year]', error, 'Failed to delete alumni year stats.')
   }
 }

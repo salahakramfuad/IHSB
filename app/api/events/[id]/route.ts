@@ -1,102 +1,79 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getEventByIdAdmin, updateEvent, deleteEvent } from '@/lib/database/events'
-import { addNotification } from '@/lib/database/notifications'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
+import { updateEventSchema } from '@/lib/validation/events'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type RouteContext = { params: Promise<{ id: string }> }
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params
+    if (!isValidDocId(id)) return notFound('Event not found')
+
+    const admin = await getOptionalAdmin(request)
     const event = await getEventByIdAdmin(id)
-    
-    if (!event) {
-      return NextResponse.json(
-        { error: 'Event not found' },
-        { status: 404 }
-      )
-    }
-    
-    return NextResponse.json({ event })
-  } catch (error: any) {
-    console.error('Error fetching event:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch event' },
-      { status: 500 }
-    )
+    if (!event) return notFound('Event not found')
+
+    return json({ event: admin ? event : toPublic(event) })
+  } catch (error) {
+    return serverError('GET /api/events/[id]', error, 'Failed to fetch event.')
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
-    const body = await request.json()
-    const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateEvent(id, body, updaterEmail)
-    await addNotification({
+    if (!isValidDocId(id)) return notFound('Event not found')
+
+    const body = await parseJsonBody(request, updateEventSchema)
+    if (!body.ok) return body.response
+
+    const existing = await getEventByIdAdmin(id)
+    if (!existing) return notFound('Event not found')
+
+    await updateEvent(id, body.data, guard.admin.email)
+
+    const name = body.data.title ?? existing.title
+    await notifyAdminAction(guard.admin, {
       type: 'event',
       action: 'updated',
-      title: `Event updated: ${body.title || 'Event'}`,
-      description: body.title || undefined,
+      title: `Event updated: ${name}`,
+      description: name,
       itemId: id,
-      itemHref: `/admin/events/${id}`,
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/events/${id}`
     })
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error updating event:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to update event' },
-      { status: 500 }
-    )
+
+    return json({ success: true, event: await getEventByIdAdmin(id) })
+  } catch (error) {
+    return serverError('PUT /api/events/[id]', error, 'Failed to update event.')
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
+    if (!isValidDocId(id)) return notFound('Event not found')
+
     await deleteEvent(id)
-    await addNotification({
+
+    await notifyAdminAction(guard.admin, {
       type: 'event',
       action: 'deleted',
       title: 'Event deleted',
       itemId: id,
-      itemHref: '/admin/events',
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: '/admin/events'
     })
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error deleting event:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to delete event' },
-      { status: 500 }
-    )
+
+    return json({ success: true })
+  } catch (error) {
+    return serverError('DELETE /api/events/[id]', error, 'Failed to delete event.')
   }
 }

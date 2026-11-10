@@ -1,67 +1,58 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { NextRequest } from 'next/server'
+import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAdmissionById, updateAdmission } from '@/lib/database/admissions'
-import { addNotification } from '@/lib/database/notifications'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { isValidDocId, json, notFound, parseJsonBody, serverError } from '@/lib/utils/http'
+import { updateAdmissionSchema } from '@/lib/validation/admissions'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type RouteContext = { params: Promise<{ id: string }> }
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
+    // Applications contain personal data: admins only
+    const guard = await requireAdmin(request)
+    if (!guard.ok) return guard.response
+
     const { id } = await params
+    if (!isValidDocId(id)) return notFound('Admission not found')
+
     const admission = await getAdmissionById(id)
-    
-    if (!admission) {
-      return NextResponse.json(
-        { error: 'Admission not found' },
-        { status: 404 }
-      )
-    }
-    
-    return NextResponse.json({ admission })
-  } catch (error: any) {
-    console.error('Error fetching admission:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch admission' },
-      { status: 500 }
-    )
+    if (!admission) return notFound('Admission not found')
+
+    return json({ admission })
+  } catch (error) {
+    return serverError('GET /api/admissions/[id]', error, 'Failed to fetch admission.')
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
-    const body = await request.json()
-    await updateAdmission(id, body)
-    const statusNote = body.status ? ` (${String(body.status)})` : ''
-    await addNotification({
+    if (!isValidDocId(id)) return notFound('Admission not found')
+
+    const body = await parseJsonBody(request, updateAdmissionSchema)
+    if (!body.ok) return body.response
+
+    const existing = await getAdmissionById(id)
+    if (!existing) return notFound('Admission not found')
+
+    await updateAdmission(id, body.data)
+
+    const { status } = body.data
+    await notifyAdminAction(guard.admin, {
       type: 'admission',
       action: 'updated',
-      title: `Admission updated${statusNote}`,
-      description: body.status ? `Status: ${body.status}` : undefined,
+      title: `Admission updated${status ? ` (${status})` : ''}`,
+      description: status ? `Status: ${status}` : undefined,
       itemId: id,
-      itemHref: `/admin/admissions/${id}`,
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/admissions/${id}`
     })
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error updating admission:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to update admission' },
-      { status: 500 }
-    )
+
+    return json({ success: true })
+  } catch (error) {
+    return serverError('PUT /api/admissions/[id]', error, 'Failed to update admission.')
   }
 }

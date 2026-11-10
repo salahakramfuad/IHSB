@@ -1,73 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
-import { adminDb } from '@/lib/integrations/firebase/admin'
-
-const SUPERADMIN_EMAILS = (process.env.SUPERADMIN_EMAILS || '')
-  .split(',')
-  .map((e) => e.trim().toLowerCase())
-  .filter(Boolean)
-
-function isSuperadmin(email?: string | null) {
-  if (!email) return false
-  return SUPERADMIN_EMAILS.includes(email.toLowerCase())
-}
+import { NextRequest } from 'next/server'
+import { requireAdmin } from '@/lib/auth/middleware'
+import { json, serverError } from '@/lib/utils/http'
 
 /**
  * GET /api/auth/me
- * Returns current admin identity if the user is allowed dashboard access:
- * - email is in SUPERADMIN_EMAILS, or
- * - user has an active record in the admins collection.
- * Used by login and ProtectedRoute to ensure only allowed admins can use the dashboard.
+ * Returns the current admin identity and role when the caller is allowed to use
+ * the dashboard (email in SUPERADMIN_EMAILS, or an active `admins` document).
+ * The dashboard UI reads the role from here; it is never derived client-side.
  */
 export async function GET(request: NextRequest) {
   try {
-    const decoded = await verifyAdminToken(request)
-    if (!decoded || !decoded.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const guard = await requireAdmin(request)
+    if (!guard.ok) return guard.response
 
-    const email = decoded.email.toLowerCase()
-
-    if (isSuperadmin(email)) {
-      return NextResponse.json({
-        role: 'superadmin',
-        email: decoded.email,
-        uid: decoded.uid
-      })
-    }
-
-    const snapshot = await adminDb
-      .collection('admins')
-      .where('email', '==', email)
-      .limit(1)
-      .get()
-
-    const doc = snapshot.docs[0]
-    if (!doc) {
-      return NextResponse.json(
-        { error: 'You do not have access to the admin dashboard.' },
-        { status: 403 }
-      )
-    }
-
-    const data = doc.data() as { active?: boolean; role?: string }
-    if (data.active === false) {
-      return NextResponse.json(
-        { error: 'Your admin account is inactive.' },
-        { status: 403 }
-      )
-    }
-
-    return NextResponse.json({
-      role: data.role === 'superadmin' ? 'superadmin' : 'admin',
-      email: decoded.email,
-      uid: decoded.uid
-    })
-  } catch (error: any) {
-    console.error('Auth me error:', error)
-    return NextResponse.json(
-      { error: error?.message || 'Failed to verify access.' },
-      { status: 500 }
-    )
+    const { role, email, uid } = guard.admin
+    return json({ role, email, uid })
+  } catch (error) {
+    return serverError('GET /api/auth/me', error, 'Failed to verify access.')
   }
 }

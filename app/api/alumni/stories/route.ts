@@ -1,68 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllAlumniStories, getPublishedAlumniStories, getFeaturedAlumniStories, createAlumniStory } from '@/lib/database/alumni'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
+import { getAllAlumniStories, createAlumniStory } from '@/lib/database/alumni'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
+import { createAlumniStorySchema } from '@/lib/validation/alumni'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const limit = searchParams.get('limit')
-    const published = searchParams.get('published')
-    const featured = searchParams.get('featured')
+    const admin = await getOptionalAdmin(request)
 
-    let stories
+    let stories = await getAllAlumniStories()
 
-    if (featured === 'true') {
-      stories = await getFeaturedAlumniStories(limit ? parseInt(limit, 10) : undefined)
-    } else if (published === 'true') {
-      stories = await getPublishedAlumniStories(limit ? parseInt(limit, 10) : undefined)
-    } else if (limit) {
-      const allStories = await getAllAlumniStories()
-      stories = allStories.slice(0, parseInt(limit, 10))
-    } else {
-      stories = await getAllAlumniStories()
+    // Drafts are only visible to admins
+    if (!admin || searchParams.get('published') === 'true' || searchParams.get('featured') === 'true') {
+      stories = stories.filter((story) => story.published === true)
     }
+    if (searchParams.get('featured') === 'true') {
+      stories = stories.filter((story) => story.featured === true)
+    }
+    if (limit) stories = stories.slice(0, parseLimit(limit, 3))
 
-    return NextResponse.json({ stories })
-  } catch (error: any) {
-    console.error('Error fetching alumni stories:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch alumni stories' },
-      { status: 500 }
-    )
+    return json({ stories: admin ? stories : stories.map(toPublic) })
+  } catch (error) {
+    return serverError('GET /api/alumni/stories', error, 'Failed to fetch alumni stories.')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
-    const body = await request.json()
-    const storyData = {
-      title: body.title,
-      excerpt: body.excerpt,
-      content: body.content,
-      author: body.author,
-      authorRole: body.authorRole,
-      imageUrl: body.imageUrl,
-      date: body.date || new Date().toISOString(),
-      published: body.published !== undefined ? body.published : false,
-      featured: body.featured || false
-    }
+    const body = await parseJsonBody(request, createAlumniStorySchema)
+    if (!body.ok) return body.response
 
-    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    const id = await createAlumniStory(storyData, creatorEmail)
-    return NextResponse.json({ id, ...storyData })
-  } catch (error: any) {
-    console.error('Error creating alumni story:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to create alumni story' },
-      { status: 500 }
-    )
+    const id = await createAlumniStory(body.data, guard.admin.email)
+
+    await notifyAdminAction(guard.admin, {
+      type: 'alumni_story',
+      action: 'created',
+      title: `Alumni story created: ${body.data.title}`,
+      description: body.data.title,
+      itemId: id,
+      itemHref: `/admin/alumni/stories`
+    })
+
+    return json({ id, ...body.data })
+  } catch (error) {
+    return serverError('POST /api/alumni/stories', error, 'Failed to create alumni story.')
   }
 }

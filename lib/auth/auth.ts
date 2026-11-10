@@ -16,7 +16,7 @@ function getSignInErrorMessage(error: { code?: string; message?: string } | null
   }
   if (code === 'auth/too-many-requests') return 'Too many failed attempts. Please try again later.'
   if (code === 'auth/network-request-failed') return 'Network error. Please check your connection.'
-  return error.message || 'An error occurred during login.'
+  return 'An error occurred during login.'
 }
 
 export const signIn = async (email: string, password: string) => {
@@ -32,8 +32,9 @@ export const signOut = async () => {
   try {
     await firebaseSignOut(auth)
     return { error: null }
-  } catch (error: any) {
-    return { error: error.message }
+  } catch (error) {
+    console.error('Sign out failed:', error)
+    return { error: 'Failed to sign out.' }
   }
 }
 

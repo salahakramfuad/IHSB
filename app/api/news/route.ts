@@ -1,81 +1,57 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllNews, createNews } from '@/lib/database/news'
-import { addNotification } from '@/lib/database/notifications'
+import { NextRequest } from 'next/server'
+import { z } from 'zod'
+import { requireAdmin, requireAdminWrite } from '@/lib/auth/middleware'
+import { getLatestNews, getNewsByCategory, getAllNews, createNews } from '@/lib/database/news'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
+import { createNewsSchema } from '@/lib/validation/news'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const limit = searchParams.get('limit')
-    const category = searchParams.get('category') as 'sports' | 'news' | 'general' | null
+    const category = z.enum(['sports', 'news', 'general']).safeParse(searchParams.get('category'))
 
-    let news
-    if (category) {
-      const { getNewsByCategory } = await import('@/lib/database/news')
-      news = await getNewsByCategory(category)
-    } else if (limit) {
-      const { getLatestNews } = await import('@/lib/database/news')
-      news = await getLatestNews(parseInt(limit, 10))
-    } else {
-      // Getting all news requires admin authentication
-      const decodedToken = await verifyAdminToken(request)
-      if (!decodedToken) {
-        return NextResponse.json(
-          { error: 'Unauthorized' },
-          { status: 401 }
-        )
-      }
-      news = await getAllNews()
+    if (category.success) {
+      const news = await getNewsByCategory(category.data)
+      return json({ news: news.map(toPublic) })
+    }
+    if (limit) {
+      const news = await getLatestNews(parseLimit(limit, 10))
+      return json({ news: news.map(toPublic) })
     }
 
-    return NextResponse.json({ news })
-  } catch (error: any) {
-    console.error('Error fetching news:', error?.message || error)
-    return NextResponse.json(
-      { error: error?.message || 'Failed to fetch news' },
-      { status: 500 }
-    )
+    // The full list (with audit fields) is for the admin dashboard only
+    const guard = await requireAdmin(request)
+    if (!guard.ok) return guard.response
+    return json({ news: await getAllNews() })
+  } catch (error) {
+    return serverError('GET /api/news', error, 'Failed to fetch news.')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
-    const body = await request.json()
-    const newsData = {
-      title: body.title,
-      description: body.description,
-      photos: body.photos || [],
-      category: body.category || 'general',
-      date: body.date || new Date().toISOString()
-    }
+    const body = await parseJsonBody(request, createNewsSchema)
+    if (!body.ok) return body.response
 
-    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    const id = await createNews(newsData, creatorEmail)
-    await addNotification({
+    const newsData = { ...body.data, date: body.data.date ?? new Date().toISOString() }
+    const id = await createNews(newsData, guard.admin.email)
+
+    await notifyAdminAction(guard.admin, {
       type: 'news',
       action: 'created',
-      title: `News created: ${newsData.title || 'Untitled'}`,
-      description: newsData.title || undefined,
+      title: `News created: ${newsData.title}`,
+      description: newsData.title,
       itemId: id,
-      itemHref: `/admin/news/${id}`,
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/news/${id}`
     })
-    return NextResponse.json({ id, ...newsData })
-  } catch (error: any) {
-    console.error('Error creating news:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to create news' },
-      { status: 500 }
-    )
+
+    return json({ id, ...newsData })
+  } catch (error) {
+    return serverError('POST /api/news', error, 'Failed to create news.')
   }
 }

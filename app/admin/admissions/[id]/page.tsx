@@ -24,7 +24,11 @@ export default function AdmissionDetailPage() {
 
   const fetchAdmission = async () => {
     try {
-      const response = await fetch(`/api/admissions/${admissionId}`)
+      // Applications are admin-only: the request must carry the ID token
+      const token = await getAuthToken()
+      const response = await fetch(`/api/admissions/${admissionId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       const data = await response.json()
 
       if (!response.ok) {

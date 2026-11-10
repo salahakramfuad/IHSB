@@ -69,8 +69,8 @@ export default function AdminManagementPage() {
       setCreateError('Invalid email format.')
       return
     }
-    if (newPassword.length < 6) {
-      setCreateError('Password must be at least 6 characters long.')
+    if (newPassword.length < 8) {
+      setCreateError('Password must be at least 8 characters long.')
       return
     }
 
@@ -158,11 +158,11 @@ export default function AdminManagementPage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
-                  minLength={6}
+                  minLength={8}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500"
-                  placeholder="Min 6 characters"
+                  placeholder="Min 8 characters"
                 />
-                <p className="text-xs text-gray-500">Must be at least 6 characters</p>
+                <p className="text-xs text-gray-500">Must be at least 8 characters</p>
               </div>
               <div className="space-y-1">
                 <label className="text-xs font-medium text-gray-700">Display name (optional)</label>

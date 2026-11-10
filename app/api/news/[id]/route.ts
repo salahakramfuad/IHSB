@@ -1,111 +1,79 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
-import { updateNews, deleteNews, getNewsById } from '@/lib/database/news'
-import { addNotification } from '@/lib/database/notifications'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
+import { getNewsById, updateNews, deleteNews } from '@/lib/database/news'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
+import { updateNewsSchema } from '@/lib/validation/news'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type RouteContext = { params: Promise<{ id: string }> }
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params
-    const news = await getNewsById(id)
-    
-    if (!news) {
-      return NextResponse.json(
-        { error: 'News not found' },
-        { status: 404 }
-      )
-    }
+    if (!isValidDocId(id)) return notFound('News not found')
 
-    return NextResponse.json({ news })
-  } catch (error: any) {
-    console.error('Error fetching news:', error?.message || error)
-    return NextResponse.json(
-      { error: error?.message || 'Failed to fetch news' },
-      { status: 500 }
-    )
+    const admin = await getOptionalAdmin(request)
+    const news = await getNewsById(id)
+    if (!news) return notFound('News not found')
+
+    return json({ news: admin ? news : toPublic(news) })
+  } catch (error) {
+    return serverError('GET /api/news/[id]', error, 'Failed to fetch news.')
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
-    const body = await request.json()
-    const updateData: any = {}
+    if (!isValidDocId(id)) return notFound('News not found')
 
-    if (body.title !== undefined) updateData.title = body.title
-    if (body.description !== undefined) updateData.description = body.description
-    if (body.photos !== undefined) updateData.photos = body.photos
-    if (body.category !== undefined) updateData.category = body.category
-    if (body.date !== undefined) updateData.date = body.date
+    const body = await parseJsonBody(request, updateNewsSchema)
+    if (!body.ok) return body.response
 
-    const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateNews(id, updateData, updaterEmail)
-    await addNotification({
+    const existing = await getNewsById(id)
+    if (!existing) return notFound('News not found')
+
+    await updateNews(id, body.data, guard.admin.email)
+
+    const name = body.data.title ?? existing.title
+    await notifyAdminAction(guard.admin, {
       type: 'news',
       action: 'updated',
-      title: `News updated: ${body.title ?? 'News'}`,
-      description: body.title ?? undefined,
+      title: `News updated: ${name}`,
+      description: name,
       itemId: id,
-      itemHref: `/admin/news/${id}`,
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/news/${id}`
     })
-    const updatedNews = await getNewsById(id)
-    return NextResponse.json({ news: updatedNews })
-  } catch (error: any) {
-    console.error('Error updating news:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to update news' },
-      { status: 500 }
-    )
+
+    return json({ success: true, news: await getNewsById(id) })
+  } catch (error) {
+    return serverError('PUT /api/news/[id]', error, 'Failed to update news.')
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
+    if (!isValidDocId(id)) return notFound('News not found')
+
     await deleteNews(id)
-    await addNotification({
+
+    await notifyAdminAction(guard.admin, {
       type: 'news',
       action: 'deleted',
       title: 'News deleted',
       itemId: id,
-      itemHref: '/admin/news',
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: '/admin/news'
     })
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error deleting news:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to delete news' },
-      { status: 500 }
-    )
+
+    return json({ success: true })
+  } catch (error) {
+    return serverError('DELETE /api/news/[id]', error, 'Failed to delete news.')
   }
 }

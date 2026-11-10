@@ -1,45 +1,37 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { adminAuth, adminDb } from '@/lib/integrations/firebase/admin'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { requireSuperadmin } from '@/lib/auth/middleware'
+import { getSuperadminEmails } from '@/lib/auth/roles'
+import { isMockMode, mockWriteBlockedResponse } from '@/lib/mock'
+import { errorResponse, json, parseJsonBody, serverError } from '@/lib/utils/http'
+import { createAdminSchema } from '@/lib/validation/admins'
 
-const SUPERADMIN_EMAILS = (process.env.SUPERADMIN_EMAILS || '')
-  .split(',')
-  .map((email) => email.trim().toLowerCase())
-  .filter(Boolean)
-
-function isSuperadmin(email?: string | null) {
-  if (!email) return false
-  return SUPERADMIN_EMAILS.includes(email.toLowerCase())
+interface AdminListItem {
+  id: string
+  email: string
+  role: 'admin' | 'superadmin'
+  active: boolean
+  displayName: string | null
+  createdAt: string | null
+  createdByEmail: string | null
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const decoded = await verifyAdminToken(request)
-    if (!decoded || !isSuperadmin(decoded.email)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
+    const guard = await requireSuperadmin(request)
+    if (!guard.ok) return guard.response
 
-    let fromDb: Array<{
-      id: string
-      email: string
-      role: 'admin' | 'superadmin'
-      active: boolean
-      displayName: string | null
-      createdAt: string | null
-      createdByEmail: string | null
-    }> = []
-
+    let fromDb: AdminListItem[] = []
     try {
       const snapshot = await adminDb.collection('admins').orderBy('email').get()
       fromDb = snapshot.docs.map((doc) => {
-        const data = doc.data() as any
+        const data = doc.data()
         const rawCreated = data.createdAt
         const createdAt =
-          rawCreated?.toDate?.()?.toISOString?.() ??
-          (typeof rawCreated === 'string' ? rawCreated : null)
+          rawCreated?.toDate?.()?.toISOString?.() ?? (typeof rawCreated === 'string' ? rawCreated : null)
         return {
           id: doc.id,
-          email: (data.email || '').toLowerCase(),
+          email: String(data.email || '').toLowerCase(),
           role: data.role === 'superadmin' ? 'superadmin' : 'admin',
           active: data.active !== false,
           displayName: data.displayName || null,
@@ -47,141 +39,80 @@ export async function GET(request: NextRequest) {
           createdByEmail: data.createdByEmail || null
         }
       })
-    } catch (e) {
-      console.error('Firestore admins list error:', e)
+    } catch (error) {
+      console.error('[api] Firestore admins list error:', error)
     }
 
-    const emailsFromDb = new Set(fromDb.map((a) => a.email))
-    const fromEnv: typeof fromDb = SUPERADMIN_EMAILS.filter((e) => !emailsFromDb.has(e)).map(
-      (email, i) => ({
+    const emailsFromDb = new Set(fromDb.map((admin) => admin.email))
+    const fromEnv: AdminListItem[] = getSuperadminEmails()
+      .filter((email) => !emailsFromDb.has(email))
+      .map((email, i) => ({
         id: `env-${i}-${email.replace(/[^a-z0-9]/gi, '-')}`,
         email,
-        role: 'superadmin' as const,
+        role: 'superadmin',
         active: true,
         displayName: null,
         createdAt: null,
         createdByEmail: null
-      })
-    )
+      }))
 
     const admins = [...fromEnv, ...fromDb].sort((a, b) =>
       a.email.localeCompare(b.email, undefined, { sensitivity: 'base' })
     )
 
-    return NextResponse.json({ admins })
-  } catch (error: any) {
-    console.error('List admins error:', error)
-    return NextResponse.json(
-      { error: error?.message || 'Failed to list admins.' },
-      { status: 500 }
-    )
+    return json({ admins })
+  } catch (error) {
+    return serverError('GET /api/admins', error, 'Failed to list admins.')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const decoded = await verifyAdminToken(request)
-    if (!decoded || !isSuperadmin(decoded.email)) {
-      return NextResponse.json(
-        { error: 'Only superadmins can create new admins.' },
-        { status: 403 }
-      )
+    const guard = await requireSuperadmin(request)
+    if (!guard.ok) {
+      return guard.response.status === 403
+        ? errorResponse('Only superadmins can create new admins.', 403)
+        : guard.response
     }
+    if (isMockMode()) return mockWriteBlockedResponse()
 
-    let body: { email?: unknown; password?: unknown; role?: string; displayName?: unknown }
-    try {
-      const raw = await request.json()
-      body = raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {}
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid request body. Send JSON with email and password.' },
-        { status: 400 }
-      )
-    }
+    const body = await parseJsonBody(request, createAdminSchema)
+    if (!body.ok) return body.response
+    const { email, password, role, displayName } = body.data
 
-    const email = typeof body.email === 'string' ? body.email : ''
-    const password = typeof body.password === 'string' ? body.password : ''
-    const role = typeof body.role === 'string' ? body.role : 'admin'
-    const displayName = typeof body.displayName === 'string' ? body.displayName : undefined
-
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password are required.' },
-        { status: 400 }
-      )
-    }
-
-    const emailTrimmed = email.trim().toLowerCase()
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(emailTrimmed)) {
-      return NextResponse.json({ error: 'Invalid email format.' }, { status: 400 })
-    }
-    if (password.length < 6) {
-      return NextResponse.json(
-        { error: 'Password must be at least 6 characters long.' },
-        { status: 400 }
-      )
-    }
-
-    // Create Firebase Auth user (same pattern as robonautsclub)
     let userRecord
     try {
       userRecord = await adminAuth.createUser({
-        email: emailTrimmed,
+        email,
         password,
-        displayName: typeof displayName === 'string' ? displayName.trim() || undefined : undefined,
+        displayName,
         emailVerified: false
       })
-    } catch (firebaseError: any) {
-      const code = firebaseError?.code || ''
+    } catch (firebaseError) {
+      const code = (firebaseError as { code?: string })?.code || ''
       if (code === 'auth/email-already-exists' || code === 'auth/uid-already-exists') {
-        return NextResponse.json(
-          { error: 'A user with this email already exists.' },
-          { status: 400 }
-        )
+        return errorResponse('A user with this email already exists.', 400)
       }
-      if (code === 'auth/invalid-email') {
-        return NextResponse.json({ error: 'Invalid email format.' }, { status: 400 })
+      if (code === 'auth/invalid-email') return errorResponse('Invalid email format.', 400)
+      if (code === 'auth/weak-password' || code === 'auth/invalid-password') {
+        return errorResponse('Password is too weak. Use at least 8 characters.', 400)
       }
-      if (code === 'auth/weak-password') {
-        return NextResponse.json(
-          { error: 'Password is too weak. Use at least 6 characters.' },
-          { status: 400 }
-        )
-      }
-      console.error('Firebase createUser error:', firebaseError)
-      return NextResponse.json(
-        { error: firebaseError?.message || 'Failed to create user account.' },
-        { status: 500 }
-      )
+      return serverError('POST /api/admins createUser', firebaseError, 'Failed to create user account.')
     }
 
-    // Create admins collection document
     const docRef = adminDb.collection('admins').doc(userRecord.uid)
     await docRef.set({
-      email: emailTrimmed,
-      role: role === 'superadmin' ? 'superadmin' : 'admin',
+      email,
+      role,
       active: true,
-      displayName: typeof displayName === 'string' ? displayName.trim() || null : null,
+      displayName: displayName ?? null,
       createdAt: new Date().toISOString(),
-      createdBy: decoded.uid,
-      createdByEmail: decoded.email || null
+      createdBy: guard.admin.uid,
+      createdByEmail: guard.admin.email
     })
 
-    return NextResponse.json(
-      {
-        id: docRef.id,
-        email: emailTrimmed,
-        role: role === 'superadmin' ? 'superadmin' : 'admin'
-      },
-      { status: 201 }
-    )
-  } catch (error: any) {
-    console.error('Create admin error:', error)
-    return NextResponse.json(
-      { error: error?.message || 'Failed to create admin.' },
-      { status: 500 }
-    )
+    return json({ id: docRef.id, email, role }, { status: 201 })
+  } catch (error) {
+    return serverError('POST /api/admins', error, 'Failed to create admin.')
   }
 }
-

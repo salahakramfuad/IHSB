@@ -23,11 +23,6 @@ import {
 import { useState } from 'react'
 import { useAuth } from './AuthProvider'
 
-const SUPERADMIN_EMAILS = (process.env.NEXT_PUBLIC_SUPERADMIN_EMAILS || '')
-  .split(',')
-  .map((email) => email.trim().toLowerCase())
-  .filter(Boolean)
-
 const menuItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/events', label: 'Events', icon: Calendar },
@@ -44,13 +39,11 @@ const menuItems = [
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const { user } = useAuth()
+  const { role } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const isSuperAdmin =
-    !!user &&
-    !!user.email &&
-    SUPERADMIN_EMAILS.includes(user.email.toLowerCase())
+  // Role is resolved server-side (GET /api/auth/me)
+  const isSuperAdmin = role === 'superadmin'
 
   const handleLogout = async () => {
     await signOut()

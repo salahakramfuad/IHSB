@@ -1,71 +1,51 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
-import { getAllFeaturedAlumni, getFeaturedAlumni, getFeaturedAlumniByYear, createFeaturedAlumni } from '@/lib/database/alumni'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
+import { getFeaturedAlumniByYear, getAllFeaturedAlumni, createFeaturedAlumni } from '@/lib/database/alumni'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { json, parseJsonBody, parseLimit, serverError, toPublic } from '@/lib/utils/http'
+import { createFeaturedAlumniSchema } from '@/lib/validation/alumni'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const limit = searchParams.get('limit')
     const year = searchParams.get('year')
-    const featured = searchParams.get('featured')
+    const admin = await getOptionalAdmin(request)
 
-    let alumni
+    let alumni = year && /^\d{4}$/.test(year) ? await getFeaturedAlumniByYear(year) : await getAllFeaturedAlumni()
 
-    if (year) {
-      alumni = await getFeaturedAlumniByYear(year)
-    } else if (limit) {
-      alumni = await getFeaturedAlumni(parseInt(limit, 10))
-    } else {
-      alumni = await getAllFeaturedAlumni()
+    if (searchParams.get('featured') === 'true') {
+      alumni = alumni.filter((item) => item.featured === true)
     }
+    if (limit) alumni = alumni.slice(0, parseLimit(limit, 6))
 
-    // Filter by featured if specified
-    if (featured === 'true') {
-      alumni = alumni.filter(a => a.featured === true)
-    }
-
-    return NextResponse.json({ alumni })
-  } catch (error: any) {
-    console.error('Error fetching featured alumni:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch featured alumni' },
-      { status: 500 }
-    )
+    return json({ alumni: admin ? alumni : alumni.map(toPublic) })
+  } catch (error) {
+    return serverError('GET /api/alumni/featured', error, 'Failed to fetch featured alumni.')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
-    const body = await request.json()
-    const alumniData = {
-      name: body.name,
-      description: body.description,
-      achievement: body.achievement,
-      graduationYear: body.graduationYear,
-      imageUrl: body.imageUrl,
-      email: body.email,
-      linkedin: body.linkedin,
-      company: body.company,
-      location: body.location,
-      featured: body.featured || false
-    }
+    const body = await parseJsonBody(request, createFeaturedAlumniSchema)
+    if (!body.ok) return body.response
 
-    const creatorEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    const id = await createFeaturedAlumni(alumniData, creatorEmail)
-    return NextResponse.json({ id, ...alumniData })
-  } catch (error: any) {
-    console.error('Error creating featured alumni:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to create featured alumni' },
-      { status: 500 }
-    )
+    const id = await createFeaturedAlumni(body.data, guard.admin.email)
+
+    await notifyAdminAction(guard.admin, {
+      type: 'alumni_featured',
+      action: 'created',
+      title: `Featured alumni created: ${body.data.name}`,
+      description: body.data.name,
+      itemId: id,
+      itemHref: `/admin/alumni/featured`
+    })
+
+    return json({ id, ...body.data })
+  } catch (error) {
+    return serverError('POST /api/alumni/featured', error, 'Failed to create featured alumni.')
   }
 }

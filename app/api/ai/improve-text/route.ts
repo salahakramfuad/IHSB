@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { requireAdmin } from '@/lib/auth/middleware'
+import { enforceRateLimit } from '@/lib/security/rateLimit'
+import { parseJsonBody } from '@/lib/utils/http'
+import { improveTextSchema, MAX_AI_INPUT_LENGTH } from '@/lib/validation/ai'
 
-const MAX_INPUT_LENGTH = 20_000
+const MAX_INPUT_LENGTH = MAX_AI_INPUT_LENGTH
 const MAX_OUTPUT_LENGTH = 25_000
 
 /** Strip control characters and normalise excessive whitespace. */
@@ -20,22 +23,24 @@ function sanitizeText(text: string): string {
  */
 export async function POST(request: NextRequest) {
   try {
-    const decoded = await verifyAdminToken(request)
-    if (!decoded) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+    const guard = await requireAdmin(request)
+    if (!guard.ok) return guard.response
+
+    // Each call costs money: cap usage per admin IP
+    const limited = enforceRateLimit(request, 'ai-improve', { limit: 30, windowMs: 10 * 60 * 1000 })
+    if (limited) return limited
 
     const apiKey = process.env.OPENAI_API_KEY?.trim().replace(/^["']|["']$/g, '')
     if (!apiKey) {
       return NextResponse.json(
-        { error: 'AI improvement is not configured. Add OPENAI_API_KEY to .env.local.' },
+        { error: 'AI improvement is not configured.' },
         { status: 503 }
       )
     }
 
-    const body = await request.json()
-    const raw = typeof body?.text === 'string' ? body.text : ''
-    const text = sanitizeText(raw)
+    const body = await parseJsonBody(request, improveTextSchema)
+    if (!body.ok) return body.response
+    const text = sanitizeText(body.data.text)
 
     if (!text) {
       return NextResponse.json(
@@ -78,21 +83,12 @@ Rules:
     })
 
     if (!res.ok) {
-      let clientMessage = 'AI service error. Please try again later.'
-      try {
-        const errBody = await res.json().catch(() => ({})) as { error?: { message?: string; code?: string } }
-        const msg = errBody?.error?.message ?? ''
-        if (res.status === 401) {
-          clientMessage = 'Invalid or missing OpenAI API key. Check OPENAI_API_KEY in .env.local.'
-        } else if (res.status === 429) {
-          clientMessage = 'AI rate limit reached. Please try again in a moment.'
-        } else if (msg && !msg.toLowerCase().includes('key') && !msg.toLowerCase().includes('secret')) {
-          clientMessage = msg.slice(0, 120)
-        }
-        console.error('[ai/improve-text] OpenAI API error:', res.status, errBody)
-      } catch {
-        console.error('[ai/improve-text] OpenAI API error:', res.status, await res.text().catch(() => ''))
-      }
+      // Upstream error bodies are logged, never forwarded to the client
+      const clientMessage =
+        res.status === 429
+          ? 'AI rate limit reached. Please try again in a moment.'
+          : 'AI service error. Please try again later.'
+      console.error('[ai/improve-text] OpenAI API error:', res.status, await res.text().catch(() => ''))
       return NextResponse.json(
         { error: clientMessage },
         { status: 502 }
@@ -113,6 +109,7 @@ Rules:
 
     return NextResponse.json({ improvedText: improved })
   } catch (e) {
+    console.error('[ai/improve-text] unexpected error:', e)
     return NextResponse.json(
       { error: 'Something went wrong. Please try again.' },
       { status: 500 }

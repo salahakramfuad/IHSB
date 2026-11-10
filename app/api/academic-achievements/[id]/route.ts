@@ -1,102 +1,79 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/auth/middleware'
+import { NextRequest } from 'next/server'
+import { getOptionalAdmin, requireAdminWrite } from '@/lib/auth/middleware'
 import { getAcademicAchievementById, updateAcademicAchievement, deleteAcademicAchievement } from '@/lib/database/academicAchievements'
-import { addNotification } from '@/lib/database/notifications'
+import { notifyAdminAction } from '@/lib/database/notifications'
+import { isValidDocId, json, notFound, parseJsonBody, serverError, toPublic } from '@/lib/utils/http'
+import { updateAcademicAchievementSchema } from '@/lib/validation/academicAchievements'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+type RouteContext = { params: Promise<{ id: string }> }
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = await params
+    if (!isValidDocId(id)) return notFound('Academic achievement not found')
+
+    const admin = await getOptionalAdmin(request)
     const achievement = await getAcademicAchievementById(id)
-    
-    if (!achievement) {
-      return NextResponse.json(
-        { error: 'Academic achievement not found' },
-        { status: 404 }
-      )
-    }
-    
-    return NextResponse.json({ achievement })
-  } catch (error: any) {
-    console.error('Error fetching academic achievement:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch academic achievement' },
-      { status: 500 }
-    )
+    if (!achievement) return notFound('Academic achievement not found')
+
+    return json({ achievement: admin ? achievement : toPublic(achievement) })
+  } catch (error) {
+    return serverError('GET /api/academic-achievements/[id]', error, 'Failed to fetch academic achievement.')
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
-    const body = await request.json()
-    const updaterEmail = decodedToken.email || decodedToken.uid || 'unknown'
-    await updateAcademicAchievement(id, body, updaterEmail)
-    await addNotification({
+    if (!isValidDocId(id)) return notFound('Academic achievement not found')
+
+    const body = await parseJsonBody(request, updateAcademicAchievementSchema)
+    if (!body.ok) return body.response
+
+    const existing = await getAcademicAchievementById(id)
+    if (!existing) return notFound('Academic achievement not found')
+
+    await updateAcademicAchievement(id, body.data, guard.admin.email)
+
+    const name = body.data.name ?? existing.name
+    await notifyAdminAction(guard.admin, {
       type: 'academic_achievement',
       action: 'updated',
-      title: `Academic achievement updated: ${body.name ?? 'Achievement'}`,
-      description: body.name ?? undefined,
+      title: `Academic achievement updated: ${name}`,
+      description: name,
       itemId: id,
-      itemHref: '/admin/academic-achievements',
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: `/admin/academic-achievements`
     })
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error updating academic achievement:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to update academic achievement' },
-      { status: 500 }
-    )
+
+    return json({ success: true, achievement: await getAcademicAchievementById(id) })
+  } catch (error) {
+    return serverError('PUT /api/academic-achievements/[id]', error, 'Failed to update academic achievement.')
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
-    const decodedToken = await verifyAdminToken(request)
-    if (!decodedToken) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
+    const guard = await requireAdminWrite(request)
+    if (!guard.ok) return guard.response
 
     const { id } = await params
+    if (!isValidDocId(id)) return notFound('Academic achievement not found')
+
     await deleteAcademicAchievement(id)
-    await addNotification({
+
+    await notifyAdminAction(guard.admin, {
       type: 'academic_achievement',
       action: 'deleted',
       title: 'Academic achievement deleted',
       itemId: id,
-      itemHref: '/admin/academic-achievements',
-      createdBy: decodedToken.uid || '',
-      createdByEmail: decodedToken.email || null,
-      createdByName: (decodedToken as { name?: string }).name ?? decodedToken.email ?? null
+      itemHref: '/admin/academic-achievements'
     })
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error('Error deleting academic achievement:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to delete academic achievement' },
-      { status: 500 }
-    )
+
+    return json({ success: true })
+  } catch (error) {
+    return serverError('DELETE /api/academic-achievements/[id]', error, 'Failed to delete academic achievement.')
   }
 }
