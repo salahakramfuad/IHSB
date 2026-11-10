@@ -109,3 +109,23 @@ export async function getRecentNotifications(limit = 30): Promise<NotificationDo
     return []
   }
 }
+
+/** Record an admin action for the dashboard feed. */
+export function notifyAdminAction(
+  admin: { uid: string; email: string; name: string },
+  params: {
+    type: NotificationType
+    action: NotificationAction
+    title: string
+    description?: string
+    itemId: string
+    itemHref: string
+  }
+): Promise<void> {
+  return addNotification({
+    ...params,
+    createdBy: admin.uid,
+    createdByEmail: admin.email,
+    createdByName: admin.name
+  })
+}

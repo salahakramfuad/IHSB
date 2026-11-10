@@ -1,18 +1,8 @@
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc,
-  query,
-  where,
-  orderBy,
-  Timestamp
-} from 'firebase/firestore'
-import { db } from '../integrations/firebase/config'
+import { Timestamp } from 'firebase-admin/firestore'
+import type { DocumentData, DocumentSnapshot } from 'firebase-admin/firestore'
+import { adminDb } from '../integrations/firebase/admin'
 import { Event } from '@/data/events'
+import { cleanForWrite, withId } from './shared'
 
 export interface EventDocument extends Omit<Event, 'date'> {
   date: Timestamp | string
@@ -24,9 +14,11 @@ export interface EventDocument extends Omit<Event, 'date'> {
   updatedByEmail?: string
 }
 
+const events = () => adminDb.collection('events')
+
 // Convert Firestore document to Event
-const docToEvent = (doc: any): Event => {
-  const data = doc.data()
+const docToEvent = (doc: DocumentSnapshot<DocumentData>): Event => {
+  const data = doc.data() || {}
   return {
     id: doc.id,
     title: data.title,
@@ -44,126 +36,82 @@ const docToEvent = (doc: any): Event => {
 
 // Get all events (for public use - returns Event type)
 export const getAllEvents = async (): Promise<Event[]> => {
-  const q = query(collection(db, 'events'), orderBy('date', 'asc'))
-  const snapshot = await getDocs(q)
+  const snapshot = await events().orderBy('date', 'asc').get()
   return snapshot.docs.map(docToEvent)
 }
 
 // Get all events with full document data (for admin use)
 export const getAllEventsAdmin = async (): Promise<EventDocument[]> => {
-  const q = query(collection(db, 'events'), orderBy('date', 'asc'))
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  } as EventDocument))
+  const snapshot = await events().orderBy('date', 'asc').get()
+  return snapshot.docs.map((doc) => withId<EventDocument>(doc))
 }
 
 // Get featured events
 export const getFeaturedEvents = async (): Promise<Event[]> => {
-  const q = query(
-    collection(db, 'events'),
-    where('featured', '==', true),
-    orderBy('date', 'asc')
-  )
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map(docToEvent)
+  const all = await getAllEvents()
+  return all.filter((event) => event.featured)
 }
 
 // Get events by category
 export const getEventsByCategory = async (category: Event['category']): Promise<Event[]> => {
-  const q = query(
-    collection(db, 'events'),
-    where('category', '==', category),
-    orderBy('date', 'asc')
-  )
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map(docToEvent)
+  const all = await getAllEvents()
+  return all.filter((event) => event.category === category)
 }
 
 // Get upcoming events
 export const getUpcomingEvents = async (): Promise<Event[]> => {
   const now = new Date()
-  const q = query(
-    collection(db, 'events'),
-    orderBy('date', 'asc')
-  )
-  const snapshot = await getDocs(q)
-  return snapshot.docs
-    .map(docToEvent)
-    .filter(event => new Date(event.date) >= now)
+  const all = await getAllEvents()
+  return all.filter((event) => new Date(event.date) >= now)
 }
 
 // Get single event (for public use)
 export const getEventById = async (id: string): Promise<Event | null> => {
-  const docRef = doc(db, 'events', id)
-  const docSnap = await getDoc(docRef)
-  
-  if (!docSnap.exists()) {
-    return null
-  }
-  
-  return docToEvent(docSnap)
+  const snap = await events().doc(id).get()
+  return snap.exists ? docToEvent(snap) : null
 }
 
 // Get single event with full document data (for admin use)
 export const getEventByIdAdmin = async (id: string): Promise<EventDocument | null> => {
-  const docRef = doc(db, 'events', id)
-  const docSnap = await getDoc(docRef)
-  
-  if (!docSnap.exists()) {
-    return null
-  }
-  
-  return {
-    id: docSnap.id,
-    ...docSnap.data()
-  } as EventDocument
+  const snap = await events().doc(id).get()
+  return snap.exists ? withId<EventDocument>(snap) : null
 }
 
 // Create event
 export const createEvent = async (eventData: Omit<Event, 'id'>, creatorEmail?: string): Promise<string> => {
-  const eventRef = collection(db, 'events')
-  const docRef = await addDoc(eventRef, {
-    ...eventData,
-    date: Timestamp.fromDate(new Date(eventData.date)),
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    createdByEmail: creatorEmail || null,
-    createdBy: creatorEmail || null
-  })
+  const docRef = await events().add(
+    cleanForWrite({
+      ...eventData,
+      date: Timestamp.fromDate(new Date(eventData.date)),
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+      createdByEmail: creatorEmail || null,
+      createdBy: creatorEmail || null
+    })
+  )
   return docRef.id
 }
 
 // Update event
 export const updateEvent = async (id: string, eventData: Partial<Event>, updaterEmail?: string): Promise<void> => {
-  const docRef = doc(db, 'events', id)
-  const updateData: any = {
+  const updateData: Record<string, unknown> = {
     ...eventData,
     updatedAt: Timestamp.now()
   }
-  
+
   if (eventData.date) {
     updateData.date = Timestamp.fromDate(new Date(eventData.date))
   }
-  
+
   if (updaterEmail) {
     updateData.updatedByEmail = updaterEmail
     updateData.updatedBy = updaterEmail
   }
-  
-  // Remove any undefined values
-  Object.keys(updateData).forEach(key => {
-    if (updateData[key] === undefined) {
-      delete updateData[key]
-    }
-  })
-  
-  await updateDoc(docRef, updateData)
+
+  await events().doc(id).update(cleanForWrite(updateData))
 }
 
 // Delete event
 export const deleteEvent = async (id: string): Promise<void> => {
-  const docRef = doc(db, 'events', id)
-  await deleteDoc(docRef)
+  await events().doc(id).delete()
 }

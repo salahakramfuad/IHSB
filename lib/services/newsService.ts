@@ -1,4 +1,4 @@
-import { getLatestNews, getLatestSportsAndNews, getAllNews, getNewsByCategory } from '../database/news'
+import { getLatestNews, getLatestSportsAndNews, getAllNews, getNewsByCategory, getNewsById } from '../database/news'
 import { NewsDocument } from '../database/news'
 
 export type { NewsDocument, NewsCategory } from '../database/news'
@@ -36,5 +36,14 @@ export async function getNewsByCategoryService(category: 'sports' | 'news' | 'ge
     return await getNewsByCategory(category)
   } catch (error) {
     return []
+  }
+}
+
+export async function getNewsByIdService(id: string): Promise<NewsDocument | null> {
+  try {
+    return await getNewsById(id)
+  } catch (error) {
+    console.error('getNewsByIdService:', error)
+    return null
   }
 }

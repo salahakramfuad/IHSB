@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { getLatestHighlights } from '@/lib/services/highlightsService'
 import type { HighlightItem } from '@/lib/services/highlightsService'
 import { Calendar, Image as ImageIcon, Trophy } from 'lucide-react'
-import { Timestamp } from 'firebase/firestore'
 import ImageWithLightbox from '../shared/ImageWithLightbox'
 
 interface NewsServerProps {
@@ -31,9 +30,7 @@ export default async function NewsServer({ limit = 3 }: NewsServerProps) {
       
       try {
         let dateObj: Date
-        if (date instanceof Timestamp) {
-          dateObj = date.toDate()
-        } else if (date && typeof date === 'object' && 'seconds' in date) {
+        if (date && typeof date === 'object' && 'seconds' in date) {
           dateObj = new Date(date.seconds * 1000)
         } else if (date && typeof date === 'object' && 'toDate' in date && typeof date.toDate === 'function') {
           dateObj = date.toDate()

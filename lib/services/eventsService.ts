@@ -1,4 +1,4 @@
-import { getFeaturedEvents, getUpcomingEvents } from '../database/events'
+import { getAllEvents, getEventById, getFeaturedEvents, getUpcomingEvents } from '../database/events'
 import { Event } from '@/data/events'
 
 export type { Event } from '@/data/events'
@@ -20,5 +20,23 @@ export async function getUpcomingEventsService(): Promise<Event[]> {
     return await getUpcomingEvents()
   } catch (error) {
     return []
+  }
+}
+
+export async function getAllEventsService(): Promise<Event[]> {
+  try {
+    return await getAllEvents()
+  } catch (error) {
+    console.error('getAllEventsService:', error)
+    return []
+  }
+}
+
+export async function getEventByIdService(id: string): Promise<Event | null> {
+  try {
+    return await getEventById(id)
+  } catch (error) {
+    console.error('getEventByIdService:', error)
+    return null
   }
 }

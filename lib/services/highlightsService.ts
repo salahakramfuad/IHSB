@@ -2,7 +2,8 @@ import { getAllNews } from '../database/news'
 import { getAllSportsAchievements } from '../database/sports'
 import { NewsDocument } from '../database/news'
 import { SportsAchievementDocument } from '../database/sports'
-import { Timestamp } from 'firebase/firestore'
+import type { Timestamp } from 'firebase-admin/firestore'
+import { dateToMillis } from '../database/shared'
 
 export interface HighlightItem {
   id: string
@@ -80,22 +81,7 @@ export async function getLatestHighlights(limit: number = 3): Promise<HighlightI
     // Combine and sort by date (newest first)
     const allItems = [...sportsItems, ...newsItems]
     
-    const sortedItems = allItems.sort((a, b) => {
-      const getDateValue = (date: any): number => {
-        if (!date) return 0
-        if (date instanceof Timestamp) return date.toMillis()
-        if (date.seconds) return date.seconds * 1000 + (date.nanoseconds || 0) / 1000000
-        if (date.toDate) return date.toDate().getTime()
-        if (typeof date === 'string') {
-          // Handle ISO date strings
-          return new Date(date).getTime()
-        }
-        if (date instanceof Date) return date.getTime()
-        return 0
-      }
-      
-      return getDateValue(b.date) - getDateValue(a.date)
-    })
+    const sortedItems = allItems.sort((a, b) => dateToMillis(b.date) - dateToMillis(a.date))
 
     // Return the latest N items
     return sortedItems.slice(0, limit)

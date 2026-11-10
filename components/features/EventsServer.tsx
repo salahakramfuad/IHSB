@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getAllEvents } from '@/lib/database/events'
+import { getAllEventsService as getAllEvents } from '@/lib/services/eventsService'
 import type { Event } from '@/data/events'
 import Card from '../ui/Card'
 import Button from '../ui/Button'

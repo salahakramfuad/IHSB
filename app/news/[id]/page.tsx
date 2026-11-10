@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getNewsById } from '@/lib/database/news'
+import { getNewsByIdService as getNewsById } from '@/lib/services/newsService'
 import Section from '@/components/ui/Section'
 import { Calendar, ArrowLeft, Image as ImageIcon } from 'lucide-react'
 import Button from '@/components/ui/Button'

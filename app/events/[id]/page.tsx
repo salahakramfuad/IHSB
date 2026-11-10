@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getEventById } from '@/lib/database/events'
+import { getEventByIdService as getEventById } from '@/lib/services/eventsService'
 import Button from '@/components/ui/Button'
 import Section from '@/components/ui/Section'
 import ImageWithLightbox from '@/components/shared/ImageWithLightbox'

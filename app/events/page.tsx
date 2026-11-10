@@ -5,7 +5,7 @@ import { CalendarDays } from 'lucide-react'
 import Section from '../../components/ui/Section'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
-import { getAllEvents } from '@/lib/database/events'
+import { getAllEventsService as getAllEvents } from '@/lib/services/eventsService'
 import type { Event } from '@/data/events'
 
 const BANNER_PATTERN = `url("data:image/svg+xml,${encodeURIComponent('<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="#ffffff" fill-opacity="0.06"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>')}")`

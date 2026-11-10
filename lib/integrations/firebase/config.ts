@@ -1,9 +1,10 @@
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { getAuth, Auth } from 'firebase/auth'
-import { getFirestore, Firestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  // Placeholder keeps module evaluation from throwing when the env var is absent
+  // (e.g. builds without credentials); sign-in simply fails until it is configured.
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'missing-firebase-api-key',
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
@@ -20,7 +21,7 @@ if (getApps().length === 0) {
   app = getApps()[0]
 }
 
-// Initialize Firebase services
+// Client SDK is used for authentication only. Firestore is accessed exclusively
+// on the server through the Admin SDK (see ./admin.ts).
 export const auth: Auth = getAuth(app)
-export const db: Firestore = getFirestore(app)
 export default app

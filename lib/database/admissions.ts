@@ -1,16 +1,6 @@
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  query,
-  where,
-  orderBy,
-  Timestamp
-} from 'firebase/firestore'
-import { db } from '../integrations/firebase/config'
+import { Timestamp } from 'firebase-admin/firestore'
+import { adminDb } from '../integrations/firebase/admin'
+import { cleanForWrite, withId } from './shared'
 
 export interface AdmissionDocument {
   id?: string
@@ -55,76 +45,53 @@ export interface AdmissionDocument {
   // Status
   status: 'pending' | 'approved' | 'rejected'
   notes?: string
-  
   createdAt?: Timestamp
   updatedAt?: Timestamp
 }
 
+const admissions = () => adminDb.collection('admissions')
+
 // Get all admissions
 export const getAllAdmissions = async (): Promise<AdmissionDocument[]> => {
-  const q = query(collection(db, 'admissions'), orderBy('createdAt', 'desc'))
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  } as AdmissionDocument))
+  const snapshot = await admissions().orderBy('createdAt', 'desc').get()
+  return snapshot.docs.map((doc) => withId<AdmissionDocument>(doc))
 }
 
 // Get admissions by status
 export const getAdmissionsByStatus = async (status: string): Promise<AdmissionDocument[]> => {
-  const q = query(
-    collection(db, 'admissions'),
-    where('status', '==', status),
-    orderBy('createdAt', 'desc')
-  )
-  const snapshot = await getDocs(q)
-  return snapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  } as AdmissionDocument))
+  const all = await getAllAdmissions()
+  return all.filter((admission) => admission.status === status)
 }
 
 // Get single admission
 export const getAdmissionById = async (id: string): Promise<AdmissionDocument | null> => {
-  const docRef = doc(db, 'admissions', id)
-  const docSnap = await getDoc(docRef)
-  
-  if (!docSnap.exists()) {
-    return null
+  const snap = await admissions().doc(id).get()
+  return snap.exists ? withId<AdmissionDocument>(snap) : null
+}
+
+// Create admission (always starts as "pending")
+export const createAdmission = async (
+  admissionData: Omit<AdmissionDocument, 'id' | 'createdAt' | 'updatedAt' | 'status'> & {
+    status?: AdmissionDocument['status']
   }
-  
-  return {
-    id: docSnap.id,
-    ...docSnap.data()
-  } as AdmissionDocument
-}
-
-/** Remove undefined values; Firestore does not allow undefined. */
-function stripUndefined<T extends Record<string, unknown>>(obj: T): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, v]) => v !== undefined)
-  ) as Record<string, unknown>
-}
-
-// Create admission
-export const createAdmission = async (admissionData: Omit<AdmissionDocument, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  const admissionRef = collection(db, 'admissions')
-  const payload = stripUndefined({
-    ...admissionData,
-    status: 'pending',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now()
-  })
-  const docRef = await addDoc(admissionRef, payload)
+): Promise<string> => {
+  const docRef = await admissions().add(
+    cleanForWrite({
+      ...admissionData,
+      status: 'pending',
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now()
+    })
+  )
   return docRef.id
 }
 
 // Update admission
 export const updateAdmission = async (id: string, admissionData: Partial<AdmissionDocument>): Promise<void> => {
-  const docRef = doc(db, 'admissions', id)
-  const payload = stripUndefined({
-    ...admissionData,
-    updatedAt: Timestamp.now()
-  })
-  await updateDoc(docRef, payload)
+  await admissions().doc(id).update(
+    cleanForWrite({
+      ...admissionData,
+      updatedAt: Timestamp.now()
+    })
+  )
 }
