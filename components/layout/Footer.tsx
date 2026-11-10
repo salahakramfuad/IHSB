@@ -36,7 +36,7 @@ const linkClass =
 const headingClass =
   'text-xs sm:text-sm font-semibold uppercase tracking-wider text-primary-green-200 border-b border-primary-green-400/40 pb-2 mb-4 inline-block'
 
-export default function Footer() {
+export default function Footer({ demoData = false }: { demoData?: boolean }) {
   return (
     <footer
       role='contentinfo'
@@ -152,6 +152,14 @@ export default function Footer() {
         <div className='border-t border-white/20 pt-8 sm:pt-10 flex flex-col-reverse sm:flex-row items-center justify-between gap-6 sm:gap-8'>
           <p className='text-sm text-white/75 text-center sm:text-left order-2 sm:order-1 max-w-xl leading-relaxed'>
             &copy; {COPYRIGHT_YEAR} {schoolInfo.name}. All rights reserved.
+            {demoData && (
+              <span
+                className='ml-2 inline-flex items-center rounded-full border border-amber-400/60 bg-amber-400/15 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-amber-200'
+                title='Mock mode is on: this content is sample data, not from the database'
+              >
+                Demo data
+              </span>
+            )}
           </p>
           <div
             className='flex items-center justify-center sm:justify-end gap-1 sm:gap-2 order-1 sm:order-2'

@@ -4,47 +4,39 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { faker } from '@faker-js/faker'
 import LightboxGallery from '../../../components/shared/LightboxGallery'
 import ImageWithLightbox from '../../../components/shared/ImageWithLightbox'
 import Button from '../../../components/ui/Button'
 import Card from '../../../components/ui/Card'
 import Section from '../../../components/ui/Section'
 import { schoolInfo } from '@/data/schoolInfo'
+import type { FacultyMember, GalleryItem, Testimonial } from '@/lib/mock/types'
 
 type Facility = { name: string; image: string }
 type Tab = 'IGCSE' | 'A Levels'
 
-// Set seed for consistent image generation between server and client
-faker.seed(67890)
-const BASE_IMAGES = Array.from({ length: 8 }).map(() =>
-  faker.image.urlPicsumPhotos({
-    width: 1200,
-    height: 800,
-    blur: 0,
-    grayscale: false
-  })
-)
+const facilityImage = (seed: string) => `https://picsum.photos/seed/${seed}/800/500`
+
 const FACILITIES: Facility[] = [
   {
     name: 'Indoor sports hall, football field, volleyball and basketball courts',
-    image: faker.image.urlPicsumPhotos({ width: 800, height: 500, blur: 0 })
+    image: facilityImage('ihsb-facility-sports-hall')
   },
   {
     name: 'Mini golf and tennis courts',
-    image: faker.image.urlPicsumPhotos({ width: 800, height: 500 })
+    image: facilityImage('ihsb-facility-tennis')
   },
   {
     name: 'Table tennis facilities and a fitness center',
-    image: faker.image.urlPicsumPhotos({ width: 800, height: 500 })
+    image: facilityImage('ihsb-facility-fitness')
   },
   {
     name: '550-seated auditorium and 130-bedded hostel',
-    image: faker.image.urlPicsumPhotos({ width: 800, height: 500 })
+    image: facilityImage('ihsb-facility-auditorium')
   },
   {
     name: 'Smart boards and multimedia systems',
-    image: faker.image.urlPicsumPhotos({ width: 800, height: 500 })
+    image: facilityImage('ihsb-facility-smartboard')
   }
 ]
 
@@ -75,51 +67,19 @@ const ALEVEL_SUBJECTS = [
   'Economics'
 ]
 
-/** Generate consistent fake data once per mount */
-function useFakerData() {
-  const { gallery, testimonials, staff } = useMemo(() => {
-    faker.seed(12345)
-    const gallery = BASE_IMAGES.map((src) => ({
-      src,
-      caption: faker.company.catchPhrase()
-    }))
-    const testimonials = Array.from({ length: 6 }).map(() => ({
-      id: faker.string.uuid(),
-      name: faker.person.fullName(),
-      avatar: `https://i.pravatar.cc/100?img=${faker.number.int({
-        min: 1,
-        max: 70
-      })}`,
-      text: faker.lorem.sentences(2),
-      grade: `${faker.helpers.arrayElement([
-        'Grade',
-        'Year'
-      ])} ${faker.number.int({ min: 7, max: 12 })}`
-    }))
-    const staff = Array.from({ length: 4 }).map(() => ({
-      id: faker.string.uuid(),
-      name: faker.person.fullName(),
-      role: faker.helpers.arrayElement([
-        'Head of Senior Section',
-        'IGCSE Coordinator',
-        'A Levels Coordinator',
-        'Student Affairs Lead'
-      ]),
-      photo: `https://i.pravatar.cc/200?img=${faker.number.int({
-        min: 1,
-        max: 70
-      })}`
-    }))
-    return { gallery, testimonials, staff }
-  }, [])
-  return { gallery, testimonials, staff }
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=75'
+
+interface UttaraSeniorClientProps {
+  gallery: GalleryItem[]
+  testimonials: Testimonial[]
+  staff: FacultyMember[]
 }
 
 const branchInfo = schoolInfo.branches.uttaraSenior
 
-export default function UttaraSeniorSection() {
+export default function UttaraSeniorClient({ gallery, testimonials, staff }: UttaraSeniorClientProps) {
   const [activeTab, setActiveTab] = useState<Tab>('IGCSE')
-  const { gallery, testimonials, staff } = useFakerData()
 
   // Map your gallery objects to string[] for LightboxGallery
   const photoSrcs = useMemo(() => gallery.map((g) => g.src), [gallery])
@@ -131,7 +91,7 @@ export default function UttaraSeniorSection() {
         {/* Background with Parallax */}
         <div className='absolute inset-0 -z-10'>
           <ImageWithLightbox
-            src={BASE_IMAGES[0]}
+            src={HERO_IMAGE}
             alt='Uttara Senior Section Campus'
             fill
             priority

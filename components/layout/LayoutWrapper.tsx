@@ -11,9 +11,12 @@ import ThemeCSSVars from '../shared/ThemeCSSVars'
  * Excludes admin routes from public navigation
  */
 export default function LayoutWrapper({
-  children
+  children,
+  demoData = false
 }: {
   children: React.ReactNode
+  /** Show the "Demo data" badge in the footer (mock mode, development only). */
+  demoData?: boolean
 }) {
   const pathname = usePathname()
   const [isAdminRoute, setIsAdminRoute] = useState(false)
@@ -39,7 +42,7 @@ export default function LayoutWrapper({
         >
           <Nav />
           {children}
-          <Footer />
+          <Footer demoData={demoData} />
         </main>
       ) : (
         <div suppressHydrationWarning>{children}</div>

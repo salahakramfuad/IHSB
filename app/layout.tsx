@@ -3,6 +3,7 @@ import React from 'react'
 import type { Metadata } from 'next'
 import '../styles/global.css'
 import LayoutWrapper from '../components/layout/LayoutWrapper'
+import { isMockMode } from '@/lib/mock'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ihsb.edu.bd'),
@@ -71,10 +72,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // "Demo data" badge: only while developing, and only when mock data is being served
+  const demoData = process.env.NODE_ENV !== 'production' && isMockMode()
+
   return (
     <html lang='en'>
       <body className='w-full'>
-        <LayoutWrapper>{children}</LayoutWrapper>
+        <LayoutWrapper demoData={demoData}>{children}</LayoutWrapper>
       </body>
     </html>
   )
