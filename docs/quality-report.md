@@ -47,7 +47,7 @@ measured in the field.
 
 ## Checks
 
-- `pnpm lint`: 0 errors. 119 warnings remain, all in the admin dashboard and `lib/auth/auth.ts`,
+- `pnpm lint`: 0 errors. 113 warnings remain, all in the admin dashboard and `lib/auth/auth.ts`,
   whose logic was deliberately left alone.
 - `pnpm build`: passes with no Firebase credentials.
 - Screenshots: 25 pages at 390 px and 1440 px, light and dark, in `docs/screenshots/`
