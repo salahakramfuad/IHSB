@@ -6,15 +6,17 @@ import '../styles/global.css'
 import ThemeScript from '@/components/theme/ThemeScript'
 
 // Display: Fraunces (soft, warm old-style serif). Body: Plus Jakarta Sans.
+// Only the Latin subset is preloaded; other subsets (e.g. Turkish letters) load on demand.
+// The optical-size axis is kept; the SOFT axis was dropped because it doubled the file size.
 const display = Fraunces({
-  subsets: ['latin', 'latin-ext'],
-  axes: ['SOFT', 'opsz'],
+  subsets: ['latin'],
+  axes: ['opsz'],
   variable: '--font-display',
   display: 'swap'
 })
 
 const sans = Plus_Jakarta_Sans({
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap'
 })

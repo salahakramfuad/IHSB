@@ -45,7 +45,7 @@ green band, add the class `on-dark`; the ink, line and accent tokens flip so chi
 
 | Role | Family | Use |
 | --- | --- | --- |
-| Display | Fraunces (variable: optical size, SOFT) | headings, numerals, pull quotes |
+| Display | Fraunces (variable: weight, optical size) | headings, numerals, pull quotes |
 | Text and UI | Plus Jakarta Sans | body, navigation, forms, buttons |
 
 Fluid scale (`clamp()`): `display-1` 40 to 84 px, `display-2` 32 to 56 px, `display-3` 26 to 36 px,

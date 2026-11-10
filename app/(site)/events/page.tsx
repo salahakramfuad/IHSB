@@ -9,7 +9,7 @@ import EmptyState from '@/components/ui/EmptyState'
 import PageHeader from '@/components/ui/PageHeader'
 import Section from '@/components/ui/Section'
 import type { Event } from '@/data/events'
-import { formatDate } from '@/lib/format'
+import { currentTime, formatDate } from '@/lib/format'
 import { getAllEventsService } from '@/lib/services/eventsService'
 
 export const metadata: Metadata = {
@@ -46,7 +46,7 @@ export default async function EventsPage({
 
   const all = await getAllEventsService()
   const events = category ? all.filter((event) => event.category === category) : all
-  const now = Date.now()
+  const now = currentTime()
   const upcoming = events.filter((event) => new Date(event.date).getTime() >= now)
   const past = events.filter((event) => new Date(event.date).getTime() < now).reverse()
 
@@ -127,9 +127,9 @@ export default async function EventsPage({
             </div>
           ) : (
             <ul className='mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
-              {upcoming.map((event) => (
+              {upcoming.map((event, index) => (
                 <li key={event.id}>
-                  <EventCard event={event} className='h-full' />
+                  <EventCard event={event} priority={index === 0} className='h-full' />
                 </li>
               ))}
             </ul>

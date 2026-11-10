@@ -48,3 +48,8 @@ export function excerpt(text: string, maxLength: number): string {
   const cut = plain.slice(0, maxLength)
   return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), maxLength - 24)).trimEnd()}…`
 }
+
+/** Current time in milliseconds. Server components call this once per render to split past from upcoming. */
+export function currentTime(): number {
+  return Date.now()
+}

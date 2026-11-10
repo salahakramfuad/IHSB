@@ -22,7 +22,7 @@ export default function Hero({ stats }: { stats: SchoolStats }) {
         className='absolute inset-0 -z-10 bg-[radial-gradient(95%_80%_at_82%_18%,rgb(var(--brand-600)/0.7),transparent_64%)]'
         aria-hidden
       />
-      <ContourLines seed={1996} lines={24} className='-z-10 text-gold-300 opacity-45' />
+      <ContourLines seed={1996} lines={16} className='-z-10 text-gold-300 opacity-45' />
 
       <div className='container grid items-center gap-8 pb-16 pt-[calc(var(--nav-height)+3rem)] lg:min-h-[min(54rem,100svh)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:pb-24'>
         <div className='max-w-2xl'>

@@ -54,10 +54,12 @@ interface EventCardProps {
   /** `row` = date block + text, for timelines and lists */
   variant?: 'card' | 'row'
   headingLevel?: 'h2' | 'h3'
+  /** Load the image eagerly (first card above the fold) */
+  priority?: boolean
   className?: string
 }
 
-export default function EventCard({ event, variant = 'card', headingLevel: Heading = 'h3', className }: EventCardProps) {
+export default function EventCard({ event, variant = 'card', headingLevel: Heading = 'h3', priority, className }: EventCardProps) {
   const href = `/events/${event.id}`
   const category = EVENT_CATEGORY[event.category] ?? EVENT_CATEGORY.other
 
@@ -78,7 +80,7 @@ export default function EventCard({ event, variant = 'card', headingLevel: Headi
   }
 
   return (
-    <Card interactive className={className}>
+    <Card bare interactive className={className}>
       <SharedElement name={transitionName('event', event.id)}>
         <div className='relative aspect-[16/10] w-full overflow-hidden bg-brand-800'>
           {event.image ? (
@@ -86,6 +88,7 @@ export default function EventCard({ event, variant = 'card', headingLevel: Headi
               src={event.image}
               alt=''
               fill
+              priority={priority}
               sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
               className='object-cover transition-transform duration-slow ease-out group-hover/card:scale-[1.03]'
             />

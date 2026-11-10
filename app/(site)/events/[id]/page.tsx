@@ -11,7 +11,7 @@ import PageHeader from '@/components/ui/PageHeader'
 import Section from '@/components/ui/Section'
 import type { Event } from '@/data/events'
 import { schoolInfo } from '@/data/schoolInfo'
-import { excerpt, formatDate, isoDate } from '@/lib/format'
+import { currentTime, excerpt, formatDate, isoDate } from '@/lib/format'
 import { getEventByIdService } from '@/lib/services/eventsService'
 
 type Props = { params: Promise<{ id: string }> }
@@ -72,7 +72,7 @@ export default async function EventDetailPage({ params }: Props) {
   if (!event) notFound()
 
   const category = EVENT_CATEGORY[event.category] ?? EVENT_CATEGORY.other
-  const isPast = new Date(event.date).getTime() < Date.now()
+  const isPast = new Date(event.date).getTime() < currentTime()
   const links = calendarLinks(event)
   const registrationHref = event.registrationUrl || '/contact'
   const externalRegistration = /^https?:\/\//.test(registrationHref)

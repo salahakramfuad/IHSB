@@ -56,7 +56,7 @@ export default function NewsCard({ item, variant = 'card', headingLevel = 'h3', 
   const feature = variant === 'feature'
 
   return (
-    <Card interactive className={cn(feature && 'lg:grid lg:grid-cols-[1.15fr_1fr]', className)}>
+    <Card bare interactive className={cn(feature && 'lg:grid lg:grid-cols-[1.15fr_1fr]', className)}>
       {image && (
         <SharedElement name={transitionName('news', item.id)}>
           <div className={cn('relative w-full overflow-hidden bg-sunken', feature ? 'aspect-[16/10] lg:aspect-auto lg:min-h-[24rem]' : 'aspect-[16/10]')}>

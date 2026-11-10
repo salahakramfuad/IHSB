@@ -21,7 +21,7 @@ function random(seed: number) {
 
 const WIDTH = 1440
 const HEIGHT = 720
-const STEP = 48
+const STEP = 96
 
 function buildPaths(seed: number, lines: number): string[] {
   const rand = random(seed)
@@ -34,7 +34,7 @@ function buildPaths(seed: number, lines: number): string[] {
     height: (rand() > 0.5 ? 1 : -1) * (40 + rand() * 70)
   }))
   const waves = Array.from({ length: 3 }, () => ({
-    frequency: 0.0025 + rand() * 0.004,
+    frequency: 0.002 + rand() * 0.003,
     phase: rand() * Math.PI * 2,
     amplitude: 6 + rand() * 12
   }))
@@ -74,7 +74,7 @@ interface ContourLinesProps {
   className?: string
 }
 
-export default function ContourLines({ seed = 1996, lines = 22, className }: ContourLinesProps) {
+export default function ContourLines({ seed = 1996, lines = 14, className }: ContourLinesProps) {
   const paths = buildPaths(seed, lines)
 
   return (

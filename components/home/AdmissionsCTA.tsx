@@ -13,7 +13,7 @@ const steps = [
 export default function AdmissionsCTA() {
   return (
     <section aria-labelledby='admissions-heading' className='on-dark relative isolate overflow-hidden bg-brand-800 py-section'>
-      <ContourLines seed={42} lines={18} className='-z-10 text-gold-300 opacity-35' />
+      <ContourLines seed={42} lines={12} className='-z-10 text-gold-300 opacity-35' />
 
       <div className='container'>
         <div className='grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-20'>

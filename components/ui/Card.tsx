@@ -6,7 +6,7 @@ import { cn } from '../../lib/utils'
  * Card: a surface for one self-contained piece of content.
  *
  * Compose it from parts:
- *   <Card>
+ *   <Card bare>
  *     <Card.Media src alt />
  *     <Card.Body>
  *       <Card.Eyebrow>…</Card.Eyebrow>
@@ -16,13 +16,16 @@ import { cn } from '../../lib/utils'
  *     <Card.Footer>…</Card.Footer>
  *   </Card>
  *
- * The `image`, `header` and `footer` props remain as a shorthand (used by the admin dashboard).
+ * Without `bare`, children are padded automatically and the `image`, `header` and `footer`
+ * props act as a shorthand (used by the forms and the admin dashboard).
  */
 export interface CardProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode
   image?: { src: string; alt: string; priority?: boolean }
   header?: React.ReactNode
   footer?: React.ReactNode
+  /** Render children as-is, for cards composed from Card.Media / Card.Body / Card.Footer */
+  bare?: boolean
   /** Lift on hover; use for cards that are links */
   interactive?: boolean
   as?: 'article' | 'div' | 'li' | 'section'
@@ -31,9 +34,8 @@ export interface CardProps extends React.HTMLAttributes<HTMLElement> {
 
 export const cardSurface = 'rounded-lg border border-line bg-paper shadow-soft'
 
-function CardRoot({ className, children, image, header, footer, interactive, as = 'article', ref, ...props }: CardProps) {
+function CardRoot({ className, children, image, header, footer, bare, interactive, as = 'article', ref, ...props }: CardProps) {
   const Component = as as React.ElementType
-  const shorthand = Boolean(image?.src?.trim() || header || footer)
 
   return (
     <Component
@@ -47,7 +49,7 @@ function CardRoot({ className, children, image, header, footer, interactive, as 
       )}
       {...props}
     >
-      {shorthand ? (
+      {!bare ? (
         <>
           {image?.src?.trim() && <CardMedia src={image.src} alt={image.alt} priority={image.priority} />}
           {header && <div className='border-b border-line px-6 pb-4 pt-6'>{header}</div>}

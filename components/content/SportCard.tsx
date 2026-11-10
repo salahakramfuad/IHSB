@@ -15,7 +15,7 @@ export const PLACEMENT_TONE: Record<Placement, BadgeTone> = {
 
 export default function SportCard({ achievement, className }: { achievement: SportsAchievementDocument; className?: string }) {
   return (
-    <Card interactive className={className}>
+    <Card bare interactive className={className}>
       <SharedElement name={transitionName('sport', achievement.slug)}>
         <div className='relative aspect-[16/10] w-full overflow-hidden bg-brand-800'>
           {achievement.image && (

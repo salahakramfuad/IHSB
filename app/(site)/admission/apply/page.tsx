@@ -9,11 +9,6 @@ import PageHeader from '@/components/ui/PageHeader'
 import { inputClass, labelClass } from '@/components/ui/Field'
 import DatePicker from '@/components/admin/DatePicker'
 import { 
-  User, 
-  Calendar, 
-  MapPin, 
-  Users, 
-  FileText, 
   CreditCard,
   Upload,
   CheckCircle2,
@@ -296,7 +291,7 @@ export default function AdmissionApplyPage() {
           [name]: { file: null, url: null, uploading: false, error: uploadResult.error || 'Upload failed' }
         }))
       }
-    } catch (error) {
+    } catch {
       setFileUploads(prev => ({
         ...prev,
         [name]: { file: null, url: null, uploading: false, error: 'An error occurred during upload' }
@@ -421,7 +416,7 @@ export default function AdmissionApplyPage() {
         setStatus('error')
         setErrorMessage(result.error || 'Failed to submit application')
       }
-    } catch (error) {
+    } catch {
       setStatus('error')
       setErrorMessage('An error occurred. Please try again later.')
     }
@@ -741,11 +736,11 @@ export default function AdmissionApplyPage() {
                   </div>
 
                   <div className='bg-sunken p-4 rounded-lg border border-line mb-6'>
-                    <h3 className='font-semibold text-ink mb-2'>Father's Information</h3>
+                    <h3 className='font-semibold text-ink mb-2'>Father&rsquo;s Information</h3>
                     <div className='space-y-4'>
                       <div>
                         <label htmlFor='fatherName' className={labelClassName}>
-                          Father's Name <span className='text-danger'>*</span>
+                          Father&rsquo;s Name <span className='text-danger'>*</span>
                         </label>
                         <input
                           type='text'
@@ -792,11 +787,11 @@ export default function AdmissionApplyPage() {
                   </div>
 
                   <div className='bg-sunken p-4 rounded-lg border border-line'>
-                    <h3 className='font-semibold text-ink mb-2'>Mother's Information</h3>
+                    <h3 className='font-semibold text-ink mb-2'>Mother&rsquo;s Information</h3>
                     <div className='space-y-4'>
                       <div>
                         <label htmlFor='motherName' className={labelClassName}>
-                          Mother's Name <span className='text-danger'>*</span>
+                          Mother&rsquo;s Name <span className='text-danger'>*</span>
                         </label>
                         <input
                           type='text'
@@ -991,7 +986,7 @@ export default function AdmissionApplyPage() {
                       {/* Visiting Card (Optional) */}
                       <div>
                         <label className={labelClassName}>
-                          Parent's Business Card (Optional)
+                          Parent&rsquo;s Business Card (Optional)
                         </label>
                         <FileUploadField
                           name='visitingCardImage'

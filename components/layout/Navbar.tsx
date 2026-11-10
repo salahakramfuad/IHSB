@@ -117,7 +117,7 @@ export default function Navbar() {
         </a>
 
         <div className='container flex h-nav items-center justify-between gap-4'>
-          <Link href='/' className='flex min-w-0 items-center gap-3' aria-label={`${schoolInfo.name}, home`}>
+          <Link href='/' className='flex min-w-0 items-center gap-3' aria-label={`IHSB, ${schoolInfo.name}, home`}>
             <Image
               src='/assets/images/logo.png'
               alt=''
@@ -128,9 +128,10 @@ export default function Navbar() {
             />
             <span className='min-w-0 leading-tight' translate='no'>
               <span className='block truncate font-display text-[1.0625rem] font-semibold text-ink sm:text-lg'>
-                International Hope School
+                <span className='sm:hidden'>IHSB</span>
+                <span className='hidden sm:inline'>International Hope School</span>
               </span>
-              <span className='block text-xs font-medium text-ink-subtle'>Bangladesh</span>
+              <span className='hidden text-xs font-medium text-ink-subtle sm:block'>Bangladesh</span>
             </span>
           </Link>
 

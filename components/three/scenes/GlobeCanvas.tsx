@@ -7,6 +7,8 @@ import {
   BackSide,
   BufferAttribute,
   BufferGeometry,
+  Line,
+  LineBasicMaterial,
   MathUtils,
   QuadraticBezierCurve3,
   Vector3,
@@ -68,7 +70,7 @@ function landDots(count: number): Float32Array {
 }
 
 interface Arc {
-  geometry: BufferGeometry
+  line: Line
   curve: QuadraticBezierCurve3
   end: Vector3
 }
@@ -79,16 +81,24 @@ function Arcs({ destinations }: { destinations: GeoPoint[] }) {
 
   const arcs = useMemo<Arc[]>(() => {
     const start = toVector(DHAKA.lat, DHAKA.lng)
+    // One material shared by every arc
+    const material = new LineBasicMaterial({ color: palette.gold, transparent: true, opacity: 0.55 })
     return destinations.map((destination) => {
       const end = toVector(destination.lat, destination.lng)
       const distance = start.distanceTo(end)
       const mid = start.clone().add(end).multiplyScalar(0.5).normalize().multiplyScalar(RADIUS + distance * 0.42)
       const curve = new QuadraticBezierCurve3(start, mid, end)
-      return { curve, end, geometry: new BufferGeometry().setFromPoints(curve.getPoints(40)) }
+      return { curve, end, line: new Line(new BufferGeometry().setFromPoints(curve.getPoints(40)), material) }
     })
-  }, [destinations])
+  }, [destinations, palette.gold])
 
-  useEffect(() => () => arcs.forEach((arc) => arc.geometry.dispose()), [arcs])
+  useEffect(
+    () => () => {
+      arcs.forEach((arc) => arc.line.geometry.dispose())
+      ;(arcs[0]?.line.material as LineBasicMaterial | undefined)?.dispose()
+    },
+    [arcs]
+  )
 
   // A small light travels along each arc, staggered
   useFrame((state) => {
@@ -108,9 +118,7 @@ function Arcs({ destinations }: { destinations: GeoPoint[] }) {
     <>
       {arcs.map((arc, index) => (
         <group key={index}>
-          <threeLine geometry={arc.geometry}>
-            <lineBasicMaterial color={palette.gold} transparent opacity={0.55} />
-          </threeLine>
+          <primitive object={arc.line} />
           <mesh position={arc.end}>
             <sphereGeometry args={[0.028, 10, 10]} />
             <meshBasicMaterial color={palette.goldLight} />
@@ -148,6 +156,8 @@ function Globe({ destinations }: { destinations: GeoPoint[] }) {
 
   useEffect(() => () => dots.dispose(), [dots])
 
+  // Pointer handling mutates a ref and the canvas element directly (no React state: it runs every frame)
+  /* eslint-disable react-hooks/immutability */
   useEffect(() => {
     const element = gl.domElement
     const state = drag.current
@@ -187,6 +197,7 @@ function Globe({ destinations }: { destinations: GeoPoint[] }) {
       element.removeEventListener('pointercancel', onUp)
     }
   }, [gl])
+  /* eslint-enable react-hooks/immutability */
 
   useFrame((_, delta) => {
     const state = drag.current

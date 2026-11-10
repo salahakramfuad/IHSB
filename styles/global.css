@@ -96,9 +96,8 @@
 }
 
 @layer components {
-  /* Display type: Fraunces with its soft, slightly wonky optical cut */
+  /* Display type: Fraunces, optical size chosen automatically */
   .font-display {
-    font-variation-settings: 'SOFT' 50, 'WONK' 0;
     font-optical-sizing: auto;
   }
 
@@ -158,7 +157,7 @@
   /* Ledger numerals: statistics set like figures entered in a bound register */
   .numeral {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-variation-settings: 'SOFT' 30, 'opsz' 144;
+    font-variation-settings: 'opsz' 144;
     font-variant-numeric: lining-nums tabular-nums;
     font-weight: 400;
     letter-spacing: -0.03em;
@@ -321,6 +320,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  /* Scroll reveals (components/motion/Reveal): content is simply visible */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
   }
   ::view-transition-old(*),
   ::view-transition-new(*),

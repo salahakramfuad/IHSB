@@ -70,7 +70,7 @@ export default function PageHeader({
         className='absolute inset-0 -z-10 bg-[radial-gradient(110%_90%_at_88%_0%,rgb(var(--brand-600)/0.6),transparent_62%)]'
         aria-hidden
       />
-      <ContourLines seed={patternSeed} lines={16} className='-z-10 text-gold-300 opacity-40' />
+      <ContourLines seed={patternSeed} lines={12} className='-z-10 text-gold-300 opacity-40' />
 
       <div
         className={cn(

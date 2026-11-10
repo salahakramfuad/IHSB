@@ -17,8 +17,11 @@ export function StudioEnvironment({ intensity = 0.9 }: { intensity?: number }) {
     const pmrem = new PMREMGenerator(gl)
     const room = new RoomEnvironment()
     const target = pmrem.fromScene(room, 0.04)
+    // three.js objects are mutable by design; this is the documented way to set scene lighting
+    /* eslint-disable react-hooks/immutability */
     scene.environment = target.texture
     scene.environmentIntensity = intensity
+    /* eslint-enable react-hooks/immutability */
     return () => {
       scene.environment = null
       target.dispose()
