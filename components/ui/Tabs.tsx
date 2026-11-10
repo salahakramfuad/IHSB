@@ -7,12 +7,12 @@ import { cn } from '../../lib/utils'
 /**
  * Accessible tabs (arrow keys, Home/End, roving focus).
  *   <Tabs>
- *     <Tabs.List label='Programmes'>
- *       <Tabs.Tab>Primary</Tabs.Tab>
- *     </Tabs.List>
- *     <Tabs.Panels>
- *       <Tabs.Panel>…</Tabs.Panel>
- *     </Tabs.Panels>
+ *     <TabsList label='Programmes'>
+ *       <TabsTab>Primary</TabsTab>
+ *     </TabsList>
+ *     <TabsPanels>
+ *       <TabsPanel>…</TabsPanel>
+ *     </TabsPanels>
  *   </Tabs>
  */
 function TabsRoot({
@@ -65,5 +65,6 @@ function TabsPanel({ children, className }: { children: React.ReactNode; classNa
   return <TabPanel className={cn('rounded-md', className)}>{children}</TabPanel>
 }
 
-const Tabs = Object.assign(TabsRoot, { List: TabsList, Tab: TabsTab, Panels: TabsPanels, Panel: TabsPanel })
-export default Tabs
+// Named exports: a Server Component cannot reach into a client module with dot notation (Tabs.List)
+export { TabsList, TabsTab, TabsPanels, TabsPanel }
+export default TabsRoot

@@ -8,7 +8,7 @@ import { cn } from '../../lib/utils'
 /**
  * Stack of expandable questions or sections.
  *   <Accordion>
- *     <Accordion.Item title='When does the year start?'>…</Accordion.Item>
+ *     <AccordionItem title='When does the year start?'>…</AccordionItem>
  *   </Accordion>
  */
 function AccordionRoot({ children, className }: { children: React.ReactNode; className?: string }) {
@@ -39,5 +39,6 @@ function AccordionItem({ title, children, defaultOpen = false, as: Heading = 'h3
   )
 }
 
-const Accordion = Object.assign(AccordionRoot, { Item: AccordionItem })
-export default Accordion
+// Named export: a Server Component cannot reach into a client module with dot notation
+export { AccordionItem }
+export default AccordionRoot
