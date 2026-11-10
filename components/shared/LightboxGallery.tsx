@@ -1,148 +1,130 @@
 'use client'
 
 import Image from 'next/image'
-import { useCallback, useEffect, useId, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Dialog as HeadlessDialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
-type Props = {
-  images: string[]
-  thumbs?: string[]
-  leadTitle?: string
-  leadCaption?: string
+export interface GalleryImage {
+  src: string
+  /** Describes the photo; also shown as the caption in the viewer */
+  caption: string
+}
+
+interface LightboxGalleryProps {
+  images: GalleryImage[]
+  /** `masonry` = columns of mixed heights, `grid` = even tiles */
+  layout?: 'masonry' | 'grid'
   className?: string
 }
 
-export default function LightboxGallery({
-  images,
-  thumbs,
-  leadTitle,
-  leadCaption,
-  className
-}: Props) {
-  const [open, setOpen] = useState(false)
-  const [index, setIndex] = useState(0)
-  const labelId = useId()
-  const descId = useId()
-  const thumbsArr = thumbs?.length ? thumbs : images
+/** Tile heights that repeat down the masonry columns */
+const RATIOS = ['aspect-[4/5]', 'aspect-[4/3]', 'aspect-square', 'aspect-[3/4]', 'aspect-[16/11]']
 
-  const openAt = useCallback((i: number) => {
-    setIndex(i)
-    setOpen(true)
-    document.documentElement.style.overflow = 'hidden'
-  }, [])
+/**
+ * Photo gallery with a full-screen viewer. Thumbnails are buttons; the viewer
+ * is a modal dialog with Previous/Next buttons and Left/Right arrow keys.
+ */
+export default function LightboxGallery({ images, layout = 'masonry', className }: LightboxGalleryProps) {
+  const [index, setIndex] = useState<number | null>(null)
+  const open = index !== null
+  const count = images.length
 
-  const close = useCallback(() => {
-    setOpen(false)
-    document.documentElement.style.overflow = ''
-  }, [])
+  const step = useCallback(
+    (direction: 1 | -1) => setIndex((current) => (current === null ? current : (current + direction + count) % count)),
+    [count]
+  )
 
   useEffect(() => {
     if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') close()
-      if (e.key === 'ArrowLeft')
-        setIndex((i) => (i - 1 + images.length) % images.length)
-      if (e.key === 'ArrowRight') setIndex((i) => (i + 1) % images.length)
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight') step(1)
+      if (event.key === 'ArrowLeft') step(-1)
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, images.length, close])
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [open, step])
+
+  if (count === 0) return null
+  const current = index !== null ? images[index] : null
+  const controlClass =
+    'inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors duration-fast hover:bg-white/25'
 
   return (
     <>
-      {/* Clickable thumbnails */}
-      <div
-        className={
-          className ?? 'grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4'
-        }
+      <ul
+        className={cn(
+          layout === 'masonry' ? 'columns-2 gap-4 md:columns-3 lg:columns-4 [&>li]:mb-4' : 'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4',
+          className
+        )}
       >
-        {thumbsArr.map((src, i) => (
-          <button
-            key={i}
-            type='button'
-            onClick={() => openAt(i)}
-            className='group relative aspect-[4/3] overflow-hidden rounded-xl ring-1 ring-black/5 focus:outline-none focus:ring-2 focus:ring-primary-green-500'
-          >
-            <Image
-              src={src}
-              alt={`Thumbnail ${i + 1}`}
-              fill
-              sizes='(max-width: 768px) 50vw, 25vw'
-              className='object-cover transition-transform duration-300 group-hover:scale-105'
-              // unoptimized
-            />
-          </button>
-        ))}
-      </div>
-
-      {/* Overlay/backdrop: ONLY mounted when open */}
-      {open && (
-        <div
-          role='dialog'
-          aria-modal='true'
-          aria-labelledby={labelId}
-          aria-describedby={descId}
-          className='fixed inset-0 z-50 bg-black/80 backdrop-blur-sm'
-          onClick={close}
-        >
-          <div
-            className='absolute inset-0 flex items-center justify-center p-4'
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className='relative w-full max-w-5xl aspect-[16/10]'>
+        {images.map((image, i) => (
+          <li key={`${image.src}-${i}`} className='break-inside-avoid'>
+            <button
+              type='button'
+              onClick={() => setIndex(i)}
+              aria-label={`View photo: ${image.caption}`}
+              className={cn(
+                'group relative block w-full overflow-hidden rounded-lg bg-sunken',
+                layout === 'masonry' ? RATIOS[i % RATIOS.length] : 'aspect-[4/3]'
+              )}
+            >
               <Image
-                src={images[index]}
-                alt={`Photo ${index + 1}`}
+                src={image.src}
+                alt={image.caption}
                 fill
-                sizes='100vw'
-                className='object-contain'
-                priority
+                sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
+                className='object-cover transition-transform duration-slow ease-out group-hover:scale-105'
               />
+              <span className='absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-brand-950/90 to-transparent px-3 pb-3 pt-10 text-left text-sm text-white opacity-0 transition-[opacity,transform] duration-base group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100'>
+                {image.caption}
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      <HeadlessDialog open={open} onClose={() => setIndex(null)} className='relative z-modal'>
+        <DialogBackdrop
+          transition
+          className='fixed inset-0 bg-brand-950/95 transition-opacity duration-base data-[closed]:opacity-0'
+        />
+        <div className='fixed inset-0 flex flex-col overscroll-contain p-4 sm:p-6'>
+          <DialogPanel className='on-dark flex min-h-0 flex-1 flex-col'>
+            <div className='flex items-center justify-between gap-4'>
+              <DialogTitle className='text-sm text-ink-muted'>
+                Photo {index !== null ? index + 1 : 1} of {count}
+              </DialogTitle>
+              <button type='button' onClick={() => setIndex(null)} aria-label='Close viewer' className={controlClass}>
+                <X className='h-5 w-5' aria-hidden />
+              </button>
             </div>
 
-            <button
-              type='button'
-              onClick={close}
-              className='absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-gray-900 hover:bg-white'
-              aria-label='Close'
-            >
-              Close
-            </button>
-            <button
-              type='button'
-              onClick={() =>
-                setIndex((i) => (i - 1 + images.length) % images.length)
-              }
-              className='absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-gray-900 hover:bg-white'
-              aria-label='Previous image'
-            >
-              ‹
-            </button>
-            <button
-              type='button'
-              onClick={() => setIndex((i) => (i + 1) % images.length)}
-              className='absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-sm font-medium text-gray-900 hover:bg-white'
-              aria-label='Next image'
-            >
-              ›
-            </button>
+            {current && (
+              <figure className='flex min-h-0 flex-1 flex-col items-center justify-center gap-4 py-4'>
+                <div className='relative min-h-0 w-full flex-1'>
+                  <Image key={current.src} src={current.src} alt={current.caption} fill sizes='100vw' className='object-contain' />
+                </div>
+                <figcaption aria-live='polite' className='max-w-2xl text-center text-[0.9375rem] text-ink'>
+                  {current.caption}
+                </figcaption>
+              </figure>
+            )}
 
-            {(leadTitle || leadCaption) && (
-              <div className='absolute bottom-4 left-1/2 w-[min(90vw,56rem)] -translate-x-1/2 rounded-xl bg-black/60 p-3 text-center text-white'>
-                {leadTitle && (
-                  <div id={labelId} className='text-sm font-semibold'>
-                    {leadTitle}
-                  </div>
-                )}
-                {leadCaption && (
-                  <div id={descId} className='text-xs opacity-90'>
-                    {leadCaption}
-                  </div>
-                )}
+            {count > 1 && (
+              <div className='flex items-center justify-center gap-3'>
+                <button type='button' onClick={() => step(-1)} aria-label='Previous photo' className={controlClass}>
+                  <ChevronLeft className='h-5 w-5' aria-hidden />
+                </button>
+                <button type='button' onClick={() => step(1)} aria-label='Next photo' className={controlClass}>
+                  <ChevronRight className='h-5 w-5' aria-hidden />
+                </button>
               </div>
             )}
-          </div>
+          </DialogPanel>
         </div>
-      )}
+      </HeadlessDialog>
     </>
   )
 }
