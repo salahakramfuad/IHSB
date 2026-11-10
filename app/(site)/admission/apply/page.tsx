@@ -5,6 +5,8 @@ import { getRecaptchaToken } from '@/lib/security/recaptchaClient'
 import Section from '@/components/ui/Section'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
+import PageHeader from '@/components/ui/PageHeader'
+import { inputClass, labelClass } from '@/components/ui/Field'
 import DatePicker from '@/components/admin/DatePicker'
 import { 
   User, 
@@ -116,16 +118,16 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
 }) => {
   return (
     <div>
-      <div className='border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-primary-green-400 transition-colors'>
+      <div className='border border-dashed border-line-strong rounded-lg p-6 hover:border-brand transition-colors'>
         {uploadState.url ? (
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-3 flex-1'>
-              <CheckCircle2 className='w-5 h-5 text-primary-green-600 flex-shrink-0' />
+              <CheckCircle2 className='w-5 h-5 text-brand flex-shrink-0' />
               <div className='flex-1 min-w-0'>
-                <p className='text-sm font-medium text-gray-900 truncate'>
+                <p className='text-sm font-medium text-ink truncate'>
                   {uploadState.file?.name || 'File uploaded'}
                 </p>
-                <p className='text-xs text-gray-500 mt-1'>Upload successful</p>
+                <p className='text-xs text-ink-subtle mt-1'>Upload successful</p>
               </div>
             </div>
             <Button
@@ -133,19 +135,19 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
               variant='ghost'
               size='sm'
               onClick={() => onRemove(name)}
-              className='text-red-600 hover:text-red-700'
+              className='text-danger hover:text-danger'
             >
               Remove
             </Button>
           </div>
         ) : uploadState.uploading ? (
           <div className='flex items-center gap-3'>
-            <Loader2 className='w-5 h-5 text-primary-green-600 animate-spin' />
+            <Loader2 className='w-5 h-5 text-brand animate-spin' />
             <div className='flex-1'>
-              <p className='text-sm font-medium text-gray-900'>
+              <p className='text-sm font-medium text-ink'>
                 Uploading {uploadState.file?.name}...
               </p>
-              <p className='text-xs text-gray-500 mt-1'>Please wait</p>
+              <p className='text-xs text-ink-subtle mt-1'>Please wait</p>
             </div>
           </div>
         ) : (
@@ -155,16 +157,16 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
               className='flex flex-col items-center justify-center cursor-pointer'
             >
               <div className='flex flex-col items-center gap-2'>
-                <div className='w-12 h-12 bg-primary-green-100 rounded-full flex items-center justify-center'>
-                  <Upload className='w-6 h-6 text-primary-green-600' />
+                <div className='w-12 h-12 bg-brand-solid/10 rounded-full flex items-center justify-center'>
+                  <Upload className='w-6 h-6 text-brand' />
                 </div>
                 <div className='text-center'>
-                  <span className='text-sm font-medium text-primary-green-600 hover:text-primary-green-700'>
+                  <span className='text-sm font-medium text-brand hover:text-brand'>
                     Click to upload
                   </span>
-                  <span className='text-sm text-gray-500'> or drag and drop</span>
+                  <span className='text-sm text-ink-subtle'> or drag and drop</span>
                 </div>
-                <p className='text-xs text-gray-500'>
+                <p className='text-xs text-ink-subtle'>
                   JPEG, PNG, WebP, or PDF (Max 5MB)
                 </p>
               </div>
@@ -180,13 +182,13 @@ const FileUploadField: React.FC<FileUploadFieldProps> = ({
           </div>
         )}
         {uploadState.error && (
-          <div className='mt-3 flex items-center gap-2 text-sm text-red-600'>
+          <div className='mt-3 flex items-center gap-2 text-sm text-danger'>
             <AlertCircle className='w-4 h-4' />
             <span>{uploadState.error}</span>
           </div>
         )}
         {description && !uploadState.url && !uploadState.uploading && (
-          <p className='mt-3 text-xs text-gray-500 text-center'>{description}</p>
+          <p className='mt-3 text-xs text-ink-subtle text-center'>{description}</p>
         )}
       </div>
     </div>
@@ -199,6 +201,8 @@ interface FileUploadState {
   uploading: boolean
   error: string | null
 }
+
+const STEP_LABELS = ['Basic info', 'Student', 'Address', 'Parents', 'Payment and documents']
 
 export default function AdmissionApplyPage() {
   const [formData, setFormData] = useState<FormData>(initialFormData)
@@ -423,83 +427,75 @@ export default function AdmissionApplyPage() {
     }
   }
 
-  const inputClassName = 'w-full px-4 py-3 border-2 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-green-500 focus:border-primary-green-500 transition-all'
-  const labelClassName = 'block text-sm font-semibold text-gray-700 mb-2'
+  const inputClassName = inputClass
+  const labelClassName = labelClass
 
   return (
-    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-primary-green-50/60'>
-      {/* Hero Section */}
-      <Section background='green' className='bg-gradient-to-br from-primary-green-600 via-primary-green-700 to-accent-blue-700 relative overflow-hidden'>
-        <div className='absolute inset-0 opacity-10'>
-          <div className='absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl'></div>
-          <div className='absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl'></div>
-        </div>
-        <div className='max-w-4xl mx-auto text-center text-white relative z-10'>
-          <div className='inline-flex items-center justify-center w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl mb-6'>
-            <FileText className='w-8 h-8 text-white' />
-          </div>
-          <h1 className='text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6'>
-            Admission Application
-          </h1>
-          <p className='text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed'>
-            Apply for admission to International Hope School Bangladesh. Fill out the form below to begin your journey with us.
-          </p>
-        </div>
-      </Section>
+    <>
+      <PageHeader
+        title='Admission application'
+        subtitle='Apply to International Hope School Bangladesh in five short steps. Fields marked * are required.'
+        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Admissions' }, { label: 'Apply online' }]}
+        patternSeed={67}
+      />
 
-      <Section background='gray' className='py-16'>
-        <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
-          {/* Progress Bar */}
-          <div className='mb-8'>
-            <div className='flex items-center justify-between mb-4'>
-              {[1, 2, 3, 4, 5].map((step) => (
-                <div key={step} className='flex items-center flex-1'>
-                  <div className='flex flex-col items-center flex-1'>
-                    <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg transition-all ${
-                        step <= currentStep
-                          ? 'bg-primary-green-600 text-white'
-                          : 'bg-gray-300 text-gray-600'
+      <Section background='canvas' spacing='sm'>
+        <div className='mx-auto max-w-4xl'>
+          {/* Progress */}
+          <nav aria-label='Application progress' className='mb-10'>
+            <p className='mb-3 text-sm font-semibold text-ink-muted' aria-live='polite'>
+              Step {currentStep} of {totalSteps}: {STEP_LABELS[currentStep - 1]}
+            </p>
+            <div
+              className='h-1.5 overflow-hidden rounded-full bg-sunken'
+              role='progressbar'
+              aria-valuemin={1}
+              aria-valuemax={totalSteps}
+              aria-valuenow={currentStep}
+              aria-label='Application progress'
+            >
+              <div
+                className='h-full rounded-full bg-gold-500 transition-[width] duration-slow ease-out'
+                style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+              />
+            </div>
+            <ol className='mt-4 grid grid-cols-5 gap-2'>
+              {STEP_LABELS.map((label, index) => {
+                const step = index + 1
+                const done = step < currentStep
+                const current = step === currentStep
+                return (
+                  <li key={label} aria-current={current ? 'step' : undefined} className='flex flex-col items-center gap-2 text-center'>
+                    <span
+                      className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition-colors duration-base ${
+                        done
+                          ? 'border-brand-solid bg-brand-solid text-white'
+                          : current
+                            ? 'border-gold-500 bg-gold-400 text-brand-950'
+                            : 'border-line-strong text-ink-subtle'
                       }`}
                     >
-                      {step < currentStep ? (
-                        <CheckCircle2 className='w-6 h-6' />
-                      ) : (
-                        step
-                      )}
-                    </div>
-                    <div className={`mt-2 text-xs font-medium text-center ${
-                      step <= currentStep ? 'text-primary-green-600' : 'text-gray-500'
-                    }`}>
-                      {step === 1 && 'Basic Info'}
-                      {step === 2 && 'Student Info'}
-                      {step === 3 && 'Address'}
-                      {step === 4 && 'Parents'}
-                      {step === 5 && 'Payment & Docs'}
-                    </div>
-                  </div>
-                  {step < totalSteps && (
-                    <div
-                      className={`h-1 flex-1 mx-2 transition-all ${
-                        step < currentStep ? 'bg-primary-green-600' : 'bg-gray-300'
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+                      {done ? <CheckCircle2 className='h-5 w-5' aria-hidden /> : step}
+                    </span>
+                    <span className={`hidden text-xs font-medium sm:block ${current || done ? 'text-ink' : 'text-ink-subtle'}`}>
+                      {label}
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
+          </nav>
 
           {/* Success Message */}
           {status === 'success' && (
-            <Card className='mb-8 border-2 border-primary-green-500 bg-primary-green-50'>
+            <Card className='mb-8 border border-brand bg-brand-solid/10'>
               <div className='flex items-center gap-4'>
-                <CheckCircle2 className='w-12 h-12 text-primary-green-600 flex-shrink-0' />
+                <CheckCircle2 className='w-12 h-12 text-brand flex-shrink-0' />
                 <div>
-                  <h3 className='text-xl font-bold text-primary-green-900 mb-1'>
+                  <h3 className='text-xl font-semibold text-brand mb-1'>
                     Application Submitted Successfully!
                   </h3>
-                  <p className='text-primary-green-700'>
+                  <p className='text-brand'>
                     Thank you for your application. We will review it and contact you soon.
                   </p>
                 </div>
@@ -509,32 +505,32 @@ export default function AdmissionApplyPage() {
 
           {/* Error Message */}
           {status === 'error' && errorMessage && (
-            <Card className='mb-8 border-2 border-red-500 bg-red-50'>
+            <Card className='mb-8 border border-danger bg-danger/10'>
               <div className='flex items-center gap-4'>
-                <AlertCircle className='w-12 h-12 text-red-600 flex-shrink-0' />
+                <AlertCircle className='w-12 h-12 text-danger flex-shrink-0' />
                 <div>
-                  <h3 className='text-xl font-bold text-red-900 mb-1'>
+                  <h3 className='text-xl font-semibold text-danger mb-1'>
                     Submission Failed
                   </h3>
-                  <p className='text-red-700'>{errorMessage}</p>
+                  <p className='text-danger'>{errorMessage}</p>
                 </div>
               </div>
             </Card>
           )}
 
           <form onSubmit={handleSubmit}>
-            <Card className='border-2 border-gray-200 shadow-xl'>
+            <Card className='border border-line-strong shadow-soft'>
               {/* Step 1: Basic Information */}
               {currentStep === 1 && (
-                <div className='space-y-6 min-h-[600px]'>
+                <div className='space-y-6 min-h-[28rem]'>
                   <div className='flex items-center gap-3 mb-6'>
-                    <div className='w-1 h-8 bg-gradient-to-b from-primary-green-500 to-accent-blue-500 rounded-full'></div>
-                    <h2 className='text-3xl font-bold text-gray-900'>Basic Information</h2>
+                    <div className='h-8 w-0.5 bg-gold-500' aria-hidden />
+                    <h2 className='font-display text-display-3 text-ink'>Basic Information</h2>
                   </div>
 
                   <div>
                     <label htmlFor='branch' className={labelClassName}>
-                      Branch <span className='text-red-500'>*</span>
+                      Branch <span className='text-danger'>*</span>
                     </label>
                     <select
                       id='branch'
@@ -555,7 +551,7 @@ export default function AdmissionApplyPage() {
 
                   <div>
                     <label htmlFor='academicYear' className={labelClassName}>
-                      Academic Year <span className='text-red-500'>*</span>
+                      Academic Year <span className='text-danger'>*</span>
                     </label>
                     <input
                       type='text'
@@ -571,7 +567,7 @@ export default function AdmissionApplyPage() {
 
                   <div>
                     <label htmlFor='classAppliedFor' className={labelClassName}>
-                      Class Applied For <span className='text-red-500'>*</span>
+                      Class Applied For <span className='text-danger'>*</span>
                     </label>
                     <select
                       id='classAppliedFor'
@@ -594,16 +590,16 @@ export default function AdmissionApplyPage() {
 
               {/* Step 2: Student Information */}
               {currentStep === 2 && (
-                <div className='space-y-6 min-h-[600px]'>
+                <div className='space-y-6 min-h-[28rem]'>
                   <div className='flex items-center gap-3 mb-6'>
-                    <div className='w-1 h-8 bg-gradient-to-b from-primary-green-500 to-accent-blue-500 rounded-full'></div>
-                    <h2 className='text-3xl font-bold text-gray-900'>Student Information</h2>
+                    <div className='h-8 w-0.5 bg-gold-500' aria-hidden />
+                    <h2 className='font-display text-display-3 text-ink'>Student Information</h2>
                   </div>
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                     <div>
                       <label htmlFor='surname' className={labelClassName}>
-                        Surname <span className='text-red-500'>*</span>
+                        Surname <span className='text-danger'>*</span>
                       </label>
                       <input
                         type='text'
@@ -618,7 +614,7 @@ export default function AdmissionApplyPage() {
 
                     <div>
                       <label htmlFor='studentName' className={labelClassName}>
-                        Student Name <span className='text-red-500'>*</span>
+                        Student Name <span className='text-danger'>*</span>
                       </label>
                       <input
                         type='text'
@@ -646,7 +642,7 @@ export default function AdmissionApplyPage() {
 
                     <div>
                       <label htmlFor='gender' className={labelClassName}>
-                        Gender <span className='text-red-500'>*</span>
+                        Gender <span className='text-danger'>*</span>
                       </label>
                       <select
                         id='gender'
@@ -666,7 +662,7 @@ export default function AdmissionApplyPage() {
 
                   <div>
                     <label htmlFor='nationality' className={labelClassName}>
-                      Nationality <span className='text-red-500'>*</span>
+                      Nationality <span className='text-danger'>*</span>
                     </label>
                     <input
                       type='text'
@@ -684,15 +680,15 @@ export default function AdmissionApplyPage() {
 
               {/* Step 3: Address Information */}
               {currentStep === 3 && (
-                <div className='space-y-6 min-h-[600px]'>
+                <div className='space-y-6 min-h-[28rem]'>
                   <div className='flex items-center gap-3 mb-6'>
-                    <div className='w-1 h-8 bg-gradient-to-b from-primary-green-500 to-accent-blue-500 rounded-full'></div>
-                    <h2 className='text-3xl font-bold text-gray-900'>Address Information</h2>
+                    <div className='h-8 w-0.5 bg-gold-500' aria-hidden />
+                    <h2 className='font-display text-display-3 text-ink'>Address Information</h2>
                   </div>
 
                   <div>
                     <label htmlFor='presentAddress' className={labelClassName}>
-                      Present Address <span className='text-red-500'>*</span>
+                      Present Address <span className='text-danger'>*</span>
                     </label>
                     <textarea
                       id='presentAddress'
@@ -711,16 +707,16 @@ export default function AdmissionApplyPage() {
                       id='sameAddress'
                       checked={sameAddress}
                       onChange={handleSameAddressChange}
-                      className='w-4 h-4 text-primary-green-600 border-gray-300 rounded focus:ring-primary-green-500'
+                      className='w-4 h-4 text-brand border-line-strong rounded focus:ring-gold-500'
                     />
-                    <label htmlFor='sameAddress' className='text-sm font-medium text-gray-700'>
+                    <label htmlFor='sameAddress' className='text-sm font-medium text-ink-muted'>
                       Same as present address
                     </label>
                   </div>
 
                   <div>
                     <label htmlFor='permanentAddress' className={labelClassName}>
-                      Permanent Address <span className='text-red-500'>*</span>
+                      Permanent Address <span className='text-danger'>*</span>
                     </label>
                     <textarea
                       id='permanentAddress'
@@ -738,18 +734,18 @@ export default function AdmissionApplyPage() {
 
               {/* Step 4: Parent Information */}
               {currentStep === 4 && (
-                <div className='space-y-6 min-h-[600px]'>
+                <div className='space-y-6 min-h-[28rem]'>
                   <div className='flex items-center gap-3 mb-6'>
-                    <div className='w-1 h-8 bg-gradient-to-b from-primary-green-500 to-accent-blue-500 rounded-full'></div>
-                    <h2 className='text-3xl font-bold text-gray-900'>Parent Information</h2>
+                    <div className='h-8 w-0.5 bg-gold-500' aria-hidden />
+                    <h2 className='font-display text-display-3 text-ink'>Parent Information</h2>
                   </div>
 
-                  <div className='bg-blue-50 p-4 rounded-lg border-2 border-blue-200 mb-6'>
-                    <h3 className='font-bold text-blue-900 mb-2'>Father's Information</h3>
+                  <div className='bg-sunken p-4 rounded-lg border border-line mb-6'>
+                    <h3 className='font-semibold text-ink mb-2'>Father's Information</h3>
                     <div className='space-y-4'>
                       <div>
                         <label htmlFor='fatherName' className={labelClassName}>
-                          Father's Name <span className='text-red-500'>*</span>
+                          Father's Name <span className='text-danger'>*</span>
                         </label>
                         <input
                           type='text'
@@ -765,7 +761,7 @@ export default function AdmissionApplyPage() {
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <div>
                           <label htmlFor='fatherContact' className={labelClassName}>
-                            Contact Number <span className='text-red-500'>*</span>
+                            Contact Number <span className='text-danger'>*</span>
                           </label>
                           <input
                             type='tel'
@@ -795,12 +791,12 @@ export default function AdmissionApplyPage() {
                     </div>
                   </div>
 
-                  <div className='bg-purple-50 p-4 rounded-lg border-2 border-purple-200'>
-                    <h3 className='font-bold text-purple-900 mb-2'>Mother's Information</h3>
+                  <div className='bg-sunken p-4 rounded-lg border border-line'>
+                    <h3 className='font-semibold text-ink mb-2'>Mother's Information</h3>
                     <div className='space-y-4'>
                       <div>
                         <label htmlFor='motherName' className={labelClassName}>
-                          Mother's Name <span className='text-red-500'>*</span>
+                          Mother's Name <span className='text-danger'>*</span>
                         </label>
                         <input
                           type='text'
@@ -816,7 +812,7 @@ export default function AdmissionApplyPage() {
                       <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                         <div>
                           <label htmlFor='motherContact' className={labelClassName}>
-                            Contact Number <span className='text-red-500'>*</span>
+                            Contact Number <span className='text-danger'>*</span>
                           </label>
                           <input
                             type='tel'
@@ -846,8 +842,8 @@ export default function AdmissionApplyPage() {
                     </div>
                   </div>
 
-                  <div className='bg-yellow-50 p-4 rounded-lg border-2 border-yellow-200'>
-                    <h3 className='font-bold text-yellow-900 mb-4'>Medical Information</h3>
+                  <div className='bg-sunken p-4 rounded-lg border border-line'>
+                    <h3 className='font-semibold text-ink mb-4'>Medical Information</h3>
                     <div className='space-y-4'>
                       <div className='flex items-center gap-2'>
                         <input
@@ -856,9 +852,9 @@ export default function AdmissionApplyPage() {
                           name='onMedication'
                           checked={formData.onMedication}
                           onChange={handleChange}
-                          className='w-4 h-4 text-primary-green-600 border-gray-300 rounded focus:ring-primary-green-500'
+                          className='w-4 h-4 text-brand border-line-strong rounded focus:ring-gold-500'
                         />
-                        <label htmlFor='onMedication' className='text-sm font-medium text-gray-700'>
+                        <label htmlFor='onMedication' className='text-sm font-medium text-ink-muted'>
                           Student is currently on medication
                         </label>
                       </div>
@@ -885,27 +881,27 @@ export default function AdmissionApplyPage() {
 
               {/* Step 5: Payment */}
               {currentStep === 5 && (
-                <div className='space-y-6 min-h-[600px]'>
+                <div className='space-y-6 min-h-[28rem]'>
                   <div className='flex items-center gap-3 mb-6'>
-                    <div className='w-1 h-8 bg-gradient-to-b from-primary-green-500 to-accent-blue-500 rounded-full'></div>
-                    <h2 className='text-3xl font-bold text-gray-900'>Payment & Documents</h2>
+                    <div className='h-8 w-0.5 bg-gold-500' aria-hidden />
+                    <h2 className='font-display text-display-3 text-ink'>Payment & Documents</h2>
                   </div>
 
-                  <div className='bg-green-50 p-6 rounded-lg border-2 border-green-200 mb-6'>
+                  <div className='bg-sunken p-6 rounded-lg border border-line mb-6'>
                     <div className='flex items-center gap-3 mb-4'>
-                      <CreditCard className='w-6 h-6 text-green-700' />
-                      <h3 className='font-bold text-green-900 text-lg'>
+                      <CreditCard className='w-6 h-6 text-ink' />
+                      <h3 className='font-semibold text-ink text-lg'>
                         Application Fee: $17.7
                       </h3>
                     </div>
-                    <p className='text-green-800 text-sm mb-4'>
+                    <p className='text-ink text-sm mb-4'>
                       Please make the payment at the school office and enter the payment reference number below.
                     </p>
                   </div>
 
                   <div>
                     <label htmlFor='paymentReference' className={labelClassName}>
-                      Payment Reference Number <span className='text-red-500'>*</span>
+                      Payment Reference Number <span className='text-danger'>*</span>
                     </label>
                     <input
                       type='text'
@@ -917,17 +913,17 @@ export default function AdmissionApplyPage() {
                       className={inputClassName}
                       required
                     />
-                    <p className='mt-2 text-sm text-gray-500'>
+                    <p className='mt-2 text-sm text-ink-subtle'>
                       This is the reference number provided when you made the payment at the school office.
                     </p>
                   </div>
 
-                  <div className='bg-blue-50 p-6 rounded-lg border-2 border-blue-200'>
+                  <div className='bg-sunken p-6 rounded-lg border border-line'>
                     <div className='flex items-center gap-3 mb-4'>
-                      <Upload className='w-6 h-6 text-blue-700' />
-                      <h3 className='font-bold text-blue-900 text-lg'>Document Uploads</h3>
+                      <Upload className='w-6 h-6 text-ink' />
+                      <h3 className='font-semibold text-ink text-lg'>Document Uploads</h3>
                     </div>
-                    <p className='text-blue-800 text-sm mb-6'>
+                    <p className='text-ink text-sm mb-6'>
                       Please upload the following documents. All files must be in JPEG, PNG, WebP, or PDF format and under 5MB.
                     </p>
 
@@ -935,7 +931,7 @@ export default function AdmissionApplyPage() {
                       {/* Student Photo */}
                       <div>
                         <label className={labelClassName}>
-                          Student Photo (Passport Size) <span className='text-red-500'>*</span>
+                          Student Photo (Passport Size) <span className='text-danger'>*</span>
                         </label>
                         <FileUploadField
                           name='studentPhoto'
@@ -950,7 +946,7 @@ export default function AdmissionApplyPage() {
                       {/* Birth Certificate */}
                       <div>
                         <label className={labelClassName}>
-                          Birth Certificate <span className='text-red-500'>*</span>
+                          Birth Certificate <span className='text-danger'>*</span>
                         </label>
                         <FileUploadField
                           name='birthCertificateImage'
@@ -965,7 +961,7 @@ export default function AdmissionApplyPage() {
                       {/* Report Card */}
                       <div>
                         <label className={labelClassName}>
-                          Last Year&apos;s Report Card <span className='text-red-500'>*</span>
+                          Last Year&apos;s Report Card <span className='text-danger'>*</span>
                         </label>
                         <FileUploadField
                           name='lastYearReportCardImage'
@@ -1012,7 +1008,7 @@ export default function AdmissionApplyPage() {
               )}
 
               {/* Navigation Buttons */}
-              <div className='flex items-center justify-between mt-8 pt-6 border-t border-gray-200'>
+              <div className='flex items-center justify-between mt-8 pt-6 border-t border-line-strong'>
                 <Button
                   type='button'
                   variant='outline'
@@ -1041,7 +1037,7 @@ export default function AdmissionApplyPage() {
                     {status === 'loading' ? (
                       <>
                         <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                        Submitting...
+                        Submitting…
                       </>
                     ) : (
                       'Submit Application'
@@ -1053,20 +1049,20 @@ export default function AdmissionApplyPage() {
           </form>
 
           {/* Contact Information */}
-          <Card className='mt-8 bg-gradient-to-br from-primary-green-50 to-accent-blue-50 border-2 border-primary-green-200'>
+          <Card className='mt-8 border border-line bg-sunken'>
             <div className='text-center'>
-              <h3 className='text-2xl font-bold text-gray-900 mb-4'>
+              <h3 className='text-2xl font-semibold text-ink mb-4'>
                 Need Help?
               </h3>
-              <p className='text-gray-700 mb-4'>
+              <p className='text-ink-muted mb-4'>
                 If you have any questions about the admission process, please contact us:
               </p>
-              <div className='flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-700'>
+              <div className='flex flex-col sm:flex-row items-center justify-center gap-6 text-ink-muted'>
                 <div className='flex items-center gap-2'>
                   <span className='font-semibold'>Email:</span>
                   <a
                     href={`mailto:${schoolInfo.email.admission}`}
-                    className='text-primary-green-600 hover:text-primary-green-700 font-medium'
+                    className='text-brand hover:text-brand font-medium'
                   >
                     {schoolInfo.email.admission}
                   </a>
@@ -1075,7 +1071,7 @@ export default function AdmissionApplyPage() {
                   <span className='font-semibold'>Phone:</span>
                   <a
                     href={`tel:${schoolInfo.phone.uttaraAdmission}`}
-                    className='text-primary-green-600 hover:text-primary-green-700 font-medium'
+                    className='text-brand hover:text-brand font-medium'
                   >
                     {schoolInfo.phone.uttaraAdmission}
                   </a>
@@ -1085,6 +1081,6 @@ export default function AdmissionApplyPage() {
           </Card>
         </div>
       </Section>
-    </main>
+    </>
   )
 }

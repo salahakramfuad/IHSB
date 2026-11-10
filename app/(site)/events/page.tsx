@@ -1,159 +1,161 @@
-import React from 'react'
-import Link from 'next/link'
 import type { Metadata } from 'next'
 import { CalendarDays } from 'lucide-react'
-import Section from '../../components/ui/Section'
-import Card from '../../components/ui/Card'
-import Button from '../../components/ui/Button'
-import { getAllEventsService as getAllEvents } from '@/lib/services/eventsService'
+import EventCard, { EVENT_CATEGORY } from '@/components/content/EventCard'
+import FilterBar from '@/components/content/FilterBar'
+import { PageTransition } from '@/components/motion/Transitions'
+import { Tag } from '@/components/ui/Badge'
+import { ButtonLink } from '@/components/ui/Button'
+import EmptyState from '@/components/ui/EmptyState'
+import PageHeader from '@/components/ui/PageHeader'
+import Section from '@/components/ui/Section'
 import type { Event } from '@/data/events'
-
-const BANNER_PATTERN = `url("data:image/svg+xml,${encodeURIComponent('<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="#ffffff" fill-opacity="0.06"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>')}")`
+import { formatDate } from '@/lib/format'
+import { getAllEventsService } from '@/lib/services/eventsService'
 
 export const metadata: Metadata = {
   title: 'Events',
   description:
     'Stay updated with upcoming and past events at IHSB - school functions, competitions, cultural programs, and special activities.',
+  alternates: { canonical: '/events' },
   openGraph: {
     title: 'Events | IHSB',
     description: 'Discover upcoming and past events and activities at International Hope School Bangladesh.'
   }
 }
 
-function splitByDate(events: Event[]) {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  const upcoming: Event[] = []
-  const past: Event[] = []
-  for (const e of events) {
-    const d = new Date(e.date)
-    d.setHours(0, 0, 0, 0)
-    if (d >= today) upcoming.push(e)
-    else past.push(e)
+const CATEGORIES = Object.keys(EVENT_CATEGORY) as Array<Event['category']>
+const monthKey = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric', timeZone: 'Asia/Dhaka' })
+
+function groupByMonth(events: Event[]) {
+  const groups = new Map<string, Event[]>()
+  for (const event of events) {
+    const key = monthKey.format(new Date(event.date))
+    groups.set(key, [...(groups.get(key) ?? []), event])
   }
-  past.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  return { upcoming, past }
+  return [...groups.entries()]
 }
 
-function EventCard({ event }: { event: Event }) {
-  return (
-    <Card
-      image={event.image ? { src: event.image, alt: event.title } : undefined}
-    >
-      <div className='text-sm text-primary-green-600 font-medium mb-2'>
-        {new Date(event.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })}
-      </div>
-      <h3 className='text-lg font-bold text-gray-900 mb-2'>{event.title}</h3>
-      {event.time && (
-        <p className='text-gray-600 text-sm mb-3'>
-          <span className='font-medium'>Time:</span> {event.time}
-        </p>
-      )}
-      {event.location && (
-        <p className='text-gray-600 text-sm mb-3'>
-          <span className='font-medium'>Location:</span> {event.location}
-        </p>
-      )}
-      <p className='text-gray-700 mb-4 line-clamp-3'>{event.description}</p>
-      <Link href={`/events/${event.id}`}>
-        <Button variant='outline' size='sm' className='w-full'>
-          View Details
-        </Button>
-      </Link>
-    </Card>
-  )
-}
+export default async function EventsPage({
+  searchParams
+}: {
+  searchParams: Promise<{ category?: string; view?: string }>
+}) {
+  const { category: requested, view: requestedView } = await searchParams
+  const category = CATEGORIES.find((value) => value === requested)
+  const view = requestedView === 'calendar' ? 'calendar' : 'list'
 
-export default async function EventsPage() {
-  const events = await getAllEvents()
-  const { upcoming, past } = splitByDate(events)
+  const all = await getAllEventsService()
+  const events = category ? all.filter((event) => event.category === category) : all
+  const now = Date.now()
+  const upcoming = events.filter((event) => new Date(event.date).getTime() >= now)
+  const past = events.filter((event) => new Date(event.date).getTime() < now).reverse()
+
+  const viewHref = (value: 'list' | 'calendar') => {
+    const query = new URLSearchParams()
+    if (category) query.set('category', category)
+    if (value === 'calendar') query.set('view', 'calendar')
+    const search = query.toString()
+    return search ? `/events?${search}` : '/events'
+  }
 
   return (
-    <main className='min-h-screen bg-gradient-to-b from-primary-50/60 via-white to-secondary-50/50'>
-      {/* Banner */}
-      <section className='relative overflow-hidden bg-gradient-to-r from-gray-600 via-gray-500 to-gray-600 text-white'>
-        <div
-          className='absolute inset-0 opacity-40'
-          style={{ backgroundImage: BANNER_PATTERN, backgroundSize: '60px 60px' }}
-          aria-hidden
+    <PageTransition>
+      <div>
+        <PageHeader
+          title='Events'
+          subtitle='Open days, fairs, matches, ceremonies and festivals across our campuses.'
+          breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Events' }]}
+          patternSeed={23}
         />
-        <div className='container relative z-10 mx-auto px-4 py-8 sm:px-6 sm:py-10'>
-          <div className='mx-auto max-w-3xl text-center'>
-            <div className='mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-white/15'>
-              <CalendarDays className='h-4 w-4 text-white' />
-            </div>
-            <h1 className='text-2xl font-bold tracking-tight sm:text-3xl'>
-              Events
-            </h1>
-            <p className='mt-2 text-sm text-white/90 sm:text-base'>
-              Upcoming and past events at International Hope School Bangladesh
-            </p>
-            <div className='mt-3 flex flex-wrap items-center justify-center gap-2'>
-              <span className='inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium'>
-                <span className='h-1.5 w-1.5 rounded-full bg-emerald-300 animate-pulse' aria-hidden />
-                {upcoming.length} upcoming
-              </span>
-              <span className='inline-flex items-center gap-1 rounded-full bg-white/5 px-2.5 py-1 text-xs font-medium text-white/80'>
-                {past.length} past
-              </span>
-            </div>
+
+        <Section background='canvas' spacing='sm' aria-labelledby='upcoming-heading'>
+          <div className='flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between'>
+            <FilterBar
+              label='Filter events by category'
+              basePath='/events'
+              param='category'
+              selected={category}
+              allLabel='All events'
+              keep={{ view: view === 'calendar' ? 'calendar' : undefined }}
+              options={CATEGORIES.map((value) => ({ value, label: EVENT_CATEGORY[value].label }))}
+            />
+            <nav aria-label='Choose a layout'>
+              <ul className='flex gap-2'>
+                <li>
+                  <Tag href={viewHref('list')} selected={view === 'list'}>
+                    Cards
+                  </Tag>
+                </li>
+                <li>
+                  <Tag href={viewHref('calendar')} selected={view === 'calendar'}>
+                    By month
+                  </Tag>
+                </li>
+              </ul>
+            </nav>
           </div>
-        </div>
-      </section>
 
-      {/* Upcoming Events */}
-      <Section background='gray'>
-        <div className='max-w-7xl mx-auto'>
-          <h2 className='text-2xl md:text-3xl font-bold text-gray-900 mb-2'>
-            Upcoming Events
+          <h2 id='upcoming-heading' className='mt-12 font-display text-display-3 text-ink'>
+            Upcoming
           </h2>
-          <p className='text-gray-600 mb-8'>
-            Join us for these events happening soon.
-          </p>
+          <div className='gold-rule mt-4 w-24' aria-hidden />
+
           {upcoming.length === 0 ? (
-            <div className='text-center py-12 rounded-xl bg-white/60 border border-gray-200'>
-              <p className='text-gray-600 text-lg'>
-                No upcoming events scheduled at this time. Please check back later.
-              </p>
+            <EmptyState
+              className='mt-8'
+              icon={<CalendarDays className='h-6 w-6' />}
+              title={category ? 'Nothing scheduled in this category' : 'No upcoming events'}
+              description='New dates are added as they are confirmed. The academic calendar has term dates and holidays.'
+              action={
+                <ButtonLink href={category ? '/events' : '/academics/calendar'} variant='outline'>
+                  {category ? 'Show all events' : 'Open the academic calendar'}
+                </ButtonLink>
+              }
+            />
+          ) : view === 'calendar' ? (
+            <div className='mt-8 space-y-10'>
+              {groupByMonth(upcoming).map(([month, monthEvents]) => (
+                <section key={month} aria-label={month} className='grid gap-4 md:grid-cols-[12rem_minmax(0,1fr)]'>
+                  <h3 className='font-display text-title text-gold'>{month}</h3>
+                  <div className='divide-y divide-line border-y border-line'>
+                    {monthEvents.map((event) => (
+                      <EventCard key={event.id} event={event} variant='row' headingLevel='h3' />
+                    ))}
+                  </div>
+                </section>
+              ))}
             </div>
           ) : (
-            <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+            <ul className='mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
               {upcoming.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <li key={event.id}>
+                  <EventCard event={event} className='h-full' />
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </div>
-      </Section>
+        </Section>
 
-      {/* Past Events */}
-      <Section background='white'>
-        <div className='max-w-7xl mx-auto'>
-          <h2 className='text-2xl md:text-3xl font-bold text-gray-900 mb-2'>
-            Past Events
-          </h2>
-          <p className='text-gray-600 mb-8'>
-            A look back at recent events and activities.
-          </p>
-          {past.length === 0 ? (
-            <div className='text-center py-12 rounded-xl bg-gray-50/80 border border-gray-200'>
-              <p className='text-gray-600 text-lg'>
-                No past events to display yet.
-              </p>
-            </div>
-          ) : (
-            <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        {past.length > 0 && (
+          <Section background='sunken' spacing='sm' aria-labelledby='past-heading'>
+            <h2 id='past-heading' className='font-display text-display-3 text-ink'>
+              Past events
+            </h2>
+            <div className='gold-rule mt-4 w-24' aria-hidden />
+            <ul className='mt-6 grid gap-x-12 md:grid-cols-2'>
               {past.map((event) => (
-                <EventCard key={event.id} event={event} />
+                <li key={event.id} className='border-b border-line'>
+                  <EventCard event={event} variant='row' />
+                </li>
               ))}
-            </div>
-          )}
-        </div>
-      </Section>
-    </main>
+            </ul>
+            <p className='mt-6 text-sm text-ink-subtle'>
+              Showing {past.length} past {past.length === 1 ? 'event' : 'events'}, most recent first
+              {past[past.length - 1] ? `, back to ${formatDate(past[past.length - 1].date, 'long')}` : ''}.
+            </p>
+          </Section>
+        )}
+      </div>
+    </PageTransition>
   )
 }

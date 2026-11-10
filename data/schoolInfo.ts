@@ -29,6 +29,11 @@ export const schoolInfo = {
       'https://www.linkedin.com/company/international-hope-school-bangladesh',
     twitter: 'https://www.twitter.com'
   },
+  // TODO(school): confirm the front-office hours before launch.
+  officeHours: [
+    { days: 'Sunday to Thursday', hours: '8:00 AM to 3:00 PM' },
+    { days: 'Friday and Saturday', hours: 'Closed' }
+  ],
   website: 'https://ihsb.edu.bd',
   foundingYear: 1996,
   motto: 'Inspiring Future Leaders with Excellence and Compassion',

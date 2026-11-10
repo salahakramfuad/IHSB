@@ -46,6 +46,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'res.cloudinary.com' } // Cloudinary images
     ]
   },
+  async redirects() {
+    return [
+      // The curriculum page used to live at a misspelled URL
+      { source: '/academics/curriculumn', destination: '/academics/curriculum', permanent: true }
+    ]
+  },
   async headers() {
     return [
       { source: '/:path*', headers: securityHeaders },

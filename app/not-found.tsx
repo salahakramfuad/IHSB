@@ -1,65 +1,51 @@
-'use client'
-
+import type { Metadata } from 'next'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import Button from '@/components/ui/Button'
+import SiteShell from '@/components/layout/SiteShell'
+import { ButtonLink } from '@/components/ui/Button'
+import PageHeader from '@/components/ui/PageHeader'
+
+export const metadata: Metadata = {
+  title: 'Page not found',
+  robots: { index: false }
+}
+
+const suggestions = [
+  { title: 'Admissions', description: 'Procedure, fees and the online application', href: '/admission/admissionprocedure' },
+  { title: 'Curriculum', description: 'What is taught at each stage', href: '/academics/curriculum' },
+  { title: 'News', description: 'Stories from the school community', href: '/news' },
+  { title: 'Events', description: 'What is on this term', href: '/events' },
+  { title: 'Our branches', description: 'Uttara and Gulshan campuses', href: '/uttarasenior' },
+  { title: 'Contact', description: 'Addresses, phone numbers and a map', href: '/contact' }
+]
 
 export default function NotFound() {
-  const router = useRouter()
   return (
-    <main className="min-h-screen bg-gradient-to-br from-primary-50/60 via-white to-primary-green-50/50 flex items-center justify-center px-4">
-      <div className="max-w-2xl mx-auto text-center">
-        <div className="mb-8">
-          <h1 className="text-9xl font-extrabold text-primary-green-600 mb-4">
-            404
-          </h1>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Page Not Found
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Sorry, we couldn't find the page you're looking for. It may have been moved, deleted, or the URL may be incorrect.
-          </p>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link href="/">
-            <Button variant="primary" className="w-full sm:w-auto">
-              Go to Homepage
-            </Button>
-          </Link>
-            <Button
-              variant="outline"
-              onClick={() => router.back()}
-              className="w-full sm:w-auto"
-            >
-              Go Back
-            </Button>
-        </div>
-
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-          <Link
-            href="/about"
-            className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="font-semibold text-primary-green-600 mb-2">About Us</h3>
-            <p className="text-sm text-gray-600">Learn more about IHSB</p>
-          </Link>
-          <Link
-            href="/admission/apply"
-            className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="font-semibold text-primary-green-600 mb-2">Admissions</h3>
-            <p className="text-sm text-gray-600">Apply for admission</p>
-          </Link>
-          <Link
-            href="/contact"
-            className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
-          >
-            <h3 className="font-semibold text-primary-green-600 mb-2">Contact</h3>
-            <p className="text-sm text-gray-600">Get in touch with us</p>
-          </Link>
-        </div>
-      </div>
-    </main>
+    <SiteShell>
+      <PageHeader
+        eyebrow='Error 404'
+        title='We could not find that page'
+        subtitle='The address may be mistyped, or the page may have moved. These are the places people look for most.'
+        actions={
+          <ButtonLink href='/' variant='secondary'>
+            Go to the home page
+          </ButtonLink>
+        }
+      />
+      <section className='container py-section-sm' aria-label='Suggested pages'>
+        <ul className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+          {suggestions.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className='block h-full rounded-lg border border-line bg-paper p-6 transition-[border-color,box-shadow] duration-base hover:border-line-strong hover:shadow-raised'
+              >
+                <span className='font-display text-title text-ink'>{item.title}</span>
+                <span className='mt-1 block text-ink-muted'>{item.description}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </SiteShell>
   )
 }

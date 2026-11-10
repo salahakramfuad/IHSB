@@ -1,200 +1,188 @@
-import React from 'react'
 import type { Metadata } from 'next'
-import PageHeader from '../../../components/ui/PageHeader'
-import Section from '../../../components/ui/Section'
-import Card from '../../../components/ui/Card'
+import {
+  BookOpen,
+  Brush,
+  ChefHat,
+  Cpu,
+  Dumbbell,
+  FlaskConical,
+  Languages,
+  Mic,
+  Music,
+  Palette,
+  Puzzle,
+  Scissors,
+  Sparkles,
+  Theater,
+  Trophy,
+  Users,
+  type LucideIcon
+} from 'lucide-react'
+import Reveal from '@/components/motion/Reveal'
+import { ButtonLink } from '@/components/ui/Button'
+import PageHeader from '@/components/ui/PageHeader'
+import Section, { SectionHeader } from '@/components/ui/Section'
 
 export const metadata: Metadata = {
   title: 'Clubs',
   description:
     'Join one of our many student clubs at IHSB - from sports to arts, technology to culture. Explore your passions and connect with peers.',
+  alternates: { canonical: '/academics/clubs' },
   openGraph: {
     title: 'Student Clubs | IHSB',
     description: 'Explore diverse student clubs and activities at International Hope School Bangladesh.'
   }
 }
 
-const clubs = [
-  { name: 'Art Club', icon: '🎨', color: 'from-accent-pink-400 to-accent-pink-600' },
-  { name: 'Book Club', icon: '📚', color: 'from-accent-blue-400 to-accent-blue-600' },
-  { name: 'Chess Club', icon: '♟️', color: 'from-gray-600 to-gray-800' },
-  { name: 'Cultural Club', icon: '🌍', color: 'from-primary-green-400 to-primary-green-600' },
-  { name: 'Cooking Club', icon: '🍳', color: 'from-accent-orange-400 to-accent-orange-600' },
-  { name: 'Dance Club', icon: '💃', color: 'from-accent-purple-400 to-accent-purple-600' },
-  { name: 'Debate Club', icon: '🗣️', color: 'from-accent-blue-500 to-accent-blue-700' },
-  { name: 'Drama Club', icon: '🎭', color: 'from-accent-pink-500 to-accent-pink-700' },
-  { name: 'French Club', icon: '🇫🇷', color: 'from-blue-400 to-blue-600' },
-  { name: 'Guidance Club', icon: '🎓', color: 'from-primary-green-500 to-primary-green-700' },
-  { name: 'Karate Club', icon: '🥋', color: 'from-red-500 to-red-700' },
-  { name: 'Library Club', icon: '🏛️', color: 'from-amber-400 to-amber-600' },
-  { name: 'Maths Club', icon: '➗', color: 'from-indigo-400 to-indigo-600' },
-  { name: 'Music Club', icon: '🎵', color: 'from-violet-400 to-violet-600' },
-  { name: 'Programming Club', icon: '💻', color: 'from-cyan-400 to-cyan-600' },
-  { name: 'Robotics Club', icon: '🤖', color: 'from-accent-purple-500 to-accent-purple-700' },
-  { name: "Rubik's Cube Club", icon: '🟥', color: 'from-red-400 to-red-600' },
-  { name: 'Science Club', icon: '🔬', color: 'from-accent-blue-400 to-accent-blue-600' },
-  { name: 'Sewing & Craft Club', icon: '🧵', color: 'from-accent-pink-400 to-accent-pink-600' },
-  { name: 'Speakers Club', icon: '🎙️', color: 'from-gray-500 to-gray-700' },
-  { name: 'Tidiness Club', icon: '🧹', color: 'from-accent-teal-400 to-accent-teal-600' },
-  { name: 'Guitar Club', icon: '🎸', color: 'from-brown-400 to-brown-600' },
-  { name: 'Table Tennis Club', icon: '🏓', color: 'from-accent-yellow-400 to-accent-yellow-600' },
-  { name: 'Badminton Club', icon: '🏸', color: 'from-green-400 to-green-600' },
-  { name: 'Football Club', icon: '⚽', color: 'from-accent-blue-500 to-accent-blue-700' },
-  { name: 'Basketball Club', icon: '🏀', color: 'from-orange-500 to-orange-700' }
-]
-
-const clubCategories = [
+const categories: Array<{ name: string; summary: string; Icon: LucideIcon; clubs: Array<{ name: string; Icon: LucideIcon }> }> = [
   {
-    name: 'Arts & Culture',
-    clubs: clubs.filter((c) =>
-      ['Art Club', 'Cultural Club', 'Dance Club', 'Drama Club', 'Music Club', 'Guitar Club', 'Book Club'].includes(
-        c.name
-      )
-    ),
-    gradient: 'from-accent-pink-500 to-accent-purple-600'
+    name: 'Arts and culture',
+    summary: 'Make, perform and read.',
+    Icon: Palette,
+    clubs: [
+      { name: 'Art Club', Icon: Brush },
+      { name: 'Cultural Club', Icon: Users },
+      { name: 'Dance Club', Icon: Sparkles },
+      { name: 'Drama Club', Icon: Theater },
+      { name: 'Music Club', Icon: Music },
+      { name: 'Guitar Club', Icon: Music },
+      { name: 'Book Club', Icon: BookOpen }
+    ]
   },
   {
     name: 'Sports',
-    clubs: clubs.filter((c) =>
-      ['Karate Club', 'Table Tennis Club', 'Badminton Club', 'Football Club', 'Basketball Club'].includes(c.name)
-    ),
-    gradient: 'from-primary-green-500 to-accent-blue-600'
+    summary: 'Train, compete and keep fit.',
+    Icon: Trophy,
+    clubs: [
+      { name: 'Karate Club', Icon: Dumbbell },
+      { name: 'Table Tennis Club', Icon: Trophy },
+      { name: 'Badminton Club', Icon: Trophy },
+      { name: 'Football Club', Icon: Trophy },
+      { name: 'Basketball Club', Icon: Trophy }
+    ]
   },
   {
     name: 'Academic',
-    clubs: clubs.filter((c) =>
-      ['Maths Club', 'Science Club', 'Debate Club', 'Speakers Club', 'Library Club', "Rubik's Cube Club"].includes(
-        c.name
-      )
-    ),
-    gradient: 'from-accent-blue-500 to-indigo-600'
+    summary: 'Argue, calculate and investigate.',
+    Icon: FlaskConical,
+    clubs: [
+      { name: 'Maths Club', Icon: Puzzle },
+      { name: 'Science Club', Icon: FlaskConical },
+      { name: 'Debate Club', Icon: Mic },
+      { name: 'Speakers Club', Icon: Mic },
+      { name: 'Library Club', Icon: BookOpen },
+      { name: 'Rubik’s Cube Club', Icon: Puzzle }
+    ]
   },
   {
     name: 'Technology',
-    clubs: clubs.filter((c) =>
-      ['Programming Club', 'Robotics Club'].includes(c.name)
-    ),
-    gradient: 'from-cyan-500 to-accent-purple-600'
+    summary: 'Code it, then build it.',
+    Icon: Cpu,
+    clubs: [
+      { name: 'Programming Club', Icon: Cpu },
+      { name: 'Robotics Club', Icon: Cpu }
+    ]
   },
   {
-    name: 'Life Skills',
-    clubs: clubs.filter((c) =>
-      ['Cooking Club', 'Sewing & Craft Club', 'Tidiness Club', 'Chess Club', 'French Club', 'Guidance Club'].includes(
-        c.name
-      )
-    ),
-    gradient: 'from-accent-orange-500 to-accent-yellow-600'
+    name: 'Life skills',
+    summary: 'Useful for the rest of your life.',
+    Icon: ChefHat,
+    clubs: [
+      { name: 'Cooking Club', Icon: ChefHat },
+      { name: 'Sewing & Craft Club', Icon: Scissors },
+      { name: 'Tidiness Club', Icon: Sparkles },
+      { name: 'Chess Club', Icon: Puzzle },
+      { name: 'French Club', Icon: Languages },
+      { name: 'Guidance Club', Icon: Users }
+    ]
   }
 ]
 
+const goals = [
+  'Utilizing school facilities more effectively.',
+  'Promoting healthy, active lifestyles among students.',
+  'Providing co-curricular opportunities for all interested students.'
+]
+
 export default function ClubsPage() {
+  const total = categories.reduce((sum, category) => sum + category.clubs.length, 0)
+
   return (
-    <main className='min-h-screen bg-gradient-to-br from-primary-50/50 via-white to-primary-green-50/50'>
-      <Section background='white'>
-        <PageHeader
-          title='Student Clubs'
-          subtitle='Explore your passions, develop new skills, and connect with peers through our diverse range of student clubs'
-          breadcrumbs={[
-            { label: 'Home', href: '/' },
-            { label: 'Academics', href: '/academics' },
-            { label: 'Clubs' }
-          ]}
-        />
-      </Section>
+    <>
+      <PageHeader
+        title='Student clubs'
+        subtitle='Explore your passions, develop new skills and connect with peers through our range of student clubs.'
+        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Campus life' }, { label: 'Clubs' }]}
+        patternSeed={37}
+      />
 
-      <Section background='gray'>
-        <div className='max-w-7xl mx-auto'>
-          {/* Introduction */}
-          <div className='bg-gradient-to-br from-primary-green-50 to-accent-blue-50 rounded-2xl p-8 mb-12 border-2 border-primary-green-200'>
-            <div className='max-w-3xl'>
-              <h2 className='text-2xl font-bold text-gray-900 mb-4'>
-                Why Join a Club? 🌟
-              </h2>
-              <p className='text-gray-700 mb-4 leading-relaxed'>
-                IHSB Clubs offer fun, learning, and personal growth. They impact
-                behavior, attendance, and achievement, fostering a sense of
-                belonging and confidence.
+      <Section background='canvas' aria-labelledby='why-clubs'>
+        <div className='grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-20'>
+          <div>
+            <h2 id='why-clubs' className='font-display text-display-2 text-ink'>
+              Why join a club?
+            </h2>
+            <div className='gold-rule mt-5 w-28' aria-hidden />
+            <div className='prose-ihsb mt-6'>
+              <p className='text-lead text-ink'>
+                IHSB clubs offer fun, learning and personal growth. They impact behavior, attendance and achievement,
+                fostering a sense of belonging and confidence.
               </p>
-              <p className='text-gray-700 mb-4 leading-relaxed'>
-                Students engage in various teams and clubs, requiring commitment and
-                enthusiasm. These activities are rewarding and vital to school life,
-                encouraging student involvement and ideas.
+              <p>
+                Students engage in various teams and clubs, requiring commitment and enthusiasm. These activities are
+                rewarding and vital to school life, encouraging student involvement and ideas.
               </p>
-              <div className='bg-white/80 rounded-xl p-6 border-2 border-primary-green-200'>
-                <p className='text-gray-800 font-semibold mb-2'>Our goals include:</p>
-                <ul className='list-disc list-inside text-gray-700 space-y-1'>
-                  <li>Utilizing school facilities more effectively.</li>
-                  <li>Promoting healthy, active lifestyles among students.</li>
-                  <li>Providing co-curricular opportunities for all interested students.</li>
-                </ul>
-              </div>
             </div>
           </div>
-
-          {/* Clubs by Category */}
-          {clubCategories.map((category, catIndex) => (
-            <div key={category.name} className='mb-12'>
-              <div className='flex items-center gap-4 mb-6'>
-                <div className={`h-1 flex-1 bg-gradient-to-r ${category.gradient} rounded-full`}></div>
-                <h3 className='text-2xl md:text-3xl font-bold text-gray-900 whitespace-nowrap'>
-                  {category.name}
-                </h3>
-                <div className={`h-1 flex-1 bg-gradient-to-r ${category.gradient} rounded-full`}></div>
-              </div>
-              <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-                {category.clubs.map((club, index) => (
-                  <Card
-                    key={club.name}
-                    className={`group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-gray-200 cursor-pointer`}
-                  >
-                    <div className={`h-1 bg-gradient-to-r ${club.color} rounded-t-xl -mx-6 -mt-6 mb-4`}></div>
-                    <div className='text-center'>
-                      <div className='text-5xl mb-3 transform group-hover:scale-110 transition-transform duration-300'>
-                        {club.icon}
-                      </div>
-                      <h4 className='text-base font-bold text-gray-900 group-hover:text-primary-green-600 transition-colors'>
-                        {club.name}
-                      </h4>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          ))}
-
-          {/* All Clubs Grid (Alternative view) */}
-          <div className='mt-12'>
-            <h3 className='text-2xl font-bold text-center text-gray-900 mb-8'>
-              Browse All Clubs
-            </h3>
-            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4'>
-              {clubs.map((club, index) => (
-                <Card
-                  key={index}
-                  className={`group hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-gray-200 cursor-pointer text-center p-4`}
-                >
-                  <div className={`h-1 bg-gradient-to-r ${club.color} rounded-t-xl -mx-6 -mt-4 mb-3`}></div>
-                  <div className='text-4xl mb-2 transform group-hover:scale-110 transition-transform'>
-                    {club.icon}
-                  </div>
-                  <h4 className='text-sm font-semibold text-gray-900 group-hover:text-primary-green-600 transition-colors leading-tight'>
-                    {club.name}
-                  </h4>
-                </Card>
+          <div className='rounded-xl border border-line bg-paper p-7'>
+            <p className='numeral text-6xl text-gold'>{total}</p>
+            <p className='mt-1 text-ink-muted'>clubs across five areas</p>
+            <h3 className='mt-6 font-display text-title text-ink'>Our goals</h3>
+            <ul className='mt-3 space-y-2 text-ink-muted'>
+              {goals.map((goal) => (
+                <li key={goal} className='flex gap-3'>
+                  <span className='mt-2.5 h-1.5 w-1.5 shrink-0 rotate-45 bg-gold-500' aria-hidden />
+                  {goal}
+                </li>
               ))}
-            </div>
-          </div>
-
-          {/* Footer Note */}
-          <div className='mt-12 text-center p-6 bg-accent-yellow-50 rounded-xl border-2 border-accent-yellow-200'>
-            <p className='text-gray-700 font-medium'>
-              <span className='text-2xl mr-2'>📌</span>
-              <strong>Note:</strong> Available clubs may vary from one branch to another.
-              Contact your branch office for specific club availability.
-            </p>
+            </ul>
           </div>
         </div>
       </Section>
-    </main>
+
+      <Section background='sunken' aria-labelledby='all-clubs'>
+        <SectionHeader
+          id='all-clubs'
+          title='Clubs by area'
+          description='Available clubs may vary from one branch to another. Ask your branch office which ones run this term.'
+        />
+        <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
+          {categories.map((category, index) => (
+            <Reveal key={category.name} delay={(index % 3) * 0.06} className='rounded-xl border border-line bg-paper p-7'>
+              <category.Icon className='h-7 w-7 text-gold' aria-hidden />
+              <h3 className='mt-4 font-display text-title text-ink'>{category.name}</h3>
+              <p className='text-ink-subtle'>{category.summary}</p>
+              <ul className='mt-5 divide-y divide-line border-t border-line'>
+                {category.clubs.map((club) => (
+                  <li key={club.name} className='flex items-center gap-3 py-2.5 text-ink'>
+                    <club.Icon className='h-4 w-4 shrink-0 text-brand' aria-hidden />
+                    {club.name}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          ))}
+          <div className='on-dark flex flex-col justify-between rounded-xl bg-brand-800 p-7'>
+            <div>
+              <h3 className='font-display text-title text-ink'>Beyond the clubs</h3>
+              <p className='mt-2 text-ink-muted'>Competitions, festivals, field trips and special days run through the year.</p>
+            </div>
+            <ButtonLink href='/academics/extracurricular' variant='inverse' className='mt-6 self-start'>
+              Extracurricular activities
+            </ButtonLink>
+          </div>
+        </div>
+      </Section>
+    </>
   )
 }

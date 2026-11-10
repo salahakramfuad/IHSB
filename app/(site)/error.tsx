@@ -1,56 +1,38 @@
 'use client'
 
 import { useEffect } from 'react'
-import Link from 'next/link'
-import Button from '@/components/ui/Button'
+import Button, { ButtonLink } from '@/components/ui/Button'
+import PageHeader from '@/components/ui/PageHeader'
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Application error:', error)
+    console.error(error)
   }, [error])
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-primary-50/50 via-white to-red-50/30 flex items-center justify-center px-4">
-      <div className="max-w-2xl mx-auto text-center">
-        <div className="mb-8">
-          <h1 className="text-9xl font-extrabold text-red-600 mb-4">
-            500
-          </h1>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Something went wrong
-          </h2>
-          <p className="text-lg text-gray-600 mb-4">
-            We're sorry, but something unexpected happened. Our team has been notified and is working on fixing the issue.
-          </p>
-          {process.env.NODE_ENV === 'development' && error.message && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-left">
-              <p className="text-sm font-mono text-red-800">{error.message}</p>
-            </div>
-          )}
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            variant="primary"
-            onClick={reset}
-            className="w-full sm:w-auto"
-          >
-            Try Again
-          </Button>
-          <Link href="/">
-            <Button variant="outline" className="w-full sm:w-auto">
-              Go to Homepage
+    <>
+      <PageHeader
+        title='This page could not be loaded'
+        subtitle='Something went wrong on our side. Try again, or go back to the home page. If it keeps happening, tell the school office.'
+        actions={
+          <>
+            <Button variant='secondary' onClick={reset}>
+              Try again
             </Button>
-          </Link>
-        </div>
-      </div>
-    </main>
+            <ButtonLink href='/' variant='inverse'>
+              Go to the home page
+            </ButtonLink>
+            <ButtonLink href='/contact' variant='inverse'>
+              Contact the office
+            </ButtonLink>
+          </>
+        }
+      />
+      {error.digest && (
+        <p className='container py-10 text-sm text-ink-subtle'>
+          Reference for the office: <code translate='no'>{error.digest}</code>
+        </p>
+      )}
+    </>
   )
 }
