@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "mock:generate": "tsx lib/mock/generate-filler.ts",
+    "seed:emulator": "tsx scripts/seed.ts"
   },
   "dependencies": {
     "cloudinary": "^2.11.0",
@@ -36,6 +38,7 @@
     "eslint-config-next": "16.4.5",
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.19",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.72.1"
   },
