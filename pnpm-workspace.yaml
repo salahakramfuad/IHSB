@@ -1,0 +1,9 @@
+allowBuilds:
+  '@firebase/util': false
+  protobufjs: false
+  sharp: true
+  unrs-resolver: true
+
+# Force patched versions of vulnerable transitive dependencies
+overrides:
+  '@grpc/grpc-js': '>=1.14.5'
