@@ -7,6 +7,7 @@ import {
   onAuthStateChanged
 } from 'firebase/auth'
 import { auth } from '../integrations/firebase/config'
+import { DEV_LOGIN, devSignIn, devSignOut, getDevUser, onDevAuthChange, updateDevDisplayName } from './devSession'
 
 function getSignInErrorMessage(error: { code?: string; message?: string } | null): string {
   if (!error) return 'An error occurred during login.'
@@ -20,6 +21,7 @@ function getSignInErrorMessage(error: { code?: string; message?: string } | null
 }
 
 export const signIn = async (email: string, password: string) => {
+  if (DEV_LOGIN) return devSignIn(email, password)
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     return { user: userCredential.user, error: null }
@@ -29,6 +31,10 @@ export const signIn = async (email: string, password: string) => {
 }
 
 export const signOut = async () => {
+  if (DEV_LOGIN) {
+    devSignOut()
+    return { error: null }
+  }
   try {
     await firebaseSignOut(auth)
     return { error: null }
@@ -39,6 +45,7 @@ export const signOut = async () => {
 }
 
 export const getCurrentUser = (): Promise<User | null> => {
+  if (DEV_LOGIN) return Promise.resolve(getDevUser())
   return new Promise((resolve) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       unsubscribe()
@@ -48,10 +55,16 @@ export const getCurrentUser = (): Promise<User | null> => {
 }
 
 export const onAuthChange = (callback: (user: User | null) => void) => {
+  if (DEV_LOGIN) return onDevAuthChange(callback)
   return onAuthStateChanged(auth, callback)
 }
 
 export const updateAdminProfile = async (params: { displayName?: string; password?: string }) => {
+  if (DEV_LOGIN) {
+    if (params.password) throw new Error('The local login password is set by DEV_ADMIN_PASSWORD in .env.local.')
+    if (params.displayName !== undefined) updateDevDisplayName(params.displayName)
+    return
+  }
   const user = auth.currentUser
   if (!user) {
     throw new Error('No authenticated user.')

@@ -3,6 +3,10 @@ import type { DecodedIdToken } from 'firebase-admin/auth'
 import { adminAuth } from '../integrations/firebase/admin'
 import { isMockMode, mockWriteBlockedResponse } from '../mock'
 import { resolveAdminAccess, type AdminRole } from './roles'
+import { isDevToken, verifyDevToken } from './devLogin'
+
+/** Identities produced by the development-only local login (never by Firebase). */
+const devIdentities = new WeakSet<object>()
 
 /**
  * Verifies the Firebase ID token only (authentication, NOT authorization).
@@ -17,6 +21,16 @@ export async function verifyAdminToken(request: NextRequest): Promise<DecodedIdT
     }
 
     const token = authHeader.substring(7)
+
+    // Development-only local login; verifyDevToken returns null in any production build.
+    if (isDevToken(token)) {
+      const dev = verifyDevToken(token)
+      if (!dev) return null
+      const decoded = { uid: dev.uid, email: dev.email, name: dev.name } as unknown as DecodedIdToken
+      devIdentities.add(decoded)
+      return decoded
+    }
+
     // checkRevoked: disabled/deleted accounts and revoked sessions are rejected.
     return await adminAuth.verifyIdToken(token, true)
   } catch {
@@ -59,7 +73,9 @@ export async function requireAdmin(request: NextRequest): Promise<AdminGuardResu
 
   let access
   try {
-    access = await resolveAdminAccess(decoded.email)
+    access = devIdentities.has(decoded)
+      ? ({ allowed: true, role: 'superadmin' } as const)
+      : await resolveAdminAccess(decoded.email)
   } catch (error) {
     console.error('requireAdmin: failed to resolve admin access', error)
     return {

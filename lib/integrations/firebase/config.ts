@@ -1,5 +1,6 @@
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app'
 import { getAuth, Auth } from 'firebase/auth'
+import { DEV_LOGIN, getDevUser } from '@/lib/auth/devSession'
 
 const firebaseConfig = {
   // Placeholder keeps module evaluation from throwing when the env var is absent
@@ -23,5 +24,13 @@ if (getApps().length === 0) {
 
 // Client SDK is used for authentication only. Firestore is accessed exclusively
 // on the server through the Admin SDK (see ./admin.ts).
-export const auth: Auth = getAuth(app)
+// Development-only local login (lib/auth/devSession.ts): `auth.currentUser` resolves to
+// the local session instead of Firebase. DEV_LOGIN is always false in production builds.
+const devAuth = {
+  get currentUser() {
+    return getDevUser()
+  }
+} as unknown as Auth
+
+export const auth: Auth = DEV_LOGIN ? devAuth : getAuth(app)
 export default app
